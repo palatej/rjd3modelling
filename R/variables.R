@@ -1,5 +1,6 @@
 fixedParameters<-function(coef){
-  if (length(coef) == 0) return (NULL)
+  if (length(coef) == 0)return (NULL)
+  if (coef == 0) return (NULL)
   return (lapply(coef, function(z){list(value=z, type="FIXED")}))
 }
 
@@ -33,10 +34,8 @@ createVariable<-function(id, name = NULL, lag0 = 0, lag1 = 0, coef = NULL, regef
 #' @export
 #'
 #' @examples
-createRamp<-function(start, end, name = NULL, coef=0){
-  s<-parseDate(start)
-  e<-parseDate(end)
-  return (list(name=name, start=s, end=e, coef=fixedParameters(coef) ))
+createRamp<-function(start, end, name = NULL, coef=NULL){
+  return (list(name=name, start=start, end=end, coef=fixedParameters(coef) ))
 }
 
 #' Title
@@ -50,8 +49,7 @@ createRamp<-function(start, end, name = NULL, coef=0){
 #' @export
 #'
 #' @examples
-createOutlier<-function(code, pos, name = NULL, coef=0){
-  p<-parseDate(po)
-  return (list(name=name, code=code, pos=p, coef=fixedParameters(coef)))
+createOutlier<-function(code, pos, name = NULL, coef=NULL){
+  return (list(name=name, code=code, pos=pos, coef=fixedParameters(coef)))
 }
 
