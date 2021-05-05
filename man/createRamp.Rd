@@ -4,7 +4,7 @@
 \alias{createRamp}
 \title{Title}
 \usage{
-createRamp(start, end, name = NULL, coef = 0)
+createRamp(start, end, name = NULL, coef = NULL)
 }
 \arguments{
 \item{coef}{}

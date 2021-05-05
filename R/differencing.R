@@ -90,3 +90,17 @@ differences<-function(data, lags=1, mean=T){
                  as.numeric(data), .jarray(as.integer(lags)), mean))
 }
 
+#' Title
+#'
+#' @param data
+#' @param period
+#'
+#' @return
+#' @export
+#'
+#' @examples
+rangemean.tstat<-function(data, period=0, groupsize = 0, trim = 0){
+  return (.jcall("demetra/modelling/r/AutoModelling", "D", "rangeMean",
+                 as.numeric(data), as.integer(period), as.integer(groupsize), as.integer(trim)))
+
+}

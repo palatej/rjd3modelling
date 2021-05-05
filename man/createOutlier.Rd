@@ -4,7 +4,7 @@
 \alias{createOutlier}
 \title{Title}
 \usage{
-createOutlier(code, pos, name = NULL, coef = 0)
+createOutlier(code, pos, name = NULL, coef = NULL)
 }
 \arguments{
 \item{coef}{}
