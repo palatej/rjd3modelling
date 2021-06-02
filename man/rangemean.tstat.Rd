@@ -4,7 +4,7 @@
 \alias{rangemean.tstat}
 \title{Title}
 \usage{
-rangemean.tstat(data, period)
+rangemean.tstat(data, period = 0, groupsize = 0, trim = 0)
 }
 \arguments{
 \item{period}{}

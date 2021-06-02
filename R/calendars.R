@@ -1,4 +1,4 @@
-#' @include utils.R jd3_r.R
+#' @include utils.R
 NULL
 
 # Raw interface
@@ -8,7 +8,7 @@ NULL
 #' @export
 #'
 #' @examples
-newCalendar<-function(){
+calendar.new<-function(){
   return (jd3.Calendar$new())
 }
 
@@ -21,16 +21,16 @@ newCalendar<-function(){
 #' @export
 #'
 #' @examples
-#' belgiumCalendar<-newCalendar()
-#' addFixedDayToCalendar(belgiumCalendar, 7, 21)
-#' addPrespecifiedHolidayToCalendar(belgiumCalendar, "NEWYEAR")
-#' addPrespecifiedHolidayToCalendar(belgiumCalendar, "CHRISTMAS")
-#' addPrespecifiedHolidayToCalendar(belgiumCalendar, "MAYDAY")
-#' addPrespecifiedHolidayToCalendar(belgiumCalendar, "EASTERMONDAY")
-#' addPrespecifiedHolidayToCalendar(belgiumCalendar, "WHITMONDAY")
-#' addPrespecifiedHolidayToCalendar(belgiumCalendar, "ASSUMPTION")
-#' addPrespecifiedHolidayToCalendar(belgiumCalendar, "ALLSAINTDAY")
-#' addPrespecifiedHolidayToCalendar(belgiumCalendar, "ARMISTICE")
+#' belgiumCalendar<-new.calendar()
+#' calendar.fixedday(belgiumCalendar, 7, 21)
+#' calendar.holiday(belgiumCalendar, "NEWYEAR")
+#' calendar.holiday(belgiumCalendar, "CHRISTMAS")
+#' calendar.holiday(belgiumCalendar, "MAYDAY")
+#' calendar.holiday(belgiumCalendar, "EASTERMONDAY")
+#' calendar.holiday(belgiumCalendar, "WHITMONDAY")
+#' calendar.holiday(belgiumCalendar, "ASSUMPTION")
+#' calendar.holiday(belgiumCalendar, "ALLSAINTDAY")
+#' calendar.holiday(belgiumCalendar, "ARMISTICE")
 #' M<-td(12, c(1980,1), 120, c(1,1,1,1,2,3,0), contrasts = F)
 #'
 #' H<-htd(belgiumCalendar, 12, c(1980,1), 120, c(1,1,1,1,1,2,0), contrasts =F)
@@ -79,7 +79,7 @@ validityPeriod<-function(start, end){
 #' @export
 #'
 #' @examples
-addFixedDayToCalendar<-function(calendar, month, day, weight=1, start=NULL, end=NULL){
+calendar.fixedday<-function(calendar, month, day, weight=1, start=NULL, end=NULL){
   fd<-jd3.FixedDay$new()
   fd$month<-month
   fd$day<-day
@@ -102,7 +102,7 @@ addFixedDayToCalendar<-function(calendar, month, day, weight=1, start=NULL, end=
 #' @export
 #'
 #' @examples
-addEasterRelatedDayToCalendar<-function(calendar, offset, julian=F, weight=1, start=NULL, end=NULL){
+calendar.easter<-function(calendar, offset, julian=F, weight=1, start=NULL, end=NULL){
   ed<-jd3.EasterRelatedDay$new()
   ed$offset<-offset
   ed$julian<-julian
@@ -125,7 +125,7 @@ addEasterRelatedDayToCalendar<-function(calendar, offset, julian=F, weight=1, st
 #' @export
 #'
 #' @examples
-addPrespecifiedHolidayToCalendar<-function(calendar, event, offset=0, weight=1, start=NULL, end=NULL){
+calendar.holiday<-function(calendar, event, offset=0, weight=1, start=NULL, end=NULL){
   pd<-jd3.PrespecifiedHoliday$new()
   pd$event<-enum_of(jd3.CalendarEvent, event, "HOLIDAY")
   pd$offset<-offset
@@ -190,6 +190,43 @@ htd<-function(calendar,frequency, start, length, groups=c(1,2,3,4,5,6,0), contra
   jm<-.jcall("demetra/calendar/r/Calendars", "Ldemetra/math/matrices/MatrixType;",
              "htd", jcal, jdom, as.integer(groups), contrasts)
   return (matrix_jd2r(jm))
+}
+
+#' Title
+#'
+#' @param calendar The calendar
+#' @param start First day of the calendar
+#' @param length Length of the calendar
+#' @param nonworking Indexes of non working days (Monday=1, Sunday=7)
+#' @param type Adjustment type when a holiday falls a week-end: "NextWorkingDay",
+#' "PreviousWorkingDay",
+#' "Skip" (holidays corresponding to non working days are simply skipped in the matrix),
+#' "All" (holidays are always put in the matrix, even if they correspond to a non working day)
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' belgiumCalendar<-newCalendar()
+#' calendar.fixedday(belgiumCalendar, 7, 21)
+#' calendar.holiday(belgiumCalendar, "NEWYEAR")
+#' calendar.holiday(belgiumCalendar, "CHRISTMAS")
+#' calendar.holiday(belgiumCalendar, "CHRISTMAS", offset=1, weight=.5)
+#' calendar.holiday(belgiumCalendar, "MAYDAY")
+#' calendar.holiday(belgiumCalendar, "EASTERMONDAY")
+#' calendar.holiday(belgiumCalendar, "WHITMONDAY")
+#' calendar.holiday(belgiumCalendar, "ASSUMPTION")
+#' calendar.holiday(belgiumCalendar, "ALLSAINTDAY")
+#' calendar.holiday(belgiumCalendar, "ARMISTICE")
+#' q<-holidays(belgium, "2021-01-01", 365.25*10, type="NextWorkingDay")
+#' plot(apply(q,1, max))
+holidays<-function(calendar, start, length, nonworking=c(6,7), type=c("Skip", "All", "NextWorkingDay", "PreviousWorkingDay")){
+  type<-match.arg(type)
+  jcal<-p2jd_calendar(calendar)
+  jm<-.jcall("demetra/calendar/r/Calendars", "Ldemetra/math/matrices/MatrixType;",
+             "holidays", jcal, as.character(start), as.integer(length), .jarray(as.integer(nonworking)), type)
+  return (matrix_jd2r(jm))
+
 }
 
 #' Title

@@ -30,12 +30,3 @@ parseDate<-function(s){
   return (d)
 }
 
-p2r_test<-function(p){
-  if (is.null(p))
-    return (NULL)
-  else{
-    return (p$as.list())
-  }
-}
-
-

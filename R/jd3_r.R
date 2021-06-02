@@ -1,58 +1,51 @@
+#' @include utils.R
+NULL
 
-ts_r2jd<-function(s){
-  if (is.null(s)){
+j2r_ldt<-function(ldt){
+  if (is.jnull(ldt))
     return (NULL)
-  }
-  freq<-frequency(s)
-  start<-start(s)
-  .jcall("demetra/timeseries/r/TsUtility", "Ldemetra/timeseries/TsData;", "of",
-         as.integer(freq), as.integer(start[1]), as.integer(start[2]), as.double(s))
+  dt<-.jcall(ldt, "Ljava/time/LocalDate;", "toLocalDate")
+  return (as.Date(.jcall(dt, "S", "toString")))
 }
 
-tsdomain_r2jd<-function(period, startYear, startPeriod, length){
-  .jcall("demetra/timeseries/r/TsUtility", "Ldemetra/timeseries/TsDomain;", "of",
-         as.integer(period), as.integer(startYear), as.integer(startPeriod), as.integer(length))
-}
-
-
-ts_jd2r<-function(s){
-  if (is.null(s)){
+j2r_dt<-function(dt){
+  if (is.jnull(dt))
     return (NULL)
-  }
-  pstart<-.jcall("demetra/timeseries/r/TsUtility", "[I", "startPeriod", s)
-  jx<-.jcall(s, "Ldemetra/data/DoubleSeq;", "getValues")
-  x<-.jcall(jx, "[D", "toArray")
-  ts(x,start=pstart[2:3], frequency=pstart[1])
+  return (as.Date(.jcall(dt, "S", "toString")))
 }
 
-matrix_jd2r<-function(s){
-  if (is.jnull(s)){
+r2j_dt<-function(dt){
+  jdt<-.jnew("java/lang/String", as.character(dt))
+  return (.jcall("java/time/LocalDate", "Ljava/time/LocalDate;", "parse", .jcast(jdt, "java/lang/CharSequence")))
+}
+
+r2j_ldt<-function(dt){
+  jdt<-r2j_dt(dt)
+  return (.jcall(jdt, "Ljava/time/LocalDateTime;", "atStartOfDay"))
+}
+
+
+jd2r_parameters <- function(jparams){
+  if (is.jnull(jparams))
+    return(NULL)
+  param<-.jcastToArray(jparams)
+  len <- length(param)
+  if (len==0)
     return (NULL)
-  }
-  nr<-.jcall(s, "I", "getRowsCount")
-  nc<-.jcall(s, "I", "getColumnsCount")
-  d<-.jcall(s, "[D", "toArray")
-  return (array(d, dim=c(nr, nc)))
+  param_name <- deparse(substitute(jparams))
+  Type <- sapply(param, function(x) .jcall(.jcall(x, "Ldemetra/data/ParameterType;", "getType"), "S", "name"))
+  Value <- sapply(param, function(x) .jcall(x, "D", "getValue"))
+  data_param <- data.frame(Type = Type, Value = Value)
+  rownames(data_param) <- sprintf("%s(%i)",
+                                  param_name,
+                                  1:len)
+  data_param
 }
 
-matrix_r2jd<-function(s){
-  if (is.null(s))
-    return (.jnull("demetra/maths/matrices/Matrix"))
-  if (!is.matrix(s)){
-    s<-matrix(s, nrow=length(s), ncol=1)
-  }
-  sdim<-dim(s)
-  return (.jcall("demetra/maths/matrices/Matrix","Ldemetra/maths/matrices/Matrix;", "ofInternal", as.double(s), as.integer(sdim[1]), as.integer(sdim[2])))
-}
-
-
-jd2r_test<-function(jtest){
-  if (is.jnull(jtest))
-    return (NULL)
-  else{
-    desc<-.jcall(jtest, "S", "getDescription")
-    val<-.jcall(jtest, "D", "getValue")
-    pval<-.jcall(jtest, "D", "getPvalue")
-    return (list(value=val, pvalue=pval, distribution=desc))
-  }
+jdomain<-function(period, start, end){
+  if (period == 0)return (.jnull("demetra/timeseries/TsDomain"))
+  n<-period*(end[1]-start[1])+end[2]-start[2]
+  jdom<-.jcall("demetra/timeseries/r/TsUtility", "Ldemetra/timeseries/TsDomain;", "of"
+               , as.integer(period), as.integer(start[1]), as.integer(start[2]), as.integer(n))
+  return (jdom)
 }
