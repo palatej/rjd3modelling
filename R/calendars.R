@@ -127,7 +127,7 @@ calendar.easter<-function(calendar, offset, julian=F, weight=1, start=NULL, end=
 #' @examples
 calendar.holiday<-function(calendar, event, offset=0, weight=1, start=NULL, end=NULL){
   pd<-jd3.PrespecifiedHoliday$new()
-  pd$event<-enum_of(jd3.CalendarEvent, event, "HOLIDAY")
+  pd$event<-.JD3_ENV$enum_of(jd3.CalendarEvent, event, "HOLIDAY")
   pd$offset<-offset
   pd$weight<-weight
   pd$validity<-validityPeriod(start, end)
@@ -167,6 +167,24 @@ td<-function(frequency, start, length, groups=c(1,2,3,4,5,6,0), contrasts=T){
   return (matrix_jd2r(jm))
 }
 
+#' Usual trading days variables for a given time series
+#'
+#' @param s The time series
+#' @param groups Groups of days. The length of the array must be 7. It indicates to what group each week day
+#' belongs. The first item corresponds to Mondays and the last one to Sundays. The group used for contrasts (usually Sundays) is identified by 0.
+#' The other groups are identified by 1, 2, ... n (<= 6). For instance, usual trading days are defined by c(1,2,3,4,5,6,0),
+#' week days by c(1,1,1,1,1,0,0), week days, Saturdays, Sundays by c(1,1,1,1,1,2,0) etc...
+#' @param contrasts If true, the variables are defined by contrasts with the 0-group. Otherwise, raw number of days are provided
+#'
+#' @return
+#' @export
+#'
+#' @examples
+td.forTs<-function(s, groups=c(1,2,3,4,5,6,0), contrasts=T){
+  if (! is.ts(s)) stop("s should be a time series")
+  return (td(frequency(s), start(s), length(s), groups, contrasts))
+}
+
 #' Trading days variables corresponding to a specific calendar
 #'
 #' @param calendar The calendar
@@ -191,6 +209,28 @@ htd<-function(calendar,frequency, start, length, groups=c(1,2,3,4,5,6,0), contra
              "htd", jcal, jdom, as.integer(groups), contrasts)
   return (matrix_jd2r(jm))
 }
+
+
+#' Title
+#'
+#' @param s The time series
+#' @param calendar The calendar
+#' @param groups Groups of days. The length of the array must be 7. It indicates to what group each week day
+#' belongs. The first item corresponds to Mondays and the last one to Sundays. The group used for contrasts (usually Sundays) is identified by 0.
+#' The other groups are identified by 1, 2, ... n (<= 6). For instance, usual trading days are defined by c(1,2,3,4,5,6,0),
+#' week days by c(1,1,1,1,1,0,0), week days, Saturdays, Sundays by c(1,1,1,1,1,2,0) etc...
+#' @param contrasts If true, the variables are defined by contrasts with the 0-group. Otherwise, raw number of days are provided
+#'
+#' @return The variables corresponding to each group, starting with the 0-group (contrasts=F)
+#' or the 1-group (contrasts=T)
+#' @export
+#'
+#' @examples
+htd.forTs<-function(s, calendar, groups=c(1,2,3,4,5,6,0), contrasts=T){
+  if (! is.ts(s)) stop("s should be a time series")
+  return (htd(calendar, frequency(s), start(s), length(s), groups, contrasts))
+}
+
 
 #' Title
 #'

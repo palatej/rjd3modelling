@@ -1,65 +1,28 @@
 #' @include utils.R jd3_r.R
 NULL
 
+p2r_parameters_estimation<-function(p){
+  if (is.null(p))
+    return (NULL)
+  return (list(val=p$value, score=p$score, cov=.JD3_ENV$p2r_matrix(p$covariance), description=p$description))
+}
+
+p2r_variables<-function(p){
+  return (lapply(p, function(v){p2r_variable(v)}))
+}
+
+p2r_variable<-function(p){
+  name<-p$name
+  type<-.JD3_ENV$enum_extract(modelling.VariableType, p$var_type)
+  coeff<-.JD3_ENV$p2r_parameters_rsltx(p$coefficients)
+  return (list(name=name, type=type, coeff=coeff))
+}
 
 p2r_likelihood<-function(p){
   return (rjd3toolkit::likelihood(p$nobs, p$neffectiveobs, p$nparams,
                          p$log_likelihood, p$adjusted_log_likelihood,
                          p$aic, p$aicc, p$bic, p$bicc, p$ssq))
 }
-
-
-p2r_test<-function(p){
-  return (rjd3toolkit::statisticaltest(p$value, p$pvalue, p$description))
-}
-
-p2r_matrix<-function(p){
-  m<-matrix(data=p$values, nrow = p$nrows, ncol = p$ncols)
-  `attr<-`(m, "name", p$name)
-  return (m)
-}
-
-p2r_ts<-function(p){
-  if (length(p$values) == 0)
-    return (NULL)
-  s<-ts(data=p$values, frequency = p$annual_frequency, start = c(p$start_year, p$start_period))
-  `attr<-`(s, "name", p$name)
-  return (s)
-}
-
-
-p2r_parameters_rslt<-function(p){
-  if (is.null(p))
-    return (NULL)
-  if (length(p) == 0)
-    return (NULL)
-  value<-sapply(p, function(z){z$value})
-  type<-sapply(p, function(z){enum_extract(jd3.ParameterType, z$type)})
-  return (data.frame(value=value, type=type))
-}
-
-p2r_parameters_rsltx<-function(p){
-  if (is.null(p))
-    return (NULL)
-  if (length(p) == 0)
-    return (NULL)
-  value<-sapply(p, function(z){z$value})
-  type<-sapply(p, function(z){enum_extract(jd3.ParameterType, z$type)})
-  description<-sapply(p, function(z){z$description})
-
-  rslt<-data.frame(value=value, type=type)
-  row.names(rslt)<-description
-
-  return (rslt)
-}
-
-
-p2r_parameters_estimation<-function(p){
-  if (is.null(p))
-    return (NULL)
-  return (list(val=p$value, score=p$score, cov=p2r_matrix(p$covariance), description=p$description))
-}
-
 
 p2r_sarima<-function(p){
   return (rjd3arima::sarima.model(p$period, p$phi, p$d, p$theta,
@@ -114,7 +77,7 @@ r2p_date<-function(s){
 # Span
 
 p2r_span<-function(span){
-  type<-enum_extract(jd3.SelectionType, span$type)
+  type<-.JD3_ENV$enum_extract(jd3.SelectionType, span$type)
   dt0<-p2r_date(span$d0)
   dt1<-p2r_date(span$d1)
 
@@ -137,34 +100,6 @@ r2p_span<-function(rspan){
 # row(1): values
 # row(2): Parameters type
 
-r2p_parameter<-function(r){
-  p<-jd3.Parameter$new()
-  if (is.null(r)) return (p)
-
-  p$value<-r$value
-  p$type<-enum_of(jd3.ParameterType, r$type, "PARAMETER")
-  return (p)
-}
-
-p2r_parameter<-function(p){
-  if (! p$has("type")) return (NULL)
-  return (list(value = p$value, type=enum_extract(jd3.ParameterType, p$type)))
-}
-
-r2p_parameters<-function(r){
-
-  n<-length(r)
-  if (n == 0) return (NULL)
-  p<-apply(r, 2, function(z){r2p_parameter(z)})
-  return (p)
-}
-
-p2r_parameters<-function(p){
-  n<-length(p)
-  if (n == 0) return (NULL)
-  r<-sapply(p, function(z){list(value=z$value, type=enum_extract(jd3.ParameterType, z$type))})
-  return (r)
-}
 
 # Sarima
 
@@ -173,10 +108,10 @@ p2r_spec_sarima<-function(spec){
     period=spec$period,
     d=spec$d,
     bd=spec$bd,
-    phi=p2r_parameters(spec$phi),
-    theta=p2r_parameters(spec$theta),
-    bphi=p2r_parameters(spec$bphi),
-    btheta=p2r_parameters(spec$btheta)
+    phi=.JD3_ENV$p2r_parameters(spec$phi),
+    theta=.JD3_ENV$p2r_parameters(spec$theta),
+    bphi=.JD3_ENV$p2r_parameters(spec$bphi),
+    btheta=.JD3_ENV$p2r_parameters(spec$btheta)
   ))
 }
 
@@ -185,19 +120,19 @@ r2p_spec_sarima<-function(r){
   p$period<-r$period
   p$d<-r$d
   p$bd<-r$bd
-  p$phi<-r2p_parameters(r$phi)
-  p$theta<-r2p_parameters(r$theta)
-  p$bphi<-r2p_parameters(r$bphi)
-  p$btheta<-r2p_parameters(r$btheta)
+  p$phi<-.JD3_ENV$r2p_parameters(r$phi)
+  p$theta<-.JD3_ENV$r2p_parameters(r$theta)
+  p$bphi<-.JD3_ENV$r2p_parameters(r$bphi)
+  p$btheta<-.JD3_ENV$r2p_parameters(r$btheta)
   return (p)
 }
 
 p2r_outlier<-function(p){
   return (list(
     name=p$name,
-    pos=p2r_date(p$position),
+    pos=.JD3_ENV$p2r_date(p$position),
     code=p$code,
-    coef=p2r_parameter(p$coefficient)
+    coef=.JD3_ENV$p2r_parameter(p$coefficient)
   ))
 }
 
@@ -205,8 +140,8 @@ r2p_outlier<-function(r){
   p<-modelling.Outlier$new()
   p$name=r$name
   p$code<-r$code
-  p$position<-r2p_date(r$pos)
-  p$coefficient<-r2p_parameter(r$coef)
+  p$position<-.JD3_ENV$r2p_date(r$pos)
+  p$coefficient<-.JD3_ENV$r2p_parameter(r$coef)
   return (p)
 }
 
@@ -226,7 +161,7 @@ p2r_ramp<-function(p){
     name=p$name,
     start=p2r_date(p$start),
     end=p2r_date(p$end),
-    coef=p2r_parameter(p$coefficient)
+    coef=.JD3_ENV$p2r_parameter(p$coefficient)
   ))
 }
 
@@ -235,7 +170,7 @@ r2p_ramp<-function(r){
   p$name<-r$name
   p$start<-r2p_date(r$start)
   p$end<-r2p_date(r$end)
-  p$coefficient<-r2p_parameter(r$coefficient)
+  p$coefficient<-.JD3_ENV$r2p_parameter(r$coefficient)
   return (p)
 }
 
@@ -273,7 +208,7 @@ p2r_uservar<-function(p){
     id=p$id,
     name=p$name,
     lags=rlags(l0, l1),
-    coef=p2r_parameter(p$coefficient),
+    coef=.JD3_ENV$p2r_parameter(p$coefficient),
     regeffect=regeffect(p$metadata)
   ))
 }
@@ -292,7 +227,7 @@ r2p_uservar<-function(r){
     }else
       stop("Invalid lags")
   }
-  p$coefficient<-r2p_parameters(r$coef)
+  p$coefficient<-.JD3_ENV$r2p_parameters(r$coef)
   p$metadata<-list(list(key="regeffect", value=r$regeffect))
   return (p)
 }
@@ -309,52 +244,4 @@ r2p_uservars<-function(r){
 }
 
 
-# Benchmarking
 
-p2r_spec_benchmarking<-function(p){
-  return (list(
-    enabled=p$enabled,
-    target=enum_extract(sa.BenchmarkingTarget, p$target),
-    lambda=p$lambda,
-    rho=p$rho,
-    bias=enum_extract(sa.BenchmarkingBias, p$bias),
-    forecast=p$forecast
-  ))
-}
-
-r2p_spec_benchmarking<-function(r){
-  p<-sa.BenchmarkingSpec$new()
-  p$enabled<-r$enabled
-  p$target<-enum_of(sa.BenchmarkingTarget, r$target, "BENCH")
-  p$lambda<-r$lambda
-  p$rho<-r$rho
-  p$bias<-enum_of(sa.BenchmarkingBias, r$bias, "BENCH")
-  p$forecast<-r$forecast
-  return (p)
-}
-
-
-
-# Benchmarking
-
-p2r_spec_benchmarking<-function(p){
-  return (list(
-    enabled=p$enabled,
-    target=enum_extract(sa.BenchmarkingTarget, p$target),
-    lambda=p$lambda,
-    rho=p$rho,
-    bias=enum_extract(sa.BenchmarkingBias, p$bias),
-    forecast=p$forecast
-  ))
-}
-
-r2p_spec_benchmarking<-function(r){
-  p<-sa.BenchmarkingSpec$new()
-  p$enabled<-r$enabled
-  p$target<-enum_of(sa.BenchmarkingTarget, r$target, "BENCH")
-  p$lambda<-r$lambda
-  p$rho<-r$rho
-  p$bias<-enum_of(sa.BenchmarkingBias, r$bias, "BENCH")
-  p$forecast<-r$forecast
-  return (p)
-}
