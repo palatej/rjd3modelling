@@ -1,15 +1,6 @@
 #' @include utils.R
 NULL
 
-regarima_rslts <- function(jrslts){
-  if (is.jnull(jrslts))
-    return (NULL)
-  q<-.jcall(jrslts, "[B", "buffer")
-  rq<-RProtoBuf::read(regarima.RegArimaModel, q)
-  return (p2r_regarima_rslts(rq))
-}
-
-
 p2r_regarima_rslts<-function(p){
 
   return (structure(list(

@@ -22,7 +22,6 @@ tsdomain_r2jd<-NULL
   ts_r2jd<<-.JD3_ENV$ts_r2jd
   tsdomain_r2jd<<-.JD3_ENV$tsdomain_r2jd
 
-  .JD3_ENV$regarima_rslts<-regarima_rslts
   .JD3_ENV$DATE_MIN<-DATE_MIN
   .JD3_ENV$DATE_MAX<-DATE_MAX
 
