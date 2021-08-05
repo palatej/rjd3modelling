@@ -48,5 +48,10 @@ tsdomain_r2jd<-NULL
   .JD3_ENV$p2r_parameters_estimation<-p2r_parameters_estimation
   .JD3_ENV$p2r_variable<-p2r_variable
   .JD3_ENV$p2r_variables<-p2r_variables
+
+  .JD3_ENV$jd2r_arima<-jd2r_arima
+  .JD3_ENV$r2jd2r_arima<-jd2r_arima
+  .JD3_ENV$jd2r_ucarima<-jd2r_ucarima
+  .JD3_ENV$r2jd2r_ucarima<-jd2r_ucarima
 }
 
