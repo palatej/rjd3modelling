@@ -7,7 +7,7 @@ p2r_regarima_rslts<-function(p){
     description=p2r_regarima_description(p$description),
     estimation=p2r_regarima_estimation(p$estimation),
     diagnostics=p2r_regarima_diagnostics(p$diagnostics)),
-    class="JD3REGARIMA_RSLTS")
+    class="JD3_REGARIMA_RSLTS")
   )
 }
 
