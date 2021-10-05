@@ -32,6 +32,8 @@ tsdomain_r2jd<-NULL
   .JD3_ENV$r2p_span<-r2p_span
   .JD3_ENV$p2r_arima<-p2r_arima
   .JD3_ENV$p2r_sarima<-p2r_sarima
+  .JD3_ENV$p2r_spec_sarima<-p2r_spec_sarima
+  .JD3_ENV$r2p_spec_sarima<-r2p_spec_sarima
   .JD3_ENV$p2r_ucarima<-p2r_ucarima
   .JD3_ENV$p2r_outlier<-p2r_outlier
   .JD3_ENV$r2p_outlier<-r2p_outlier
@@ -50,8 +52,10 @@ tsdomain_r2jd<-NULL
   .JD3_ENV$p2r_variables<-p2r_variables
 
   .JD3_ENV$jd2r_arima<-jd2r_arima
-  .JD3_ENV$r2jd2r_arima<-jd2r_arima
+  .JD3_ENV$r2jd_arima<-r2jd_arima
+  .JD3_ENV$jd2r_sarima<-jd2r_sarima
+  .JD3_ENV$r2jd_sarima<-r2jd_sarima
   .JD3_ENV$jd2r_ucarima<-jd2r_ucarima
-  .JD3_ENV$r2jd2r_ucarima<-jd2r_ucarima
+  .JD3_ENV$r2jd_ucarima<-r2jd_ucarima
 }
 
