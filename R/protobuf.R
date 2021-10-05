@@ -25,12 +25,12 @@ p2r_likelihood<-function(p){
 }
 
 p2r_sarima<-function(p){
-  return (rjd3arima::sarima.model(p$period, p$phi, p$d, p$theta,
-               p$bphi, p$bd, p$btheta, p$name))
+  return (sarima.model(p$name, p$period, p$phi, p$d, p$theta,
+               p$bphi, p$bd, p$btheta))
 }
 
 p2r_arima<-function(p){
-  return (rjd3arima::arima.model(p$ar, p$delta, p$ma, p$innovation_variance, p$name))
+  return (arima.model(p$name, p$ar, p$delta, p$ma, p$innovation_variance))
 }
 
 p2r_ucarima<-function(p){
@@ -40,7 +40,7 @@ p2r_ucarima<-function(p){
     model<-p2r_sarima(p$sarima)
   else
     model<-NULL
-  return (rjd3arima::ucarima.model(model,lapply(p$components, function(z){p2r_arima(z)})))
+  return (ucarima.model(model,lapply(p$components, function(z){p2r_arima(z)})))
 }
 
 dateOf<-function(year, month, day){
@@ -81,12 +81,12 @@ p2r_span<-function(span){
   dt0<-p2r_date(span$d0)
   dt1<-p2r_date(span$d1)
 
-  return (structure(list(type=type, d0=dt0, d1=dt1, n0=span$n0, n1=span$n1), class= "JD3SPAN"))
+  return (structure(list(type=type, d0=dt0, d1=dt1, n0=span$n0, n1=span$n1), class= "JD3_SPAN"))
 }
 
 r2p_span<-function(rspan){
   pspan<-jd3.TimeSelector$new()
-  pspan$type<-enum_of(jd3.SelectionType, rspan$type, "SPAN")
+  pspan$type<-.JD3_ENV$enum_of(jd3.SelectionType, rspan$type, "SPAN")
   pspan$n0<-rspan$n0
   pspan$n1<-rspan$n1
   pspan$d0<-r2p_date(rspan$d0)
@@ -104,7 +104,8 @@ r2p_span<-function(rspan){
 # Sarima
 
 p2r_spec_sarima<-function(spec){
-  return (list(
+  return (structure(
+    list(
     period=spec$period,
     d=spec$d,
     bd=spec$bd,
@@ -112,7 +113,8 @@ p2r_spec_sarima<-function(spec){
     theta=.JD3_ENV$p2r_parameters(spec$theta),
     bphi=.JD3_ENV$p2r_parameters(spec$bphi),
     btheta=.JD3_ENV$p2r_parameters(spec$btheta)
-  ))
+  ),
+  class="JD3_SARIMA_ESTIMATION"))
 }
 
 r2p_spec_sarima<-function(r){

@@ -1,3 +1,47 @@
+#' Title
+#'
+#' @param period
+#' @param phi
+#' @param d
+#' @param theta
+#' @param bphi
+#' @param bd
+#' @param btheta
+#' @param name
+#'
+#' @return
+#' @export
+#'
+#' @examples
+sarima.model<-function(name=NULL, period, phi=NULL, d=0, theta=NULL, bphi=NULL, bd=0, btheta=NULL){
+  return (structure(
+    list(name=name, period=period, phi = phi, d=d, theta=theta,
+                         bphi = bphi, bd = bd, btheta = btheta), class="JD3_SARIMA"))
+}
+
+#' Title
+#'
+#' @param model
+#' @param length
+#' @param stde
+#'
+#' @return
+#' @export
+#'
+#' @examples
+sarima.random<-function(model, length, stde=5){
+  if (class(model) != "JD3_SARIMA") stop("Invalid model")
+  return (.jcall("demetra/arima/r/SarimaModels", "[D", "random",
+         as.integer(length),
+         as.integer(model$period),
+         .jarray(as.numeric(model$phi)),
+         as.integer(model$d),
+         .jarray(as.numeric(model$theta)),
+         .jarray(as.numeric(model$bphi)),
+         as.integer(model$bd),
+         .jarray(as.numeric(model$btheta)),
+         stde))
+}
 
 #' Title
 #'
@@ -11,7 +55,7 @@
 #' @export
 #'
 #' @examples
-arima<-function(name="arima", ar=1, delta=1, ma=1, variance=1){
+arima.model<-function(name="arima", ar=1, delta=1, ma=1, variance=1){
   return (structure(list(name=name, ar=ar, delta=delta, ma=ma, var=variance), class="JD3_ARIMA"))
 }
 
@@ -20,8 +64,34 @@ jd2r_doubleseq<-function(jobj, jprop){
   return (.jcall(jseq, "[D", "toArray"))
 }
 
+jd2r_sarima<-function(jsarima){
+  return (sarima.model(.jcall(jsarima, "S", "getName"),
+                       .jcall(jarima, "I", "getPeriod"),
+                       jd2r_doubleseq(jsarima, "getPhi"),
+                      .jcall(jsarima, "D", "getD"),
+                      jd2r_doubleseq(jsarima, "getTheta"),
+                      jd2r_doubleseq(jsarima, "getBphi"),
+                      .jcall(jsarima, "D", "getBd"),
+                      jd2r_doubleseq(jsarima, "getBtheta")
+  ))
+}
+
+r2jd_sarima<-function(model){
+  return (.jcall("demetra/arima/r/SarimaModels", "Ldemetra/arima/SarimaModel;", "of",
+                 model$name,
+                 as.integer(model$period),
+                 .jarray(as.numeric(model$phi)),
+                 as.integer(model$d),
+                 .jarray(as.numeric(model$theta)),
+                 .jarray(as.numeric(model$bphi)),
+                 as.integer(model$bd),
+                 .jarray(as.numeric(model$btheta))))
+}
+
+
+
 jd2r_arima<-function(jarima){
-  return (arima(.jcall(jarima, "S", "getName"),
+  return (arima.model(.jcall(jarima, "S", "getName"),
                 jd2r_doubleseq(jarima, "getAr"),
                 jd2r_doubleseq(jarima, "getDelta"),
                 jd2r_doubleseq(jarima, "getMa"),
@@ -84,9 +154,12 @@ arima.properties<-function(model, nspectrum=601, nacf=36){
 #' @export
 #'
 #' @examples
-ucarima<-function(model=NULL, components){
+ucarima.model<-function(model=NULL, components, checkmodel=F){
   if (is.null(model))
     model<-arima.lsum(components)
+  else if (! is(model, "JD3_ARIMA") && ! is(model, "JD3_SARIMA")) stop("Invalid model")
+
+  # TODO: checkmodel
   return (structure(list(model=model, components=components), class="JD3_UCARIMA"))
 }
 
@@ -99,7 +172,7 @@ r2jd_ucarima<-function(ucm){
 jd2r_ucarima<-function(jucm){
   model<-.jcall(jucm, "Ldemetra/arima/ArimaModel;", "getSum")
   jcmps<-.jcall(jucm, "[Ldemetra/arima/ArimaModel;", "getComponents")
-  return (ucarima(jd2r_arima(model), lapply(jcmps, jd2r_arima)))
+  return (ucarima.model(jd2r_arima(model), lapply(jcmps, jd2r_arima)))
 }
 
 
