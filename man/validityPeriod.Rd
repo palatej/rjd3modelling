@@ -26,12 +26,12 @@ calendar.holiday(belgiumCalendar, "WHITMONDAY")
 calendar.holiday(belgiumCalendar, "ASSUMPTION")
 calendar.holiday(belgiumCalendar, "ALLSAINTDAY")
 calendar.holiday(belgiumCalendar, "ARMISTICE")
-M<-td(12, c(1980,1), 120, c(1,1,1,1,2,3,0), contrasts = F)
+M<-td(12, c(1980,1), 120, c(1,1,1,1,2,3,0), contrasts = FALSE)
 
-H<-htd(belgiumCalendar, 12, c(1980,1), 120, c(1,1,1,1,1,2,0), contrasts =F)
+H<-htd(belgiumCalendar, 12, c(1980,1), 120, c(1,1,1,1,1,2,0), contrasts = FALSE)
 
-MC<-td(4, c(1980,1), 120, c(1,1,1,1,1,2,0), contrasts = T)
-HC<-htd(belgiumCalendar, 4, c(1980,1), 120, c(1,1,1,1,1,2,0), contrasts = T)
+MC<-td(4, c(1980,1), 120, c(1,1,1,1,1,2,0), contrasts = TRUE)
+HC<-htd(belgiumCalendar, 4, c(1980,1), 120, c(1,1,1,1,1,2,0), contrasts = TRUE)
 
 C12<-longTermMean(belgiumCalendar, 12)
 C4<-longTermMean(belgiumCalendar, 4)

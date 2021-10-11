@@ -14,6 +14,12 @@ calendar.holiday(
 )
 }
 \arguments{
+\item{calendar}{The calendar.}
+
+\item{event}{}
+
+\item{weight}{}
+
 \item{end}{}
 }
 \value{

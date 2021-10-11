@@ -15,7 +15,7 @@ holidays(
 \arguments{
 \item{calendar}{The calendar}
 
-\item{start}{First day of the calendar}
+\item{start}{First day of the calendar in the format \code{"YYYY-MM-DD"}.}
 
 \item{length}{Length of the calendar}
 
@@ -44,6 +44,6 @@ calendar.holiday(belgiumCalendar, "WHITMONDAY")
 calendar.holiday(belgiumCalendar, "ASSUMPTION")
 calendar.holiday(belgiumCalendar, "ALLSAINTDAY")
 calendar.holiday(belgiumCalendar, "ARMISTICE")
-q<-holidays(belgium, "2021-01-01", 365.25*10, type="NextWorkingDay")
+q<-holidays(belgiumCalendar, "2021-01-01", 365.25*10, type="NextWorkingDay")
 plot(apply(q,1, max))
 }

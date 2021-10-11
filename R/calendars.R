@@ -21,7 +21,7 @@ calendar.new<-function(){
 #' @export
 #'
 #' @examples
-#' belgiumCalendar<-new.calendar()
+#' belgiumCalendar<-calendar.new()
 #' calendar.fixedday(belgiumCalendar, 7, 21)
 #' calendar.holiday(belgiumCalendar, "NEWYEAR")
 #' calendar.holiday(belgiumCalendar, "CHRISTMAS")
@@ -31,12 +31,12 @@ calendar.new<-function(){
 #' calendar.holiday(belgiumCalendar, "ASSUMPTION")
 #' calendar.holiday(belgiumCalendar, "ALLSAINTDAY")
 #' calendar.holiday(belgiumCalendar, "ARMISTICE")
-#' M<-td(12, c(1980,1), 120, c(1,1,1,1,2,3,0), contrasts = F)
+#' M<-td(12, c(1980,1), 120, c(1,1,1,1,2,3,0), contrasts = FALSE)
 #'
-#' H<-htd(belgiumCalendar, 12, c(1980,1), 120, c(1,1,1,1,1,2,0), contrasts =F)
+#' H<-htd(belgiumCalendar, 12, c(1980,1), 120, c(1,1,1,1,1,2,0), contrasts = FALSE)
 #'
-#' MC<-td(4, c(1980,1), 120, c(1,1,1,1,1,2,0), contrasts = T)
-#' HC<-htd(belgiumCalendar, 4, c(1980,1), 120, c(1,1,1,1,1,2,0), contrasts = T)
+#' MC<-td(4, c(1980,1), 120, c(1,1,1,1,1,2,0), contrasts = TRUE)
+#' HC<-htd(belgiumCalendar, 4, c(1980,1), 120, c(1,1,1,1,1,2,0), contrasts = TRUE)
 #'
 #' C12<-longTermMean(belgiumCalendar, 12)
 #' C4<-longTermMean(belgiumCalendar, 4)
@@ -66,11 +66,10 @@ validityPeriod<-function(start, end){
   return (vp)
 }
 
-#' Title
+#' Add fixed day to a calendar
 #'
-#' @param calendar
-#' @param month
-#' @param day
+#' @param calendar The calendar.
+#' @param month,day the month and the day of the fixed day to add.
 #' @param weight
 #' @param start
 #' @param end
@@ -91,12 +90,10 @@ calendar.fixedday<-function(calendar, month, day, weight=1, start=NULL, end=NULL
 
 #' Title
 #'
-#' @param calendar
+#' @inheritParams calendar.fixedday
 #' @param offset
 #' @param julian
 #' @param weight
-#' @param start
-#' @param end
 #'
 #' @return
 #' @export
@@ -114,12 +111,8 @@ calendar.easter<-function(calendar, offset, julian=F, weight=1, start=NULL, end=
 
 #' Title
 #'
-#' @param calendar
+#' @inheritParams calendar.easter
 #' @param event
-#' @param offset
-#' @param weight
-#' @param start
-#' @param end
 #'
 #' @return
 #' @export
@@ -159,7 +152,7 @@ p2jd_calendar<-function(pcalendar){
 #' @export
 #'
 #' @examples
-td<-function(frequency, start, length, groups=c(1,2,3,4,5,6,0), contrasts=T){
+td<-function(frequency, start, length, groups=c(1,2,3,4,5,6,0), contrasts=TRUE){
   jdom<-tsdomain_r2jd(frequency, start[1], start[2], length)
   igroups<-as.integer(groups)
   jm<-.jcall("demetra/calendar/r/Calendars", "Ldemetra/math/matrices/MatrixType;",
@@ -180,7 +173,7 @@ td<-function(frequency, start, length, groups=c(1,2,3,4,5,6,0), contrasts=T){
 #' @export
 #'
 #' @examples
-td.forTs<-function(s, groups=c(1,2,3,4,5,6,0), contrasts=T){
+td.forTs<-function(s, groups=c(1,2,3,4,5,6,0), contrasts=TRUE){
   if (! is.ts(s)) stop("s should be a time series")
   return (td(frequency(s), start(s), length(s), groups, contrasts))
 }
@@ -197,12 +190,12 @@ td.forTs<-function(s, groups=c(1,2,3,4,5,6,0), contrasts=T){
 #' week days by c(1,1,1,1,1,0,0), week days, Saturdays, Sundays by c(1,1,1,1,1,2,0) etc...
 #' @param contrasts If true, the variables are defined by contrasts with the 0-group. Otherwise, raw number of days are provided
 #'
-#' @return The variables corresponding to each group, starting with the 0-group (contrasts=F)
+#' @return The variables corresponding to each group, starting with the 0-group (contrasts=FALSE)
 #' or the 1-group (contrasts=T)
 #' @export
 #'
 #' @examples
-htd<-function(calendar,frequency, start, length, groups=c(1,2,3,4,5,6,0), contrasts=T){
+htd<-function(calendar,frequency, start, length, groups=c(1,2,3,4,5,6,0), contrasts=TRUE){
   jdom<-tsdomain_r2jd(frequency, start[1], start[2], length)
   jcal<-p2jd_calendar(calendar)
   jm<-.jcall("demetra/calendar/r/Calendars", "Ldemetra/math/matrices/MatrixType;",
@@ -221,12 +214,12 @@ htd<-function(calendar,frequency, start, length, groups=c(1,2,3,4,5,6,0), contra
 #' week days by c(1,1,1,1,1,0,0), week days, Saturdays, Sundays by c(1,1,1,1,1,2,0) etc...
 #' @param contrasts If true, the variables are defined by contrasts with the 0-group. Otherwise, raw number of days are provided
 #'
-#' @return The variables corresponding to each group, starting with the 0-group (contrasts=F)
-#' or the 1-group (contrasts=T)
+#' @return The variables corresponding to each group, starting with the 0-group (\code{contrasts = FALSE})
+#' or the 1-group (\code{contrasts = TRUE}).
 #' @export
 #'
 #' @examples
-htd.forTs<-function(s, calendar, groups=c(1,2,3,4,5,6,0), contrasts=T){
+htd.forTs<-function(s, calendar, groups = c(1,2,3,4,5,6,0), contrasts = TRUE){
   if (! is.ts(s)) stop("s should be a time series")
   return (htd(calendar, frequency(s), start(s), length(s), groups, contrasts))
 }
@@ -235,7 +228,7 @@ htd.forTs<-function(s, calendar, groups=c(1,2,3,4,5,6,0), contrasts=T){
 #' Title
 #'
 #' @param calendar The calendar
-#' @param start First day of the calendar
+#' @param start First day of the calendar in the format \code{"YYYY-MM-DD"}.
 #' @param length Length of the calendar
 #' @param nonworking Indexes of non working days (Monday=1, Sunday=7)
 #' @param type Adjustment type when a holiday falls a week-end: "NextWorkingDay",
@@ -247,7 +240,7 @@ htd.forTs<-function(s, calendar, groups=c(1,2,3,4,5,6,0), contrasts=T){
 #' @export
 #'
 #' @examples
-#' belgiumCalendar<-newCalendar()
+#' belgiumCalendar<-calendar.new()
 #' calendar.fixedday(belgiumCalendar, 7, 21)
 #' calendar.holiday(belgiumCalendar, "NEWYEAR")
 #' calendar.holiday(belgiumCalendar, "CHRISTMAS")
@@ -258,7 +251,7 @@ htd.forTs<-function(s, calendar, groups=c(1,2,3,4,5,6,0), contrasts=T){
 #' calendar.holiday(belgiumCalendar, "ASSUMPTION")
 #' calendar.holiday(belgiumCalendar, "ALLSAINTDAY")
 #' calendar.holiday(belgiumCalendar, "ARMISTICE")
-#' q<-holidays(belgium, "2021-01-01", 365.25*10, type="NextWorkingDay")
+#' q<-holidays(belgiumCalendar, "2021-01-01", 365.25*10, type="NextWorkingDay")
 #' plot(apply(q,1, max))
 holidays<-function(calendar, start, length, nonworking=c(6,7), type=c("Skip", "All", "NextWorkingDay", "PreviousWorkingDay")){
   type<-match.arg(type)
@@ -269,7 +262,7 @@ holidays<-function(calendar, start, length, nonworking=c(6,7), type=c("Skip", "A
 
 }
 
-#' Title
+#' Long-term means of a calendar
 #'
 #' @param calendar
 #' @param frequency

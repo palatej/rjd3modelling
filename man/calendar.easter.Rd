@@ -14,6 +14,10 @@ calendar.easter(
 )
 }
 \arguments{
+\item{calendar}{The calendar.}
+
+\item{weight}{}
+
 \item{end}{}
 }
 \value{

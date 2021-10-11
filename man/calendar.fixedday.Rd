@@ -2,16 +2,20 @@
 % Please edit documentation in R/calendars.R
 \name{calendar.fixedday}
 \alias{calendar.fixedday}
-\title{Title}
+\title{Add fixed day to a calendar}
 \usage{
 calendar.fixedday(calendar, month, day, weight = 1, start = NULL, end = NULL)
 }
 \arguments{
+\item{calendar}{The calendar.}
+
+\item{month, day}{the month and the day of the fixed day to add.}
+
 \item{end}{}
 }
 \value{
 
 }
 \description{
-Title
+Add fixed day to a calendar
 }
