@@ -1,4 +1,8 @@
 #' @importFrom rjd3toolkit .JD3_ENV
+#' @import rJava
+#' @import methods
+#' @importFrom stats frequency is.ts start
+#' @importFrom RProtoBuf read
 NULL
 
 DATE_MIN<-NULL
