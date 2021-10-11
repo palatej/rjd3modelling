@@ -4,7 +4,7 @@
 \alias{td.forTs}
 \title{Usual trading days variables for a given time series}
 \usage{
-td.forTs(s, groups = c(1, 2, 3, 4, 5, 6, 0), contrasts = T)
+td.forTs(s, groups = c(1, 2, 3, 4, 5, 6, 0), contrasts = TRUE)
 }
 \arguments{
 \item{s}{The time series}

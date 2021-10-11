@@ -4,7 +4,7 @@
 \alias{htd.forTs}
 \title{Title}
 \usage{
-htd.forTs(s, calendar, groups = c(1, 2, 3, 4, 5, 6, 0), contrasts = T)
+htd.forTs(s, calendar, groups = c(1, 2, 3, 4, 5, 6, 0), contrasts = TRUE)
 }
 \arguments{
 \item{s}{The time series}

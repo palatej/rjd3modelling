@@ -16,7 +16,7 @@ validityPeriod(start, end)
 Title
 }
 \examples{
-belgiumCalendar<-new.calendar()
+belgiumCalendar<-calendar.new()
 calendar.fixedday(belgiumCalendar, 7, 21)
 calendar.holiday(belgiumCalendar, "NEWYEAR")
 calendar.holiday(belgiumCalendar, "CHRISTMAS")

@@ -33,7 +33,7 @@ holidays(
 Title
 }
 \examples{
-belgiumCalendar<-newCalendar()
+belgiumCalendar<-calendar.new()
 calendar.fixedday(belgiumCalendar, 7, 21)
 calendar.holiday(belgiumCalendar, "NEWYEAR")
 calendar.holiday(belgiumCalendar, "CHRISTMAS")

@@ -64,7 +64,7 @@ do.stationary<-function(data, period){
 #'
 #' @examples
 #'
-differencing.fast<-function(data, period, mad=T, centile=90, k=1.2){
+differencing.fast<-function(data, period, mad=TRUE, centile=90, k=1.2){
   jst<-.jcall("demetra/modelling/r/Differencing", "Ldemetra/modelling/StationaryTransformation;", "fastDifferencing",
               as.numeric(data), as.integer(period), as.logical(mad), centile, k)
   q<-.jcall("demetra/modelling/r/Differencing", "[B", "toBuffer", jst)
@@ -83,9 +83,9 @@ differencing.fast<-function(data, period, mad=T, centile=90, k=1.2){
 #' @export
 #'
 #' @examples
-#' differences(retail$BookStores, c(1,1,12), F)
+#' differences(retail$BookStores, c(1,1,12), FALSE)
 #'
-differences<-function(data, lags=1, mean=T){
+differences<-function(data, lags=1, mean=TRUE){
   return (.jcall("demetra/modelling/r/Differencing", "[D", "differences",
                  as.numeric(data), .jarray(as.integer(lags)), mean))
 }

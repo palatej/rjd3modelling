@@ -4,7 +4,7 @@
 \alias{td}
 \title{Usual trading days variables}
 \usage{
-td(frequency, start, length, groups = c(1, 2, 3, 4, 5, 6, 0), contrasts = T)
+td(frequency, start, length, groups = c(1, 2, 3, 4, 5, 6, 0), contrasts = TRUE)
 }
 \arguments{
 \item{frequency}{Annual frequency. Should be a divisor of 12}

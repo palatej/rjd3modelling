@@ -4,7 +4,7 @@
 \alias{differencing.fast}
 \title{Automatic differencing}
 \usage{
-differencing.fast(data, period, mad = T, centile = 90, k = 1.2)
+differencing.fast(data, period, mad = TRUE, centile = 90, k = 1.2)
 }
 \arguments{
 \item{data}{Series being differenced}

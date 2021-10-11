@@ -2,7 +2,7 @@
 % Please edit documentation in R/calendars.R
 \name{longTermMean}
 \alias{longTermMean}
-\title{Title}
+\title{Long-term means of a calendar}
 \usage{
 longTermMean(calendar, frequency, groups = c(1, 2, 3, 4, 5, 6, 0))
 }
@@ -13,5 +13,5 @@ longTermMean(calendar, frequency, groups = c(1, 2, 3, 4, 5, 6, 0))
 The long term means corresponding to each group/period, starting with the 0-group
 }
 \description{
-Title
+Long-term means of a calendar
 }

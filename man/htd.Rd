@@ -10,7 +10,7 @@ htd(
   start,
   length,
   groups = c(1, 2, 3, 4, 5, 6, 0),
-  contrasts = T
+  contrasts = TRUE
 )
 }
 \arguments{

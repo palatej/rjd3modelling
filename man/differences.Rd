@@ -4,7 +4,7 @@
 \alias{differences}
 \title{Differencing of a series}
 \usage{
-differences(data, lags = 1, mean = T)
+differences(data, lags = 1, mean = TRUE)
 }
 \arguments{
 \item{data}{The series to be differenced}
@@ -20,6 +20,6 @@ The differenced series
 Differencing of a series
 }
 \examples{
-differences(retail$BookStores, c(1,1,12), F)
+differences(retail$BookStores, c(1,1,12), FALSE)
 
 }
