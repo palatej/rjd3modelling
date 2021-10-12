@@ -2,29 +2,32 @@
 % Please edit documentation in R/calendars.R
 \name{td}
 \alias{td}
+\alias{td.forTs}
 \title{Usual trading days variables}
 \usage{
 td(frequency, start, length, groups = c(1, 2, 3, 4, 5, 6, 0), contrasts = TRUE)
+
+td.forTs(s, groups = c(1, 2, 3, 4, 5, 6, 0), contrasts = TRUE)
 }
 \arguments{
 \item{frequency}{Annual frequency. Should be a divisor of 12}
 
-\item{start}{Array with the first year and the first period (for instance c(1980, 1) )}
+\item{start}{Array with the first year and the first period (for instance \code{c(1980, 1)}).}
 
 \item{length}{Length of the variables}
 
 \item{groups}{Groups of days. The length of the array must be 7. It indicates to what group each week day
 belongs. The first item corresponds to Mondays and the last one to Sundays. The group used for contrasts (usually Sundays) is identified by 0.
-The other groups are identified by 1, 2, ... n (<= 6). For instance, usual trading days are defined by c(1,2,3,4,5,6,0),
+The other groups are identified by 1, 2,... n (<= 6). For instance, usual trading days are defined by c(1,2,3,4,5,6,0),
 week days by c(1,1,1,1,1,0,0), week days, Saturdays, Sundays by c(1,1,1,1,1,2,0) etc...}
 
 \item{contrasts}{If true, the variables are defined by contrasts with the 0-group. Otherwise, raw number of days are provided}
+
+\item{s}{time series used to get the dates for the trading days variables.}
 }
 \value{
-
-
-The variables corresponding to each group, starting with the 0-group (contrasts=F)
-or the 1-group (contrasts=T)
+The variables corresponding to each group, starting with the 0-group (\code{contrasts = FALSE})
+or the 1-group (\code{contrasts = TRUE}). If \code{contrasts = TRUE} regressors are also corrected for long-term mean.
 }
 \description{
 Usual trading days variables

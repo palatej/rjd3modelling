@@ -2,7 +2,7 @@
 % Please edit documentation in R/calendars.R
 \name{holidays}
 \alias{holidays}
-\title{Title}
+\title{Gets the days corresponding to the holidays}
 \usage{
 holidays(
   calendar,
@@ -17,20 +17,20 @@ holidays(
 
 \item{start}{First day of the calendar in the format \code{"YYYY-MM-DD"}.}
 
-\item{length}{Length of the calendar}
+\item{length}{Length of the calendar.}
 
-\item{nonworking}{Indexes of non working days (Monday=1, Sunday=7)}
+\item{nonworking}{Indexes of non working days (Monday=1, Sunday=7).}
 
-\item{type}{Adjustment type when a holiday falls a week-end: "NextWorkingDay",
-"PreviousWorkingDay",
-"Skip" (holidays corresponding to non working days are simply skipped in the matrix),
-"All" (holidays are always put in the matrix, even if they correspond to a non working day)}
+\item{type}{Adjustment type when a holiday falls a week-end: \code{"NextWorkingDay"},
+\code{"PreviousWorkingDay"},
+\code{"Skip"} (holidays corresponding to non working days are simply skipped in the matrix),
+\code{"All"} (holidays are always put in the matrix, even if they correspond to a non working day).}
 }
 \value{
-
+A matrix where each column is associated to a holiday (in the order of creation of the holiday) and each row to a date.
 }
 \description{
-Title
+Gets the days corresponding to the holidays
 }
 \examples{
 belgiumCalendar<-calendar.new()

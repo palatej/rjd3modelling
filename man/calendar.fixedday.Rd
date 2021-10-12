@@ -11,11 +11,15 @@ calendar.fixedday(calendar, month, day, weight = 1, start = NULL, end = NULL)
 
 \item{month, day}{the month and the day of the fixed day to add.}
 
-\item{end}{}
-}
-\value{
+\item{weight}{weight associated to the holiday.}
 
+\item{start, end}{Validity period of the holiday in the format \code{"YYYY-MM-DD"}.}
 }
 \description{
 Add fixed day to a calendar
+}
+\examples{
+calendar <-calendar.new()
+calendar.fixedday(calendar, 1, 1) # add New-Year
+calendar.fixedday(calendar, 12, 24) # add Christmas
 }

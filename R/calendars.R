@@ -1,24 +1,9 @@
 #' @include utils.R
 NULL
 
-# Raw interface
-#' Title
+#' Create a calendar
 #'
-#' @return
-#' @export
 #'
-#' @examples
-calendar.new<-function(){
-  return (jd3.Calendar$new())
-}
-
-#' Title
-#'
-#' @param start
-#' @param end
-#'
-#' @return
-#' @export
 #'
 #' @examples
 #' belgiumCalendar<-calendar.new()
@@ -45,8 +30,12 @@ calendar.new<-function(){
 #' C4bis<-longTermMean(belgiumCalendar, 4, c(1,1,1,1,1,2,0))
 #'
 #' print(C12)
-#' print( C12bis)
-#'
+#' print(C12bis)
+#' @export
+calendar.new<-function(){
+  return (jd3.Calendar$new())
+}
+
 
 
 validityPeriod<-function(start, end){
@@ -65,19 +54,28 @@ validityPeriod<-function(start, end){
   vp$end<-pend
   return (vp)
 }
+#' @importFrom stats is.mts
+length_ts <- function(s){
+  if(is.mts(s)){
+    nrow(s)
+  }else{
+    length(s)
+  }
+}
 
 #' Add fixed day to a calendar
 #'
 #' @param calendar The calendar.
 #' @param month,day the month and the day of the fixed day to add.
-#' @param weight
-#' @param start
-#' @param end
+#' @param weight weight associated to the holiday.
+#' @param start,end Validity period of the holiday in the format \code{"YYYY-MM-DD"}.
 #'
-#' @return
-#' @export
 #'
 #' @examples
+#' calendar <-calendar.new()
+#' calendar.fixedday(calendar, 1, 1) # add New-Year
+#' calendar.fixedday(calendar, 12, 24) # add Christmas
+#' @export
 calendar.fixedday<-function(calendar, month, day, weight=1, start=NULL, end=NULL){
   fd<-jd3.FixedDay$new()
   fd$month<-month
@@ -88,18 +86,18 @@ calendar.fixedday<-function(calendar, month, day, weight=1, start=NULL, end=NULL
   calendar$fixed_days[[n]]<-fd
 }
 
-#' Title
+#' Add Easter related day to a calendar
 #'
 #' @inheritParams calendar.fixedday
-#' @param offset
-#' @param julian
-#' @param weight
+#' @param offset The position of the holiday in relation to the Easter Sunday, measured in days (can be positive or negative).
+#' @param julian boolean indicating if julian calendar must be used.
 #'
-#' @return
 #' @export
-#'
 #' @examples
-calendar.easter<-function(calendar, offset, julian=F, weight=1, start=NULL, end=NULL){
+#' calendar <- calendar.new()
+#' calendar.easter(calendar, 1) # add Easter Monday
+#' calendar.easter(calendar, -2) # add Easter Good Friday
+calendar.easter<-function(calendar, offset, julian=FALSE, weight=1, start=NULL, end=NULL){
   ed<-jd3.EasterRelatedDay$new()
   ed$offset<-offset
   ed$julian<-julian
@@ -109,15 +107,42 @@ calendar.easter<-function(calendar, offset, julian=F, weight=1, start=NULL, end=
   calendar$easter_related_days[[n]]<-ed
 }
 
-#' Title
+#' Add specific holiday to a calendar
 #'
 #' @inheritParams calendar.easter
-#' @param event
+#' @param offset The position of the holiday in relation to the selected pre-specified holiday measured in days (can be positive or negative).
+#' By default \code{offset = 0}.
+#' @param event the event to add (see details).
 #'
-#' @return
+#' @details Possible values :
+#'
+#' \tabular{ll}{
+#' NEWYEAR        \tab Fixed holiday, falls on January, 1.                                                  \cr
+#' SHROVEMONDAY   \tab Moving holiday, falls on Monday before Ash Wednesday (48 days before Easter Sunday). \cr
+#' SHROVETUESDAY  \tab Moving holiday, falls on Tuesday before Ash Wednesday (47 days before Easter Sunday).\cr
+#' ASHWEDNESDAY   \tab Moving holiday, occurring 46 days before Easter Sunday.                              \cr
+#' MAUNDYTHURSDAY \tab Moving holiday, falls on the Thursday before Easter.                                 \cr
+#' GOODFRIDAY     \tab Moving holiday, falls on the Friday before Easter.                                   \cr
+#' EASTER         \tab Moving holiday, varies between March, 22 and April, 25.                              \cr
+#' EASTERMONDAY   \tab Moving holiday, falls on the day after Easter.                                       \cr
+#' ASCENSION      \tab Moving holiday, celebrated on Thursday, 39 days after Easter.                        \cr
+#' PENTECOST      \tab Moving holiday, celebrated 49 days after Easter Sunday.                              \cr
+#' WHITMONDAY     \tab Moving holiday, falling on the day after Pentecost.                                  \cr
+#' CORPUSCHRISTI  \tab Moving holiday, celebrated 60 days after Easter Sunday.                              \cr
+#' JULIANEASTER   \tab                                                                                      \cr
+#' MAYDAY         \tab Fixed holiday, falls on May, 1.                                                      \cr
+#' ASSUMPTION     \tab Fixed holiday, falls on August, 15.                                                  \cr
+#' HALLOWEEN      \tab Fixed holiday, falls on October, 31.                                                 \cr
+#' ALLSAINTDAY    \tab Fixed holiday, falls on November, 1.                                                 \cr
+#' ARMISTICE      \tab Fixed holiday, falls on November, 11.                                                \cr
+#' CHRISTMAS      \tab Fixed holiday, falls on December, 25.
+#' }
+#'
+#'
 #' @export
-#'
 #' @examples
+#' calendar <- calendar.new()
+#' calendar.holiday(calendar, "EASTERMONDAY") # add Easter Monday
 calendar.holiday<-function(calendar, event, offset=0, weight=1, start=NULL, end=NULL){
   pd<-jd3.PrespecifiedHoliday$new()
   pd$event<-.JD3_ENV$enum_of(jd3.CalendarEvent, event, "HOLIDAY")
@@ -134,21 +159,27 @@ p2jd_calendar<-function(pcalendar){
                "calendarOf", bytes)
   return (jcal)
 }
+group_names <- function(x, contrasts = TRUE){
+  if(!is.matrix(x))
+    return(x)
+  col_names <- seq_len(ncol(x)) - !contrasts #if !constrast then it starts from 0
+  colnames(x) <- sprintf("group-%i", col_names)
+  x
+}
 
 #' Usual trading days variables
 #'
 #' @param frequency Annual frequency. Should be a divisor of 12
-#' @param start Array with the first year and the first period (for instance c(1980, 1) )
+#' @param start Array with the first year and the first period (for instance \code{c(1980, 1)}).
 #' @param length Length of the variables
 #' @param groups Groups of days. The length of the array must be 7. It indicates to what group each week day
 #' belongs. The first item corresponds to Mondays and the last one to Sundays. The group used for contrasts (usually Sundays) is identified by 0.
-#' The other groups are identified by 1, 2, ... n (<= 6). For instance, usual trading days are defined by c(1,2,3,4,5,6,0),
+#' The other groups are identified by 1, 2,... n (<= 6). For instance, usual trading days are defined by c(1,2,3,4,5,6,0),
 #' week days by c(1,1,1,1,1,0,0), week days, Saturdays, Sundays by c(1,1,1,1,1,2,0) etc...
 #' @param contrasts If true, the variables are defined by contrasts with the 0-group. Otherwise, raw number of days are provided
 #'
-#' @return
-#' @return The variables corresponding to each group, starting with the 0-group (contrasts=F)
-#' or the 1-group (contrasts=T)
+#' @return The variables corresponding to each group, starting with the 0-group (\code{contrasts = FALSE})
+#' or the 1-group (\code{contrasts = TRUE}). If \code{contrasts = TRUE} regressors are also corrected for long-term mean.
 #' @export
 #'
 #' @examples
@@ -157,41 +188,25 @@ td<-function(frequency, start, length, groups=c(1,2,3,4,5,6,0), contrasts=TRUE){
   igroups<-as.integer(groups)
   jm<-.jcall("demetra/calendar/r/Calendars", "Ldemetra/math/matrices/MatrixType;",
              "td", jdom, igroups, contrasts)
-  return (matrix_jd2r(jm))
+  res <- matrix_jd2r(jm)
+  return (group_names(res, contrasts = contrasts))
 }
 
-#' Usual trading days variables for a given time series
-#'
-#' @param s The time series
-#' @param groups Groups of days. The length of the array must be 7. It indicates to what group each week day
-#' belongs. The first item corresponds to Mondays and the last one to Sundays. The group used for contrasts (usually Sundays) is identified by 0.
-#' The other groups are identified by 1, 2, ... n (<= 6). For instance, usual trading days are defined by c(1,2,3,4,5,6,0),
-#' week days by c(1,1,1,1,1,0,0), week days, Saturdays, Sundays by c(1,1,1,1,1,2,0) etc...
-#' @param contrasts If true, the variables are defined by contrasts with the 0-group. Otherwise, raw number of days are provided
-#'
-#' @return
+#' @param s time series used to get the dates for the trading days variables.
 #' @export
-#'
-#' @examples
+#' @rdname td
 td.forTs<-function(s, groups=c(1,2,3,4,5,6,0), contrasts=TRUE){
   if (! is.ts(s)) stop("s should be a time series")
-  return (td(frequency(s), start(s), length(s), groups, contrasts))
+  return (td(frequency(s), start(s), length_ts(s), groups, contrasts))
 }
 
-#' Trading days variables corresponding to a specific calendar
+#' Calendar specific trading days variables
 #'
-#' @param calendar The calendar
-#' @param frequency Annual frequency. Should be a divisor of 12
-#' @param start Array with the first year and the first period (for instance c(1980, 1) )
-#' @param length Length of the variables
-#' @param groups Groups of days. The length of the array must be 7. It indicates to what group each week day
-#' belongs. The first item corresponds to Mondays and the last one to Sundays. The group used for contrasts (usually Sundays) is identified by 0.
-#' The other groups are identified by 1, 2, ... n (<= 6). For instance, usual trading days are defined by c(1,2,3,4,5,6,0),
-#' week days by c(1,1,1,1,1,0,0), week days, Saturdays, Sundays by c(1,1,1,1,1,2,0) etc...
-#' @param contrasts If true, the variables are defined by contrasts with the 0-group. Otherwise, raw number of days are provided
+#' @inheritParams td
+#' @param calendar The calendar.
 #'
-#' @return The variables corresponding to each group, starting with the 0-group (contrasts=FALSE)
-#' or the 1-group (contrasts=T)
+#' @return The variables corresponding to each group, starting with the 0-group (\code{contrasts = FALSE})
+#' or the 1-group (\code{contrasts = TRUE}). If \code{contrasts = TRUE} regressors are also corrected for long-term mean.
 #' @export
 #'
 #' @examples
@@ -200,44 +215,31 @@ htd<-function(calendar,frequency, start, length, groups=c(1,2,3,4,5,6,0), contra
   jcal<-p2jd_calendar(calendar)
   jm<-.jcall("demetra/calendar/r/Calendars", "Ldemetra/math/matrices/MatrixType;",
              "htd", jcal, jdom, as.integer(groups), contrasts)
-  return (matrix_jd2r(jm))
+  res <- matrix_jd2r(jm)
+  return (group_names(res, contrasts = contrasts))
 }
 
-
-#' Title
-#'
-#' @param s The time series
-#' @param calendar The calendar
-#' @param groups Groups of days. The length of the array must be 7. It indicates to what group each week day
-#' belongs. The first item corresponds to Mondays and the last one to Sundays. The group used for contrasts (usually Sundays) is identified by 0.
-#' The other groups are identified by 1, 2, ... n (<= 6). For instance, usual trading days are defined by c(1,2,3,4,5,6,0),
-#' week days by c(1,1,1,1,1,0,0), week days, Saturdays, Sundays by c(1,1,1,1,1,2,0) etc...
-#' @param contrasts If true, the variables are defined by contrasts with the 0-group. Otherwise, raw number of days are provided
-#'
-#' @return The variables corresponding to each group, starting with the 0-group (\code{contrasts = FALSE})
-#' or the 1-group (\code{contrasts = TRUE}).
+#' @param s The time series.
 #' @export
-#'
-#' @examples
+#' @rdname htd
 htd.forTs<-function(s, calendar, groups = c(1,2,3,4,5,6,0), contrasts = TRUE){
   if (! is.ts(s)) stop("s should be a time series")
-  return (htd(calendar, frequency(s), start(s), length(s), groups, contrasts))
+  return (htd(calendar, frequency(s), start(s), length_ts(s), groups, contrasts))
 }
 
 
-#' Title
+#' Gets the days corresponding to the holidays
 #'
 #' @param calendar The calendar
 #' @param start First day of the calendar in the format \code{"YYYY-MM-DD"}.
-#' @param length Length of the calendar
-#' @param nonworking Indexes of non working days (Monday=1, Sunday=7)
-#' @param type Adjustment type when a holiday falls a week-end: "NextWorkingDay",
-#' "PreviousWorkingDay",
-#' "Skip" (holidays corresponding to non working days are simply skipped in the matrix),
-#' "All" (holidays are always put in the matrix, even if they correspond to a non working day)
+#' @param length Length of the calendar.
+#' @param nonworking Indexes of non working days (Monday=1, Sunday=7).
+#' @param type Adjustment type when a holiday falls a week-end: \code{"NextWorkingDay"},
+#' \code{"PreviousWorkingDay"},
+#' \code{"Skip"} (holidays corresponding to non working days are simply skipped in the matrix),
+#' \code{"All"} (holidays are always put in the matrix, even if they correspond to a non working day).
 #'
-#' @return
-#' @export
+#' @returns A matrix where each column is associated to a holiday (in the order of creation of the holiday) and each row to a date.
 #'
 #' @examples
 #' belgiumCalendar<-calendar.new()
@@ -253,20 +255,21 @@ htd.forTs<-function(s, calendar, groups = c(1,2,3,4,5,6,0), contrasts = TRUE){
 #' calendar.holiday(belgiumCalendar, "ARMISTICE")
 #' q<-holidays(belgiumCalendar, "2021-01-01", 365.25*10, type="NextWorkingDay")
 #' plot(apply(q,1, max))
+#' @export
 holidays<-function(calendar, start, length, nonworking=c(6,7), type=c("Skip", "All", "NextWorkingDay", "PreviousWorkingDay")){
   type<-match.arg(type)
   jcal<-p2jd_calendar(calendar)
   jm<-.jcall("demetra/calendar/r/Calendars", "Ldemetra/math/matrices/MatrixType;",
              "holidays", jcal, as.character(start), as.integer(length), .jarray(as.integer(nonworking)), type)
-  return (matrix_jd2r(jm))
+  res <- matrix_jd2r(jm)
+  rownames(res) <- as.character(seq(as.Date(start), length.out = nrow(res), by="days"))
+  return (res)
 
 }
 
 #' Long-term means of a calendar
 #'
-#' @param calendar
-#' @param frequency
-#' @param groups
+#' @inheritParams htd
 #'
 #' @return The long term means corresponding to each group/period, starting with the 0-group
 #' @export
@@ -276,41 +279,44 @@ longTermMean<-function(calendar,frequency,groups=c(1,2,3,4,5,6,0)){
   jcal<-p2jd_calendar(calendar)
   jm<-.jcall("demetra/calendar/r/Calendars", "Ldemetra/math/matrices/MatrixType;",
              "longTermMean", jcal, as.integer(frequency), as.integer(groups))
-  return (matrix_jd2r(jm))
+  res <- matrix_jd2r(jm)
+  return (group_names(res, contrasts = FALSE))
 }
 
-#' Title
+#' Compute Easter days between two years
 #'
-#' @param year0
-#' @param year1
-#' @param julian
+#' @param year0,year1 years.
+#' @inheritParams calendar.easter
 #'
-#' @return
 #' @export
 #'
 #' @examples
-easter.dates<-function(year0, year1, julian=F){
+#' easter.dates(2020, 2021)
+easter.dates<-function(year0, year1, julian = FALSE){
   dates<-.jcall("demetra/calendar/r/Calendars", "[S", "easter", as.integer(year0), as.integer(year1), as.logical(julian))
   return (sapply(dates, as.Date))
 }
 
-#' Title
+#' Easter regressors
 #'
-#' @param frequency
-#' @param start
-#' @param length
-#' @param duration
-#' @param endpos
+#' @inheritParams td
+#' @param duration Duration (length in days) of the Easter effect.
+#' @param endpos Position of the end of the Easter effect, relatively to Easter.
 #' @param correction
 #'
-#' @return
 #' @export
-#'
-#' @examples
 easter.variable<-function(frequency, start, length, duration, endpos=-1, correction=c("Simple", "PreComputed", "Theoretical", "None")){
   correction<-match.arg(correction)
   jdom<-tsdomain_r2jd(frequency, start[1], start[2], length)
   return (.jcall("demetra/calendar/r/Calendars", "[D", "easter", jdom, as.integer(duration), as.integer(endpos), correction))
+}
+#' @export
+#' @rdname easter.variable
+easter.variable.forTs<-function(s,duration, endpos=-1, correction=c("Simple", "PreComputed", "Theoretical", "None")){
+  if (! is.ts(s))
+    stop("s should be a time series")
+  return (easter.variable(frequency = frequency(s), start = start(s), length = length_ts(s),
+                 duration = duration, endpos = endpos, correction = correction))
 }
 
 
