@@ -68,11 +68,11 @@ jd2r_sarima<-function(jsarima){
   return (sarima.model(.jcall(jsarima, "S", "getName"),
                        .jcall(jsarima, "I", "getPeriod"),
                        jd2r_doubleseq(jsarima, "getPhi"),
-                      .jcall(jsarima, "D", "getD"),
-                      jd2r_doubleseq(jsarima, "getTheta"),
-                      jd2r_doubleseq(jsarima, "getBphi"),
-                      .jcall(jsarima, "D", "getBd"),
-                      jd2r_doubleseq(jsarima, "getBtheta")
+                       .jcall(jsarima, "D", "getD"),
+                       jd2r_doubleseq(jsarima, "getTheta"),
+                       jd2r_doubleseq(jsarima, "getBphi"),
+                       .jcall(jsarima, "D", "getBd"),
+                       jd2r_doubleseq(jsarima, "getBtheta")
   ))
 }
 

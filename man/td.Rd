@@ -10,7 +10,7 @@ td(frequency, start, length, groups = c(1, 2, 3, 4, 5, 6, 0), contrasts = TRUE)
 td.forTs(s, groups = c(1, 2, 3, 4, 5, 6, 0), contrasts = TRUE)
 }
 \arguments{
-\item{frequency}{Annual frequency. Should be a divisor of 12}
+\item{frequency}{Annual frequency. Should be a divisor of 12.}
 
 \item{start}{Array with the first year and the first period (for instance \code{c(1980, 1)}).}
 

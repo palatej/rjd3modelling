@@ -9,7 +9,7 @@ longTermMean(calendar, frequency, groups = c(1, 2, 3, 4, 5, 6, 0))
 \arguments{
 \item{calendar}{The calendar.}
 
-\item{frequency}{Annual frequency. Should be a divisor of 12}
+\item{frequency}{Annual frequency. Should be a divisor of 12.}
 
 \item{groups}{Groups of days. The length of the array must be 7. It indicates to what group each week day
 belongs. The first item corresponds to Mondays and the last one to Sundays. The group used for contrasts (usually Sundays) is identified by 0.
