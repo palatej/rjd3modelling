@@ -54,7 +54,7 @@ validityPeriod<-function(start, end){
   vp$end<-pend
   return (vp)
 }
-#' @importFrom stats is.mts
+#' @importFrom stats is.mts ts
 length_ts <- function(s){
   if(is.mts(s)){
     nrow(s)
@@ -169,7 +169,7 @@ group_names <- function(x, contrasts = TRUE){
 
 #' Usual trading days variables
 #'
-#' @param frequency Annual frequency. Should be a divisor of 12
+#' @param frequency Annual frequency. Should be a divisor of 12.
 #' @param start Array with the first year and the first period (for instance \code{c(1980, 1)}).
 #' @param length Length of the variables
 #' @param groups Groups of days. The length of the array must be 7. It indicates to what group each week day
@@ -186,11 +186,11 @@ group_names <- function(x, contrasts = TRUE){
 td<-function(frequency, start, length, groups=c(1,2,3,4,5,6,0), contrasts=TRUE){
   jdom<-tsdomain_r2jd(frequency, start[1], start[2], length)
   igroups<-as.integer(groups)
-  jm<-.jcall("demetra/calendar/r/Calendars", "Ldemetra/math/matrices/MatrixType;",
+  jm<-.jcall("demetra/modelling/r/Variables", "Ldemetra/math/matrices/MatrixType;",
              "td", jdom, igroups, contrasts)
-  res <- matrix_jd2r(jm)
-  res <- group_names(res, contrasts = contrasts)
-  return (ts(res, start = start, frequency = frequency))
+  data <- matrix_jd2r(jm)
+  data <- group_names(data, contrasts = contrasts)
+  return (ts(data, start = start, frequency = frequency))
 }
 
 #' @param s time series used to get the dates for the trading days variables.
@@ -214,11 +214,11 @@ td.forTs<-function(s, groups=c(1,2,3,4,5,6,0), contrasts=TRUE){
 htd<-function(calendar,frequency, start, length, groups=c(1,2,3,4,5,6,0), contrasts=TRUE){
   jdom<-tsdomain_r2jd(frequency, start[1], start[2], length)
   jcal<-p2jd_calendar(calendar)
-  jm<-.jcall("demetra/calendar/r/Calendars", "Ldemetra/math/matrices/MatrixType;",
+  jm<-.jcall("demetra/modelling/r/Variables", "Ldemetra/math/matrices/MatrixType;",
              "htd", jcal, jdom, as.integer(groups), contrasts)
-  res <- matrix_jd2r(jm)
-  res <- group_names(res, contrasts = contrasts)
-  return (ts(res, start = start, frequency = frequency))
+  return <- matrix_jd2r(jm)
+  return <- group_names(return, contrasts = contrasts)
+  return (ts(return, start = start, frequency = frequency))
 }
 
 #' @param s The time series.
@@ -298,28 +298,4 @@ easter.dates<-function(year0, year1, julian = FALSE){
   dates<-.jcall("demetra/calendar/r/Calendars", "[S", "easter", as.integer(year0), as.integer(year1), as.logical(julian))
   return (sapply(dates, as.Date))
 }
-
-#' Easter regressors
-#'
-#' @inheritParams td
-#' @param duration Duration (length in days) of the Easter effect.
-#' @param endpos Position of the end of the Easter effect, relatively to Easter.
-#' @param correction
-#'
-#' @export
-easter.variable<-function(frequency, start, length, duration, endpos=-1, correction=c("Simple", "PreComputed", "Theoretical", "None")){
-  correction<-match.arg(correction)
-  jdom<-tsdomain_r2jd(frequency, start[1], start[2], length)
-  res <- .jcall("demetra/calendar/r/Calendars", "[D", "easter", jdom, as.integer(duration), as.integer(endpos), correction)
-  return (ts(res, start = start, frequency = frequency))
-}
-#' @export
-#' @rdname easter.variable
-easter.variable.forTs<-function(s,duration, endpos=-1, correction=c("Simple", "PreComputed", "Theoretical", "None")){
-  if (! is.ts(s))
-    stop("s should be a time series")
-  return (easter.variable(frequency = frequency(s), start = start(s), length = length_ts(s),
-                 duration = duration, endpos = endpos, correction = correction))
-}
-
 
