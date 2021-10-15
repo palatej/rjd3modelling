@@ -162,9 +162,10 @@ p2jd_calendar<-function(pcalendar){
 td<-function(frequency, start, length, groups=c(1,2,3,4,5,6,0), contrasts=T){
   jdom<-tsdomain_r2jd(frequency, start[1], start[2], length)
   igroups<-as.integer(groups)
-  jm<-.jcall("demetra/calendar/r/Calendars", "Ldemetra/math/matrices/MatrixType;",
+  jm<-.jcall("demetra/modelling/r/Variables", "Ldemetra/math/matrices/MatrixType;",
              "td", jdom, igroups, contrasts)
-  return (matrix_jd2r(jm))
+  data<-matrix_jd2r(jm)
+  return (ts(data, frequency = frequency, start = start))
 }
 
 #' Usual trading days variables for a given time series
@@ -205,9 +206,10 @@ td.forTs<-function(s, groups=c(1,2,3,4,5,6,0), contrasts=T){
 htd<-function(calendar,frequency, start, length, groups=c(1,2,3,4,5,6,0), contrasts=T){
   jdom<-tsdomain_r2jd(frequency, start[1], start[2], length)
   jcal<-p2jd_calendar(calendar)
-  jm<-.jcall("demetra/calendar/r/Calendars", "Ldemetra/math/matrices/MatrixType;",
+  jm<-.jcall("demetra/modelling/r/Variables", "Ldemetra/math/matrices/MatrixType;",
              "htd", jcal, jdom, as.integer(groups), contrasts)
-  return (matrix_jd2r(jm))
+  data<-matrix_jd2r(jm)
+  return (ts(data, frequency = frequency, start = start))
 }
 
 
@@ -299,25 +301,6 @@ longTermMean<-function(calendar,frequency,groups=c(1,2,3,4,5,6,0)){
 easter.dates<-function(year0, year1, julian=F){
   dates<-.jcall("demetra/calendar/r/Calendars", "[S", "easter", as.integer(year0), as.integer(year1), as.logical(julian))
   return (sapply(dates, as.Date))
-}
-
-#' Title
-#'
-#' @param frequency
-#' @param start
-#' @param length
-#' @param duration
-#' @param endpos
-#' @param correction
-#'
-#' @return
-#' @export
-#'
-#' @examples
-easter.variable<-function(frequency, start, length, duration, endpos=-1, correction=c("Simple", "PreComputed", "Theoretical", "None")){
-  correction<-match.arg(correction)
-  jdom<-tsdomain_r2jd(frequency, start[1], start[2], length)
-  return (.jcall("demetra/calendar/r/Calendars", "[D", "easter", jdom, as.integer(duration), as.integer(endpos), correction))
 }
 
 
