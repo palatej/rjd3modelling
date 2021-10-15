@@ -189,7 +189,8 @@ td<-function(frequency, start, length, groups=c(1,2,3,4,5,6,0), contrasts=TRUE){
   jm<-.jcall("demetra/calendar/r/Calendars", "Ldemetra/math/matrices/MatrixType;",
              "td", jdom, igroups, contrasts)
   res <- matrix_jd2r(jm)
-  return (group_names(res, contrasts = contrasts))
+  res <- group_names(res, contrasts = contrasts)
+  return (ts(res, start = start, frequency = frequency))
 }
 
 #' @param s time series used to get the dates for the trading days variables.
@@ -216,7 +217,8 @@ htd<-function(calendar,frequency, start, length, groups=c(1,2,3,4,5,6,0), contra
   jm<-.jcall("demetra/calendar/r/Calendars", "Ldemetra/math/matrices/MatrixType;",
              "htd", jcal, jdom, as.integer(groups), contrasts)
   res <- matrix_jd2r(jm)
-  return (group_names(res, contrasts = contrasts))
+  res <- group_names(res, contrasts = contrasts)
+  return (ts(res, start = start, frequency = frequency))
 }
 
 #' @param s The time series.
@@ -308,7 +310,8 @@ easter.dates<-function(year0, year1, julian = FALSE){
 easter.variable<-function(frequency, start, length, duration, endpos=-1, correction=c("Simple", "PreComputed", "Theoretical", "None")){
   correction<-match.arg(correction)
   jdom<-tsdomain_r2jd(frequency, start[1], start[2], length)
-  return (.jcall("demetra/calendar/r/Calendars", "[D", "easter", jdom, as.integer(duration), as.integer(endpos), correction))
+  res <- .jcall("demetra/calendar/r/Calendars", "[D", "easter", jdom, as.integer(duration), as.integer(endpos), correction)
+  return (ts(res, start = start, frequency = frequency))
 }
 #' @export
 #' @rdname easter.variable
