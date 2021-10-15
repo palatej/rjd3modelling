@@ -184,7 +184,6 @@ so.variable<-function(frequency, start, length, pos, date=NULL, zeroended=TRUE){
     data<-.jcall("demetra/modelling/r/Variables", "[D", "so", jdom, as.integer(pos-1), as.logical(zeroended))
   }else{
     data<-.jcall("demetra/modelling/r/Variables", "[D", "so", jdom, as.character(date),
-                 0L,
                  as.logical(zeroended))
   }
   return (ts(data, frequency = frequency, start= start))
