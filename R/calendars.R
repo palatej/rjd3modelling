@@ -62,7 +62,6 @@ length_ts <- function(s){
     length(s)
   }
 }
-
 #' Add fixed day to a calendar
 #'
 #' @param calendar The calendar.
@@ -84,6 +83,27 @@ calendar.fixedday<-function(calendar, month, day, weight=1, start=NULL, end=NULL
   fd$validity<-validityPeriod(start, end)
   n<-1+length(calendar$fixed_days)
   calendar$fixed_days[[n]]<-fd
+}
+
+#' Add fixed week day to a calendar
+#'
+#' @inheritParams calendar.fixedday
+#' @param month the month of the day to add: from 1 (January) to 12 (December).
+#' @param week the number of the week of the day to add: from 1 (first week of the month) to 5.
+#' @param dayofweek the day of the week: from 1 (Monday) to 7 (Sunday).
+#'
+#'
+#' @export
+calendar.fixedweekday<-function(calendar, month, week,
+                                dayofweek, weight=1, start=NULL, end=NULL){
+  fd<-jd3.FixedWeekDay$new()
+  fd$month<-month
+  fd$position <- week
+  fd$weekday <- dayofweek
+  fd$weight<-weight
+  fd$validity<-validityPeriod(start, end)
+  n<-1+length(calendar$fixed_week_days)
+  calendar$fixed_week_days[[n]]<-fd
 }
 
 #' Add Easter related day to a calendar
@@ -179,7 +199,7 @@ group_names <- function(x, contrasts = TRUE){
 #' @param contrasts If true, the variables are defined by contrasts with the 0-group. Otherwise, raw number of days are provided
 #'
 #' @return The variables corresponding to each group, starting with the 0-group (\code{contrasts = FALSE})
-#' or the 1-group (\code{contrasts = TRUE}). If \code{contrasts = TRUE} regressors are also corrected for long-term mean.
+#' or the 1-group (\code{contrasts = TRUE}).
 #' @export
 #'
 #' @examples
@@ -205,17 +225,22 @@ td.forTs<-function(s, groups=c(1,2,3,4,5,6,0), contrasts=TRUE){
 #'
 #' @inheritParams td
 #' @param calendar The calendar.
+#' @param meanCorrection boolean indicating if the regressors are corrected for long-term term.
+#' By default the correction is done if \code{contrasts = TRUE}.
 #'
 #' @return The variables corresponding to each group, starting with the 0-group (\code{contrasts = FALSE})
-#' or the 1-group (\code{contrasts = TRUE}). If \code{contrasts = TRUE} regressors are also corrected for long-term mean.
+#' or the 1-group (\code{contrasts = TRUE}).
 #' @export
 #'
 #' @examples
-htd<-function(calendar,frequency, start, length, groups=c(1,2,3,4,5,6,0), contrasts=TRUE){
+htd<-function(calendar,frequency, start, length, groups=c(1,2,3,4,5,6,0), contrasts=TRUE,
+              meanCorrection = contrasts){
   jdom<-tsdomain_r2jd(frequency, start[1], start[2], length)
   jcal<-p2jd_calendar(calendar)
-  jm<-.jcall("demetra/modelling/r/Variables", "Ldemetra/math/matrices/MatrixType;",
-             "htd", jcal, jdom, as.integer(groups), contrasts)
+  r.Variables <- J("demetra/modelling/r/Variables")
+  # jm<-.jcall("demetra/modelling/r/Variables", "Ldemetra/math/matrices/MatrixType;",
+  #            "htd", jcal, jdom, as.integer(groups), contrasts, meanCorrection)
+  jm <- r.Variables$htd(jcal, jdom, as.integer(groups), contrasts, meanCorrection)
   return <- matrix_jd2r(jm)
   return <- group_names(return, contrasts = contrasts)
   return (ts(return, start = start, frequency = frequency))
@@ -299,3 +324,16 @@ easter.dates<-function(year0, year1, julian = FALSE){
   return (sapply(dates, as.Date))
 }
 
+#' Stock Trading days
+#'
+#' @inheritParams td
+#' @param w indicates day of the month when inventories and other stock are reported (to denote the last day of the month enter 31).
+#' @export
+stock.td<-function(frequency, start, length, w = 31){
+  jdom <- tsdomain_r2jd(frequency, start[1], start[2], length)
+  r.Variables <- J("demetra/modelling/r/Variables")
+  data <-r.Variables$stockTradingDays(jdom, as.integer(w))
+  data <- matrix_jd2r(data)
+  colnames(data) <- c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
+  return (ts(data, frequency = frequency, start= start))
+}
