@@ -27,7 +27,7 @@ week days by c(1,1,1,1,1,0,0), week days, Saturdays, Sundays by c(1,1,1,1,1,2,0)
 }
 \value{
 The variables corresponding to each group, starting with the 0-group (\code{contrasts = FALSE})
-or the 1-group (\code{contrasts = TRUE}). If \code{contrasts = TRUE} regressors are also corrected for long-term mean.
+or the 1-group (\code{contrasts = TRUE}).
 }
 \description{
 Usual trading days variables

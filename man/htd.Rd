@@ -11,7 +11,8 @@ htd(
   start,
   length,
   groups = c(1, 2, 3, 4, 5, 6, 0),
-  contrasts = TRUE
+  contrasts = TRUE,
+  meanCorrection = contrasts
 )
 
 htd.forTs(s, calendar, groups = c(1, 2, 3, 4, 5, 6, 0), contrasts = TRUE)
@@ -32,11 +33,14 @@ week days by c(1,1,1,1,1,0,0), week days, Saturdays, Sundays by c(1,1,1,1,1,2,0)
 
 \item{contrasts}{If true, the variables are defined by contrasts with the 0-group. Otherwise, raw number of days are provided}
 
+\item{meanCorrection}{boolean indicating if the regressors are corrected for long-term term.
+By default the correction is done if \code{contrasts = TRUE}.}
+
 \item{s}{The time series.}
 }
 \value{
 The variables corresponding to each group, starting with the 0-group (\code{contrasts = FALSE})
-or the 1-group (\code{contrasts = TRUE}). If \code{contrasts = TRUE} regressors are also corrected for long-term mean.
+or the 1-group (\code{contrasts = TRUE}).
 }
 \description{
 Calendar specific trading days variables
