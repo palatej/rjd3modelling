@@ -77,8 +77,6 @@ easter.variable.forTs<-function(s, duration = 6, endpos=-1, correction=c("Simple
                           duration = duration, endpos = endpos, correction = correction))
 }
 
-
-
 #' @rdname easter.variable
 #' @export
 julianeaster.variable<-function(frequency, start, length, duration=6){
@@ -278,15 +276,96 @@ periodic.contrasts <-function(frequency, start, length){
   data <- matrix_jd2r(r.Variables$periodicContrasts(jdom))
   return (ts(data, frequency = frequency, start= start))
 }
+#' Trigonometric variables
+#'
+#' Computes trigonometric variables at different frequencies
+#'
+#' @inheritParams outliers.variables
+#' @param seasonal_frequency the seasonal frequencies.
+#' By default the fundamental seasonal frequency and all the harmonics are used.
+#'
+#' @details \loadmathjax
+#' Denote by \mjseqn{P} the value of \code{frequency} (= the period) and
+#' \mjseqn{f_1}, ..., \mjseqn{f_n} the frequencies provides by \code{seasonal_frequency}
+#' (if \code{seasonal_frequency = NULL} then \mjseqn{n=\lfloor P/2\rfloor} and \mjseqn{f_i}=i).
+#'
+#' \code{trigonometric.variables} returns a matrix of size \mjseqn{length\times(2n)}.
+#'
+#' For each date \mjseqn{t} associated to the period \mjseqn{m} (\mjseqn{m \in [1,P]}),
+#' the columns \mjseqn{2i} and \mjseqn{2i-1} are equal to:
+#' \mjsdeqn{
+#' \cos \left(
+#' \frac{2 \pi}{P}  \times m \times f_i
+#' \right)
+#' \text{ and }
+#' \sin \left(
+#' \frac{2 \pi}{P} \times m \times f_i
+#' \right)
+#' }
+#' Take for example the case when the first date (\code{date}) is a January, \code{frequency = 12}
+#' (monthly time series), \code{length = 12} and \code{seasonal_frequency = NULL}.
+#' The first frequency, \mjseqn{\lambda_1 = 2\pi /12} represent the fundamental seasonal frequency and the
+#' other frequencies (\mjseqn{\lambda_2 = 2\pi /12 \times 2}, ..., \mjseqn{\lambda_6 = 2\pi /12 \times 6})
+#' are the five harmonics. The output matrix will be equal to:
+#' \mjsdeqn{
+#' \begin{pmatrix}
+#' \cos(\lambda_1) & \sin (\lambda_1) & \cdots &
+#' \cos(\lambda_6) & \sin (\lambda_6) \newline
+#' \cos(\lambda_1\times 2) & \sin (\lambda_1\times 2) & \cdots &
+#' \cos(\lambda_6\times 2) & \sin (\lambda_6\times 2)\newline
+#' \vdots & \vdots & \cdots & \vdots & \vdots \newline
+#' \cos(\lambda_1\times 12) & \sin (\lambda_1\times 12) & \cdots &
+#' \cos(\lambda_6\times 12) & \sin (\lambda_6\times 12)
+#' \end{pmatrix}
+#' }
+#'
+#'
+#' @export
+trigonometric.variables <- function(frequency, start, length,
+                                    seasonal_frequency = NULL){
+  jdom <- tsdomain_r2jd(frequency, start[1], start[2], length)
+  r.Variables <- J("demetra/modelling/r/Variables")
+  if(!is.null(seasonal_frequency))
+    seasonal_frequency <- as.integer(seasonal_frequency)
+  data<-r.Variables$trigonometricVariables(jdom,
+                                           .jarray(seasonal_frequency))
+  data <- matrix_jd2r(data)
+
+  if(ncol(data) %% 2 == 1)
+    data <- cbind(data, 0)
+
+  return(ts(data, frequency = frequency, start = start))
+}
+
+# Denote by \mjseqn{l} the value of \code{length},
+# \mjseqn{s} the value of \code{start} and
+# \mjseqn{f_1}, ..., \mjseqn{f_n} the different frequencies.
+# \code{trigonometric.variables} returns a matrix of size \mjseqn{l\times(2n)}.
 #
-# trigonometric.variables <- function(frequency, start, length, pos, date=NULL){
-#   jdom <- tsdomain_r2jd(frequency, start[1], start[2], length)
+# For \mjseqn{i} in \mjseqn{[1,n]}, the columns \mjseqn{2*i} and
+# \mjseqn{2*i+1} are equal to
+# \mjsdeqn{
+# \begin{pmatrix}
+# \cos(f_i \pi (0 + s)) \newline
+# \cos(f_i \pi (1 + s)) \newline \vdots \newline
+# \cos(f_i \pi (l-1 + s))
+# \end{pmatrix} \text{ and }
+# \begin{pmatrix}
+# \sin(f_i \pi (0 + s)) \newline
+# \sin(f_i \pi (1 + s)) \newline \vdots \newline
+# \sin(f_i \pi (l-1 + s))
+# \end{pmatrix}
+# }
+# trigonometric.variables2 <- function(frequencies, length, start){
 #   r.Variables <- J("demetra/modelling/r/Variables")
-#   if (is.null(date)){
-#     data<-r.Variables$trigonometricVariables(jdom, as.integer(c(12,2)), "2020-01-01")
-#   }else{
-#     data<-.jcall("demetra/modelling/r/Variables", "[D", "so", jdom, as.character(date), as.logical(zeroended))
-#   }
-#   data <- matrix_jd2r(r.Variables$periodicContrasts(jdom))
-#   return (ts(data, frequency = frequency, start= start))
+#   data <- r.Variables$trigonometricVariables(.jarray(frequencies),
+#                                      as.integer(start),
+#                                      as.integer(length))
+#   data <- matrix_jd2r(data)
+#   if(ncol(data) %% 2 == 1)
+#     data <- cbind(data, 0)
+#   colnames(data) <- sprintf("%s - frequency %i",
+#                             rep(c("cos","sin"), length(freq)),
+#                             rep(seq_along(freq), length(freq)))
+#   data
 # }
