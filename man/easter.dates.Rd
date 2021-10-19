@@ -2,16 +2,18 @@
 % Please edit documentation in R/calendars.R
 \name{easter.dates}
 \alias{easter.dates}
-\title{Title}
+\title{Compute Easter days between two years}
 \usage{
-easter.dates(year0, year1, julian = F)
+easter.dates(year0, year1, julian = FALSE)
 }
 \arguments{
-\item{julian}{}
-}
-\value{
+\item{year0, year1}{years.}
 
+\item{julian}{boolean indicating if julian calendar must be used.}
 }
 \description{
-Title
+Compute Easter days between two years
+}
+\examples{
+easter.dates(2020, 2021)
 }

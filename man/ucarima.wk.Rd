@@ -4,7 +4,7 @@
 \alias{ucarima.wk}
 \title{Title}
 \usage{
-ucarima.wk(ucm, cmp, signal = T, nspectrum = 601, nwk = 300)
+ucarima.wk(ucm, cmp, signal = TRUE, nspectrum = 601, nwk = 300)
 }
 \arguments{
 \item{nwk}{}

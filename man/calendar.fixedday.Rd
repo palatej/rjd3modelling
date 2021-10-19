@@ -2,16 +2,24 @@
 % Please edit documentation in R/calendars.R
 \name{calendar.fixedday}
 \alias{calendar.fixedday}
-\title{Title}
+\title{Add fixed day to a calendar}
 \usage{
 calendar.fixedday(calendar, month, day, weight = 1, start = NULL, end = NULL)
 }
 \arguments{
-\item{end}{}
-}
-\value{
+\item{calendar}{The calendar.}
 
+\item{month, day}{the month and the day of the fixed day to add.}
+
+\item{weight}{weight associated to the holiday.}
+
+\item{start, end}{Validity period of the holiday in the format \code{"YYYY-MM-DD"}.}
 }
 \description{
-Title
+Add fixed day to a calendar
+}
+\examples{
+calendar <-calendar.new()
+calendar.fixedday(calendar, 1, 1) # add New-Year
+calendar.fixedday(calendar, 12, 24) # add Christmas
 }

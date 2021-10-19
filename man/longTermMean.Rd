@@ -2,16 +2,23 @@
 % Please edit documentation in R/calendars.R
 \name{longTermMean}
 \alias{longTermMean}
-\title{Title}
+\title{Long-term means of a calendar}
 \usage{
 longTermMean(calendar, frequency, groups = c(1, 2, 3, 4, 5, 6, 0))
 }
 \arguments{
-\item{groups}{}
+\item{calendar}{The calendar.}
+
+\item{frequency}{Annual frequency. Should be a divisor of 12.}
+
+\item{groups}{Groups of days. The length of the array must be 7. It indicates to what group each week day
+belongs. The first item corresponds to Mondays and the last one to Sundays. The group used for contrasts (usually Sundays) is identified by 0.
+The other groups are identified by 1, 2,... n (<= 6). For instance, usual trading days are defined by c(1,2,3,4,5,6,0),
+week days by c(1,1,1,1,1,0,0), week days, Saturdays, Sundays by c(1,1,1,1,1,2,0) etc...}
 }
 \value{
 The long term means corresponding to each group/period, starting with the 0-group
 }
 \description{
-Title
+Long-term means of a calendar
 }

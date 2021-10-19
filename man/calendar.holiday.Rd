@@ -2,7 +2,7 @@
 % Please edit documentation in R/calendars.R
 \name{calendar.holiday}
 \alias{calendar.holiday}
-\title{Title}
+\title{Add specific holiday to a calendar}
 \usage{
 calendar.holiday(
   calendar,
@@ -14,11 +14,48 @@ calendar.holiday(
 )
 }
 \arguments{
-\item{end}{}
-}
-\value{
+\item{calendar}{The calendar.}
 
+\item{event}{the event to add (see details).}
+
+\item{offset}{The position of the holiday in relation to the selected pre-specified holiday measured in days (can be positive or negative).
+By default \code{offset = 0}.}
+
+\item{weight}{weight associated to the holiday.}
+
+\item{start}{Validity period of the holiday in the format \code{"YYYY-MM-DD"}.}
+
+\item{end}{Validity period of the holiday in the format \code{"YYYY-MM-DD"}.}
 }
 \description{
-Title
+Add specific holiday to a calendar
+}
+\details{
+Possible values :
+
+\tabular{ll}{
+NEWYEAR        \tab Fixed holiday, falls on January, 1.                                                  \cr
+SHROVEMONDAY   \tab Moving holiday, falls on Monday before Ash Wednesday (48 days before Easter Sunday). \cr
+SHROVETUESDAY  \tab Moving holiday, falls on Tuesday before Ash Wednesday (47 days before Easter Sunday).\cr
+ASHWEDNESDAY   \tab Moving holiday, occurring 46 days before Easter Sunday.                              \cr
+MAUNDYTHURSDAY \tab Moving holiday, falls on the Thursday before Easter.                                 \cr
+GOODFRIDAY     \tab Moving holiday, falls on the Friday before Easter.                                   \cr
+EASTER         \tab Moving holiday, varies between March, 22 and April, 25.                              \cr
+EASTERMONDAY   \tab Moving holiday, falls on the day after Easter.                                       \cr
+ASCENSION      \tab Moving holiday, celebrated on Thursday, 39 days after Easter.                        \cr
+PENTECOST      \tab Moving holiday, celebrated 49 days after Easter Sunday.                              \cr
+WHITMONDAY     \tab Moving holiday, falling on the day after Pentecost.                                  \cr
+CORPUSCHRISTI  \tab Moving holiday, celebrated 60 days after Easter Sunday.                              \cr
+JULIANEASTER   \tab                                                                                      \cr
+MAYDAY         \tab Fixed holiday, falls on May, 1.                                                      \cr
+ASSUMPTION     \tab Fixed holiday, falls on August, 15.                                                  \cr
+HALLOWEEN      \tab Fixed holiday, falls on October, 31.                                                 \cr
+ALLSAINTDAY    \tab Fixed holiday, falls on November, 1.                                                 \cr
+ARMISTICE      \tab Fixed holiday, falls on November, 11.                                                \cr
+CHRISTMAS      \tab Fixed holiday, falls on December, 25.
+}
+}
+\examples{
+calendar <- calendar.new()
+calendar.holiday(calendar, "EASTERMONDAY") # add Easter Monday
 }

@@ -2,7 +2,9 @@
 % Please edit documentation in R/variables.R
 \name{easter.variable}
 \alias{easter.variable}
-\title{Title}
+\alias{easter.variable.forTs}
+\alias{julianeaster.variable}
+\title{Easter regressors}
 \usage{
 easter.variable(
   frequency,
@@ -12,13 +14,31 @@ easter.variable(
   endpos = -1,
   correction = c("Simple", "PreComputed", "Theoretical", "None")
 )
+
+easter.variable.forTs(
+  s,
+  duration = 6,
+  endpos = -1,
+  correction = c("Simple", "PreComputed", "Theoretical", "None")
+)
+
+julianeaster.variable(frequency, start, length, duration = 6)
 }
 \arguments{
-\item{correction}{}
-}
-\value{
+\item{frequency}{Annual frequency. Should be a divisor of 12.}
 
+\item{start}{Array with the first year and the first period (for instance \code{c(1980, 1)}).}
+
+\item{length}{Length of the variables}
+
+\item{duration}{Duration (length in days) of the Easter effect.}
+
+\item{endpos}{Position of the end of the Easter effect, relatively to Easter.}
+
+\item{correction}{}
+
+\item{s}{time series used to get the dates for the trading days variables.}
 }
 \description{
-Title
+Easter regressors
 }

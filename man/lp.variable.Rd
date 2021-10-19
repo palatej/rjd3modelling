@@ -2,16 +2,27 @@
 % Please edit documentation in R/variables.R
 \name{lp.variable}
 \alias{lp.variable}
-\title{Title}
+\title{Leap Year regressor}
 \usage{
 lp.variable(frequency, start, length, type = c("LeapYear", "LengthOfPeriod"))
 }
 \arguments{
-\item{type}{}
+\item{frequency}{Annual frequency. Should be a divisor of 12.}
+
+\item{start}{Array with the first year and the first period (for instance \code{c(1980, 1)}).}
+
+\item{length}{Length of the variables}
+
+\item{type}{the modelisation of the leap year effect: as a contrast variable (\code{type = "LeapYear"}, default)
+or by a length-of-month (or length-of-quarter; \code{type = "LengthOfPeriod"}).}
 }
 \value{
 
 }
 \description{
-Title
+Leap Year regressor
+}
+\examples{
+# Leap years occurs on 2000, 2004, 2008 and 2012
+lp.variable(4, start = c(2000, 1), length = 4*13)
 }

@@ -66,13 +66,13 @@ jd2r_doubleseq<-function(jobj, jprop){
 
 jd2r_sarima<-function(jsarima){
   return (sarima.model(.jcall(jsarima, "S", "getName"),
-                       .jcall(jarima, "I", "getPeriod"),
+                       .jcall(jsarima, "I", "getPeriod"),
                        jd2r_doubleseq(jsarima, "getPhi"),
-                      .jcall(jsarima, "D", "getD"),
-                      jd2r_doubleseq(jsarima, "getTheta"),
-                      jd2r_doubleseq(jsarima, "getBphi"),
-                      .jcall(jsarima, "D", "getBd"),
-                      jd2r_doubleseq(jsarima, "getBtheta")
+                       .jcall(jsarima, "D", "getD"),
+                       jd2r_doubleseq(jsarima, "getTheta"),
+                       jd2r_doubleseq(jsarima, "getBphi"),
+                       .jcall(jsarima, "D", "getBd"),
+                       jd2r_doubleseq(jsarima, "getBtheta")
   ))
 }
 
@@ -154,7 +154,7 @@ arima.properties<-function(model, nspectrum=601, nacf=36){
 #' @export
 #'
 #' @examples
-ucarima.model<-function(model=NULL, components, checkmodel=F){
+ucarima.model<-function(model=NULL, components, checkmodel=FALSE){
   if (is.null(model))
     model<-arima.lsum(components)
   else if (! is(model, "JD3_ARIMA") && ! is(model, "JD3_SARIMA")) stop("Invalid model")
@@ -188,7 +188,7 @@ jd2r_ucarima<-function(jucm){
 #' @export
 #'
 #' @examples
-ucarima.wk<-function(ucm, cmp, signal=T, nspectrum=601, nwk=300){
+ucarima.wk<-function(ucm, cmp, signal=TRUE, nspectrum=601, nwk=300){
   jucm<-r2jd_ucarima(ucm)
   jwks<-.jcall("demetra/arima/r/UcarimaModels", "Ljdplus/ucarima/WienerKolmogorovEstimators;", "wienerKolmogorovEstimators", jucm)
   jwk<-.jcall("demetra/arima/r/UcarimaModels", "Ljdplus/ucarima/WienerKolmogorovEstimator;", "finalEstimator", jwks, as.integer(cmp-1), signal)
@@ -210,7 +210,7 @@ ucarima.wk<-function(ucm, cmp, signal=T, nspectrum=601, nwk=300){
 #' @export
 #'
 #' @examples
-ucarima.canonical<-function(ucm, cmp=0, adjust=T){
+ucarima.canonical<-function(ucm, cmp=0, adjust=TRUE){
   jucm<-r2jd_ucarima(ucm)
   jnucm<-.jcall("demetra/arima/r/UcarimaModels", "Ldemetra/arima/UcarimaModel;", "doCanonical",
                jucm, as.integer(cmp-1), as.logical(adjust))

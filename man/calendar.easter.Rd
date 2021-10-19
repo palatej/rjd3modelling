@@ -2,23 +2,35 @@
 % Please edit documentation in R/calendars.R
 \name{calendar.easter}
 \alias{calendar.easter}
-\title{Title}
+\title{Add Easter related day to a calendar}
 \usage{
 calendar.easter(
   calendar,
   offset,
-  julian = F,
+  julian = FALSE,
   weight = 1,
   start = NULL,
   end = NULL
 )
 }
 \arguments{
-\item{end}{}
-}
-\value{
+\item{calendar}{The calendar.}
 
+\item{offset}{The position of the holiday in relation to the Easter Sunday, measured in days (can be positive or negative).}
+
+\item{julian}{boolean indicating if julian calendar must be used.}
+
+\item{weight}{weight associated to the holiday.}
+
+\item{start}{Validity period of the holiday in the format \code{"YYYY-MM-DD"}.}
+
+\item{end}{Validity period of the holiday in the format \code{"YYYY-MM-DD"}.}
 }
 \description{
-Title
+Add Easter related day to a calendar
+}
+\examples{
+calendar <- calendar.new()
+calendar.easter(calendar, 1) # add Easter Monday
+calendar.easter(calendar, -2) # add Easter Good Friday
 }

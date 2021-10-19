@@ -216,7 +216,7 @@ p2r_uservar<-function(p){
 }
 
 r2p_uservar<-function(r){
-  p<-modelling.TsVariable.$new()
+  p<-modelling.TsVariable$new()
   p$name<-r$name
   p$id<-r$id
   if (! is.null(r$lags)){
