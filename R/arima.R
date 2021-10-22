@@ -13,7 +13,7 @@
 #' @export
 #'
 #' @examples
-sarima.model<-function(name=NULL, period, phi=NULL, d=0, theta=NULL, bphi=NULL, bd=0, btheta=NULL){
+sarima.model<-function(name="sarima", period, phi=NULL, d=0, theta=NULL, bphi=NULL, bd=0, btheta=NULL){
   return (structure(
     list(name=name, period=period, phi = phi, d=d, theta=theta,
                          bphi = bphi, bd = bd, btheta = btheta), class="JD3_SARIMA"))
@@ -66,19 +66,21 @@ jd2r_doubleseq<-function(jobj, jprop){
 
 jd2r_sarima<-function(jsarima){
   return (sarima.model(.jcall(jsarima, "S", "getName"),
-                       .jcall(jsarima, "I", "getPeriod"),
+                       .jcall(jarima, "I", "getPeriod"),
                        jd2r_doubleseq(jsarima, "getPhi"),
-                       .jcall(jsarima, "D", "getD"),
-                       jd2r_doubleseq(jsarima, "getTheta"),
-                       jd2r_doubleseq(jsarima, "getBphi"),
-                       .jcall(jsarima, "D", "getBd"),
-                       jd2r_doubleseq(jsarima, "getBtheta")
+                      .jcall(jsarima, "D", "getD"),
+                      jd2r_doubleseq(jsarima, "getTheta"),
+                      jd2r_doubleseq(jsarima, "getBphi"),
+                      .jcall(jsarima, "D", "getBd"),
+                      jd2r_doubleseq(jsarima, "getBtheta")
   ))
 }
 
 r2jd_sarima<-function(model){
+  name<-model$name
+  if (is.null(name)) name<-"sarima"
   return (.jcall("demetra/arima/r/SarimaModels", "Ldemetra/arima/SarimaModel;", "of",
-                 model$name,
+                 as.character(name),
                  as.integer(model$period),
                  .jarray(as.numeric(model$phi)),
                  as.integer(model$d),
@@ -154,7 +156,7 @@ arima.properties<-function(model, nspectrum=601, nacf=36){
 #' @export
 #'
 #' @examples
-ucarima.model<-function(model=NULL, components, checkmodel=FALSE){
+ucarima.model<-function(model=NULL, components, checkmodel=F){
   if (is.null(model))
     model<-arima.lsum(components)
   else if (! is(model, "JD3_ARIMA") && ! is(model, "JD3_SARIMA")) stop("Invalid model")
@@ -188,7 +190,7 @@ jd2r_ucarima<-function(jucm){
 #' @export
 #'
 #' @examples
-ucarima.wk<-function(ucm, cmp, signal=TRUE, nspectrum=601, nwk=300){
+ucarima.wk<-function(ucm, cmp, signal=T, nspectrum=601, nwk=300){
   jucm<-r2jd_ucarima(ucm)
   jwks<-.jcall("demetra/arima/r/UcarimaModels", "Ljdplus/ucarima/WienerKolmogorovEstimators;", "wienerKolmogorovEstimators", jucm)
   jwk<-.jcall("demetra/arima/r/UcarimaModels", "Ljdplus/ucarima/WienerKolmogorovEstimator;", "finalEstimator", jwks, as.integer(cmp-1), signal)
@@ -210,10 +212,28 @@ ucarima.wk<-function(ucm, cmp, signal=TRUE, nspectrum=601, nwk=300){
 #' @export
 #'
 #' @examples
-ucarima.canonical<-function(ucm, cmp=0, adjust=TRUE){
+ucarima.canonical<-function(ucm, cmp=0, adjust=T){
   jucm<-r2jd_ucarima(ucm)
   jnucm<-.jcall("demetra/arima/r/UcarimaModels", "Ldemetra/arima/UcarimaModel;", "doCanonical",
                jucm, as.integer(cmp-1), as.logical(adjust))
   return (jd2r_ucarima(jnucm))
 }
+
+#' Title
+#'
+#' @param ucm
+#' @param data
+#' @param stdev
+#'
+#' @return
+#' @export
+#'
+#' @examples
+ucarima.estimate<-function(ucm, data, stdev=T){
+  jucm<-r2jd_ucarima(ucm)
+  jcmps<-.jcall("demetra/arima/r/UcarimaModels", "Ldemetra/math/matrices/Matrix;", "estimate",
+                as.numeric(data), jucm, as.logical(stdev))
+  return (matrix_jd2r(jcmps))
+}
+
 

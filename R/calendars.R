@@ -206,7 +206,7 @@ group_names <- function(x, contrasts = TRUE){
 td<-function(frequency, start, length, groups=c(1,2,3,4,5,6,0), contrasts=TRUE){
   jdom<-tsdomain_r2jd(frequency, start[1], start[2], length)
   igroups<-as.integer(groups)
-  jm<-.jcall("demetra/modelling/r/Variables", "Ldemetra/math/matrices/MatrixType;",
+  jm<-.jcall("demetra/modelling/r/Variables", "Ldemetra/math/matrices/Matrix;",
              "td", jdom, igroups, contrasts)
   data <- matrix_jd2r(jm)
   data <- group_names(data, contrasts = contrasts)
@@ -238,7 +238,7 @@ htd<-function(calendar,frequency, start, length, groups=c(1,2,3,4,5,6,0), contra
   jdom<-tsdomain_r2jd(frequency, start[1], start[2], length)
   jcal<-p2jd_calendar(calendar)
   r.Variables <- J("demetra/modelling/r/Variables")
-  # jm<-.jcall("demetra/modelling/r/Variables", "Ldemetra/math/matrices/MatrixType;",
+  # jm<-.jcall("demetra/modelling/r/Variables", "Ldemetra/math/matrices/Matrix;",
   #            "htd", jcal, jdom, as.integer(groups), contrasts, meanCorrection)
   jm <- r.Variables$htd(jcal, jdom, as.integer(groups), contrasts, meanCorrection)
   return <- matrix_jd2r(jm)
@@ -286,7 +286,7 @@ htd.forTs<-function(s, calendar, groups = c(1,2,3,4,5,6,0), contrasts = TRUE){
 holidays<-function(calendar, start, length, nonworking=c(6,7), type=c("Skip", "All", "NextWorkingDay", "PreviousWorkingDay")){
   type<-match.arg(type)
   jcal<-p2jd_calendar(calendar)
-  jm<-.jcall("demetra/calendar/r/Calendars", "Ldemetra/math/matrices/MatrixType;",
+  jm<-.jcall("demetra/calendar/r/Calendars", "Ldemetra/math/matrices/Matrix;",
              "holidays", jcal, as.character(start), as.integer(length), .jarray(as.integer(nonworking)), type)
   res <- matrix_jd2r(jm)
   rownames(res) <- as.character(seq(as.Date(start), length.out = nrow(res), by="days"))
@@ -304,7 +304,7 @@ holidays<-function(calendar, start, length, nonworking=c(6,7), type=c("Skip", "A
 #' @examples
 longTermMean<-function(calendar,frequency,groups=c(1,2,3,4,5,6,0)){
   jcal<-p2jd_calendar(calendar)
-  jm<-.jcall("demetra/calendar/r/Calendars", "Ldemetra/math/matrices/MatrixType;",
+  jm<-.jcall("demetra/calendar/r/Calendars", "Ldemetra/math/matrices/Matrix;",
              "longTermMean", jcal, as.integer(frequency), as.integer(groups))
   res <- matrix_jd2r(jm)
   return (group_names(res, contrasts = FALSE))

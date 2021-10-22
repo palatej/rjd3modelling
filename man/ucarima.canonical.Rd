@@ -4,7 +4,7 @@
 \alias{ucarima.canonical}
 \title{Title}
 \usage{
-ucarima.canonical(ucm, cmp = 0, adjust = TRUE)
+ucarima.canonical(ucm, cmp = 0, adjust = T)
 }
 \arguments{
 \item{adjust}{}
