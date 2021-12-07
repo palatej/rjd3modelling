@@ -33,5 +33,6 @@ Collate:
     'jd3_r.R'
     'protobuf.R'
     'regarima_rslts.R'
+    'td.R'
     'variables.R'
     'zzz.R'

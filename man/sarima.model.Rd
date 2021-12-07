@@ -5,7 +5,7 @@
 \title{Title}
 \usage{
 sarima.model(
-  name = NULL,
+  name = "sarima",
   period,
   phi = NULL,
   d = 0,
