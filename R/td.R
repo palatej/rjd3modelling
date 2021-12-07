@@ -1,10 +1,32 @@
-#' Title
+#' Trading Days Test
 #'
-#' @param s
-#' @param model
-#' @param nyears
+#' @param nyears \code{integer} that corresponds to number of periods number of periods starting from the end of the series:
+#' in periods (positive value) or years (negative values).
+#' By default (\code{nyears = 0}), the entire sample is used.
+#' @param s a \code{ts} object that corresponds to the input time series to test.
+#' @param model the model to use for the residuals. See details.
 #'
-#' @return
+#' @details \loadmathjax
+#' The function performs a residual seasonality test that is a joint F-Test on the coefficients of trading days regressors.
+#' Several specifications can be used on the model:
+#' \itemize{
+#' \item \code{model = "WN"} the following model is used:
+#' \mjsdeqn{
+#' y_t - \bar y =\beta TD_t +  \varepsilon_t
+#' }
+#' \item \code{model = "D1"} (the default) the following model is used:
+#' \mjsdeqn{
+#' \Delta y_t - \overline{\Delta y} =\beta \Delta TD_t +  \varepsilon_t
+#' }
+#' \item \code{model = "DY"} the following model is used:
+#' \mjsdeqn{
+#' \Delta_s y_t - \overline{\Delta_s y} =\beta \Delta_s TD_t +  \varepsilon_t
+#' }
+#' \item \code{model = "DYD1"} the following model is used:
+#' \mjsdeqn{
+#' \Delta_s\Delta y_t - \overline{\Delta_s \Delta y} =\beta \Delta_s \Delta TD_t +  \varepsilon_t
+#' }
+#' }
 #' @export
 #'
 #' @examples
