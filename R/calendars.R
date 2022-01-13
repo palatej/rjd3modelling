@@ -14,7 +14,7 @@ NULL
 #' calendar.holiday(belgiumCalendar, "EASTERMONDAY")
 #' calendar.holiday(belgiumCalendar, "WHITMONDAY")
 #' calendar.holiday(belgiumCalendar, "ASSUMPTION")
-#' calendar.holiday(belgiumCalendar, "ALLSAINTDAY")
+#' calendar.holiday(belgiumCalendar, "ALLSAINTSDAY")
 #' calendar.holiday(belgiumCalendar, "ARMISTICE")
 #' M<-td(12, c(1980,1), 120, c(1,1,1,1,2,3,0), contrasts = FALSE)
 #'
@@ -153,7 +153,7 @@ calendar.easter<-function(calendar, offset, julian=FALSE, weight=1, start=NULL, 
 #' MAYDAY         \tab Fixed holiday, falls on May, 1.                                                      \cr
 #' ASSUMPTION     \tab Fixed holiday, falls on August, 15.                                                  \cr
 #' HALLOWEEN      \tab Fixed holiday, falls on October, 31.                                                 \cr
-#' ALLSAINTDAY    \tab Fixed holiday, falls on November, 1.                                                 \cr
+#' ALLSAINTSDAY    \tab Fixed holiday, falls on November, 1.                                                 \cr
 #' ARMISTICE      \tab Fixed holiday, falls on November, 11.                                                \cr
 #' CHRISTMAS      \tab Fixed holiday, falls on December, 25.
 #' }
@@ -225,6 +225,7 @@ td.forTs<-function(s, groups=c(1,2,3,4,5,6,0), contrasts=TRUE){
 #'
 #' @inheritParams td
 #' @param calendar The calendar.
+#' @param holiday Day for holidays (holidays are considered as that day). 1 for Monday... 7 for Sunday. Doesn't necessary belong to the 0-group
 #' @param meanCorrection boolean indicating if the regressors are corrected for long-term term.
 #' By default the correction is done if \code{contrasts = TRUE}.
 #'
@@ -233,14 +234,14 @@ td.forTs<-function(s, groups=c(1,2,3,4,5,6,0), contrasts=TRUE){
 #' @export
 #'
 #' @examples
-htd<-function(calendar,frequency, start, length, groups=c(1,2,3,4,5,6,0), contrasts=TRUE,
+htd<-function(calendar,frequency, start, length, groups=c(1,2,3,4,5,6,0), holiday=7, contrasts=TRUE,
               meanCorrection = contrasts){
   jdom<-tsdomain_r2jd(frequency, start[1], start[2], length)
   jcal<-p2jd_calendar(calendar)
   r.Variables <- J("demetra/modelling/r/Variables")
   # jm<-.jcall("demetra/modelling/r/Variables", "Ldemetra/math/matrices/Matrix;",
-  #            "htd", jcal, jdom, as.integer(groups), contrasts, meanCorrection)
-  jm <- r.Variables$htd(jcal, jdom, as.integer(groups), contrasts, meanCorrection)
+  #            "htd", jcal, jdom, as.integer(groups), as.integer(holiday), contrasts, meanCorrection)
+  jm <- r.Variables$htd(jcal, jdom, as.integer(groups), as.integer(holiday), contrasts, meanCorrection)
   return <- matrix_jd2r(jm)
   return <- group_names(return, contrasts = contrasts)
   return (ts(return, start = start, frequency = frequency))
@@ -249,9 +250,9 @@ htd<-function(calendar,frequency, start, length, groups=c(1,2,3,4,5,6,0), contra
 #' @param s The time series.
 #' @export
 #' @rdname htd
-htd.forTs<-function(s, calendar, groups = c(1,2,3,4,5,6,0), contrasts = TRUE){
+htd.forTs<-function(s, calendar, groups = c(1,2,3,4,5,6,0), holiday=7, contrasts = TRUE){
   if (! is.ts(s)) stop("s should be a time series")
-  return (htd(calendar, frequency(s), start(s), length_ts(s), groups, contrasts))
+  return (htd(calendar, frequency(s), start(s), length_ts(s), groups, as.integer(holiday), contrasts))
 }
 
 
@@ -302,10 +303,10 @@ holidays<-function(calendar, start, length, nonworking=c(6,7), type=c("Skip", "A
 #' @export
 #'
 #' @examples
-longTermMean<-function(calendar,frequency,groups=c(1,2,3,4,5,6,0)){
+longTermMean<-function(calendar,frequency,groups=c(1,2,3,4,5,6,0), holiday=7){
   jcal<-p2jd_calendar(calendar)
   jm<-.jcall("demetra/calendar/r/Calendars", "Ldemetra/math/matrices/Matrix;",
-             "longTermMean", jcal, as.integer(frequency), as.integer(groups))
+             "longTermMean", jcal, as.integer(frequency), as.integer(groups), as.integer(holiday))
   res <- matrix_jd2r(jm)
   return (group_names(res, contrasts = FALSE))
 }
