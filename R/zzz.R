@@ -1,8 +1,5 @@
-#' @importFrom rjd3toolkit .JD3_ENV
-#' @import rJava
 #' @import methods
 #' @importFrom stats frequency is.ts start
-#' @importFrom RProtoBuf read
 NULL
 
 DATE_MIN<-NULL
@@ -15,6 +12,7 @@ ts_r2jd<-NULL
 tsdomain_r2jd<-NULL
 
 .onLoad <- function(libname, pkgname) {
+  suppressMessages(require(rjd3toolkit))
 
   DATE_MIN<<-dateOf(1,1,1)
   DATE_MAX<<-dateOf(9999, 12, 31)
