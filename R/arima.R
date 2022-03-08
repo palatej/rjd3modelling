@@ -1,13 +1,17 @@
-#' Title
+#' @importFrom methods is
+#' @include protobuf.R jd3_r.R
+NULL
+
+#' Seasonal ARIMA model (Box-Jenkins)
 #'
-#' @param period
-#' @param phi
-#' @param d
-#' @param theta
-#' @param bphi
-#' @param bd
-#' @param btheta
-#' @param name
+#' @param period Period of the model
+#' @param phi Coefficients of the regular auto-regressive polynomial (1 + phi(1)B + phi(2)B + ...). True signs
+#' @param d Regular differencing order
+#' @param theta Coefficients of the regular moving average polynomial (1 + theta(1)B + theta(2)B + ...). True signs
+#' @param bphi Coefficients of the seasonal auto-regressive polynomial. True signs
+#' @param bd Seasonal differencing order
+#' @param btheta Coefficients of the seasonal moving average polynomial. True signs
+#' @param name Name of the model
 #'
 #' @return
 #' @export
@@ -64,23 +68,15 @@ jd2r_doubleseq<-function(jobj, jprop){
   return (.jcall(jseq, "[D", "toArray"))
 }
 
+
 jd2r_sarima<-function(jsarima){
-  return (sarima.model(.jcall(jsarima, "S", "getName"),
-                       .jcall(jarima, "I", "getPeriod"),
-                       jd2r_doubleseq(jsarima, "getPhi"),
-                      .jcall(jsarima, "D", "getD"),
-                      jd2r_doubleseq(jsarima, "getTheta"),
-                      jd2r_doubleseq(jsarima, "getBphi"),
-                      .jcall(jsarima, "D", "getBd"),
-                      jd2r_doubleseq(jsarima, "getBtheta")
-  ))
+  q<-.jcall("demetra/arima/r/SarimaModels", "[B", "toBuffer", jsarima)
+  rq<-RProtoBuf::read(modelling.SarimaModel, q)
+  return (p2r_sarima(rq))
 }
 
 r2jd_sarima<-function(model){
-  name<-model$name
-  if (is.null(name)) name<-"sarima"
-  return (.jcall("demetra/arima/r/SarimaModels", "Ldemetra/arima/SarimaModel;", "of",
-                 as.character(name),
+  return (.jcall("demetra/arima/r/SarimaModels", "Ljdplus/sarima/SarimaModel;", "of",
                  as.integer(model$period),
                  .jarray(as.numeric(model$phi)),
                  as.integer(model$d),
@@ -93,21 +89,17 @@ r2jd_sarima<-function(model){
 
 
 jd2r_arima<-function(jarima){
-  return (arima.model(.jcall(jarima, "S", "getName"),
-                jd2r_doubleseq(jarima, "getAr"),
-                jd2r_doubleseq(jarima, "getDelta"),
-                jd2r_doubleseq(jarima, "getMa"),
-                .jcall(jarima, "D", "getInnovationVariance")
-                ))
+  q<-.jcall("demetra/arima/r/ArimaModels", "[B", "toBuffer", jarima)
+  rq<-RProtoBuf::read(modelling.ArimaModel, q)
+  return (p2r_arima(rq))
 }
 
 r2jd_arima<-function(model){
-  return (.jcall("demetra/arima/r/ArimaModels", "Ldemetra/arima/ArimaModel;", "of",
-                 model$name,
+  return (.jcall("demetra/arima/r/ArimaModels", "Ljdplus/arima/ArimaModel;", "of",
                  .jarray(as.numeric(model$ar)),
                  .jarray(as.numeric(model$delta)),
                  .jarray(as.numeric(model$ma)),
-                 as.numeric(model$var)))
+                 as.numeric(model$var), F))
 }
 
 #' Title
@@ -124,9 +116,8 @@ arima.sum<-function(...){
 }
 
 arima.lsum<-function(components){
-
-  q<-.jarray(lapply(components, r2jd_arima), "demetra/arima/ArimaModel")
-  jsum<-.jcall("demetra/arima/r/ArimaModels", "Ldemetra/arima/ArimaModel;", "sum", q)
+  q<-.jarray(lapply(components, r2jd_arima), "jdplus/arima/ArimaModel")
+  jsum<-.jcall("demetra/arima/r/ArimaModels", "Ljdplus/arima/ArimaModel;", "sum", q)
   return (jd2r_arima(jsum))
 }
 
@@ -151,30 +142,34 @@ arima.properties<-function(model, nspectrum=601, nacf=36){
 #'
 #' @param model
 #' @param components
+#' @param complements Complements of (some) components
 #'
 #' @return
 #' @export
 #'
 #' @examples
-ucarima.model<-function(model=NULL, components, checkmodel=F){
+ucarima.model<-function(model=NULL, components, complements=NULL, checkmodel=F){
   if (is.null(model))
     model<-arima.lsum(components)
   else if (! is(model, "JD3_ARIMA") && ! is(model, "JD3_SARIMA")) stop("Invalid model")
 
   # TODO: checkmodel
-  return (structure(list(model=model, components=components), class="JD3_UCARIMA"))
+  return (structure(list(model=model, components=components, complements=complements), class="JD3_UCARIMA"))
 }
 
 r2jd_ucarima<-function(ucm){
   jmodel<-r2jd_arima(ucm$model)
-  jcmps<-.jarray(lapply(ucm$components, r2jd_arima), "demetra/arima/ArimaModel")
-  return (.jcall("demetra/arima/r/UcarimaModels", "Ldemetra/arima/UcarimaModel;", "of", jmodel, jcmps))
+  jcmps<-.jarray(lapply(ucm$components, r2jd_arima), "jdplus/arima/ArimaModel")
+  return (.jcall("demetra/arima/r/UcarimaModels", "Ljdplus/ucarima/UcarimaModel;", "of", jmodel, jcmps))
 }
 
 jd2r_ucarima<-function(jucm){
-  model<-.jcall(jucm, "Ldemetra/arima/ArimaModel;", "getSum")
-  jcmps<-.jcall(jucm, "[Ldemetra/arima/ArimaModel;", "getComponents")
-  return (ucarima.model(jd2r_arima(model), lapply(jcmps, jd2r_arima)))
+#  model<-.jcall(jucm, "Ljdplus/arima/ArimaModel;", "sum")
+#  jcmps<-.jcall(jucm, "[Ljdplus/arima/ArimaModel;", "getComponents")
+#  return (ucarima.model(jd2r_arima(model), lapply(jcmps, jd2r_arima)))
+  q<-.jcall("demetra/arima/r/UcarimaModels", "[B", "toBuffer", jucm)
+  rq<-RProtoBuf::read(modelling.UcarimaModel, q)
+  return (p2r_ucarima(rq))
 }
 
 
@@ -214,7 +209,7 @@ ucarima.wk<-function(ucm, cmp, signal=T, nspectrum=601, nwk=300){
 #' @examples
 ucarima.canonical<-function(ucm, cmp=0, adjust=T){
   jucm<-r2jd_ucarima(ucm)
-  jnucm<-.jcall("demetra/arima/r/UcarimaModels", "Ldemetra/arima/UcarimaModel;", "doCanonical",
+  jnucm<-.jcall("demetra/arima/r/UcarimaModels", "Ljdplus/ucarima/UcarimaModel;", "doCanonical",
                jucm, as.integer(cmp-1), as.logical(adjust))
   return (jd2r_ucarima(jnucm))
 }
@@ -233,7 +228,7 @@ ucarima.estimate<-function(ucm, data, stdev=T){
   jucm<-r2jd_ucarima(ucm)
   jcmps<-.jcall("demetra/arima/r/UcarimaModels", "Ldemetra/math/matrices/Matrix;", "estimate",
                 as.numeric(data), jucm, as.logical(stdev))
-  return (matrix_jd2r(jcmps))
+  return (rjd3toolkit:::matrix_jd2r(jcmps))
 }
 
 

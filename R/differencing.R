@@ -1,4 +1,4 @@
-#' @include utils.R
+#' @include protobuf.R jd3_r.R
 NULL
 
 p2r_differencing<-function(p){
@@ -35,7 +35,7 @@ p2r_differencing<-function(p){
 #'
 #' @examples
 do.stationary<-function(data, period){
-  jst<-.jcall("demetra/modelling/r/Differencing", "Ldemetra/modelling/StationaryTransformation;", "doStationary",
+  jst<-.jcall("demetra/modelling/r/Differencing", "Ljdplus/modelling/StationaryTransformation;", "doStationary",
          as.numeric(data), as.integer(period))
   q<-.jcall("demetra/modelling/r/Differencing", "[B", "toBuffer", jst)
   p<-RProtoBuf::read(modelling.StationaryTransformation, q)
@@ -63,9 +63,10 @@ do.stationary<-function(data, period){
 #' @export
 #'
 #' @examples
+#' z<-rjd3modelling::differencing.fast(log(rjd3toolkit::ABS$X0.2.09.10.M),12)
 #'
 differencing.fast<-function(data, period, mad=TRUE, centile=90, k=1.2){
-  jst<-.jcall("demetra/modelling/r/Differencing", "Ldemetra/modelling/StationaryTransformation;", "fastDifferencing",
+  jst<-.jcall("demetra/modelling/r/Differencing", "Ljdplus/modelling/StationaryTransformation;", "fastDifferencing",
               as.numeric(data), as.integer(period), as.logical(mad), centile, k)
   q<-.jcall("demetra/modelling/r/Differencing", "[B", "toBuffer", jst)
   p<-RProtoBuf::read(modelling.StationaryTransformation, q)
@@ -83,7 +84,7 @@ differencing.fast<-function(data, period, mad=TRUE, centile=90, k=1.2){
 #' @export
 #'
 #' @examples
-#' differences(retail$BookStores, c(1,1,12), FALSE)
+#' differences(rjd3toolkit::retail$BookStores, c(1,1,12), FALSE)
 #'
 differences<-function(data, lags=1, mean=TRUE){
   return (.jcall("demetra/modelling/r/Differencing", "[D", "differences",

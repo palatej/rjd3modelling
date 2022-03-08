@@ -1,4 +1,5 @@
-#' @include utils.R
+#' @importFrom rJava .jpackage .jcall .jnull .jarray .jevalArray .jcast .jcastToArray .jinstanceof .jnew is.jnull .jclass
+#' @import rjd3toolkit
 NULL
 
 j2r_ldt<-function(ldt){
