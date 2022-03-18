@@ -50,7 +50,7 @@ JULIANEASTER   \tab                                                             
 MAYDAY         \tab Fixed holiday, falls on May, 1.                                                      \cr
 ASSUMPTION     \tab Fixed holiday, falls on August, 15.                                                  \cr
 HALLOWEEN      \tab Fixed holiday, falls on October, 31.                                                 \cr
-ALLSAINTDAY    \tab Fixed holiday, falls on November, 1.                                                 \cr
+ALLSAINTSDAY    \tab Fixed holiday, falls on November, 1.                                                 \cr
 ARMISTICE      \tab Fixed holiday, falls on November, 11.                                                \cr
 CHRISTMAS      \tab Fixed holiday, falls on December, 25.
 }

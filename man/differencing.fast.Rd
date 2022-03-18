@@ -33,5 +33,6 @@ Stationary transformation
 The series is differentiated till its variance is decreasing
 }
 \examples{
+z<-rjd3modelling::differencing.fast(log(rjd3toolkit::ABS$X0.2.09.10.M),12)
 
 }
