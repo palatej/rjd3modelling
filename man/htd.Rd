@@ -11,11 +11,18 @@ htd(
   start,
   length,
   groups = c(1, 2, 3, 4, 5, 6, 0),
+  holiday = 7,
   contrasts = TRUE,
   meanCorrection = contrasts
 )
 
-htd.forTs(s, calendar, groups = c(1, 2, 3, 4, 5, 6, 0), contrasts = TRUE)
+htd.forTs(
+  s,
+  calendar,
+  groups = c(1, 2, 3, 4, 5, 6, 0),
+  holiday = 7,
+  contrasts = TRUE
+)
 }
 \arguments{
 \item{calendar}{The calendar.}
@@ -30,6 +37,8 @@ htd.forTs(s, calendar, groups = c(1, 2, 3, 4, 5, 6, 0), contrasts = TRUE)
 belongs. The first item corresponds to Mondays and the last one to Sundays. The group used for contrasts (usually Sundays) is identified by 0.
 The other groups are identified by 1, 2,... n (<= 6). For instance, usual trading days are defined by c(1,2,3,4,5,6,0),
 week days by c(1,1,1,1,1,0,0), week days, Saturdays, Sundays by c(1,1,1,1,1,2,0) etc...}
+
+\item{holiday}{Day for holidays (holidays are considered as that day). 1 for Monday... 7 for Sunday. Doesn't necessary belong to the 0-group}
 
 \item{contrasts}{If true, the variables are defined by contrasts with the 0-group. Otherwise, raw number of days are provided}
 

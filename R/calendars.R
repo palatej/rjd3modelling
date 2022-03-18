@@ -1,4 +1,6 @@
-#' @include utils.R
+#' @importFrom methods is
+#' @importFrom stats frequency is.ts start
+#' @include protobuf.R jd3_r.R
 NULL
 
 #' Create a calendar
@@ -14,7 +16,7 @@ NULL
 #' calendar.holiday(belgiumCalendar, "EASTERMONDAY")
 #' calendar.holiday(belgiumCalendar, "WHITMONDAY")
 #' calendar.holiday(belgiumCalendar, "ASSUMPTION")
-#' calendar.holiday(belgiumCalendar, "ALLSAINTDAY")
+#' calendar.holiday(belgiumCalendar, "ALLSAINTSDAY")
 #' calendar.holiday(belgiumCalendar, "ARMISTICE")
 #' M<-td(12, c(1980,1), 120, c(1,1,1,1,2,3,0), contrasts = FALSE)
 #'
@@ -41,14 +43,14 @@ calendar.new<-function(){
 validityPeriod<-function(start, end){
   vp<-jd3.ValidityPeriod$new()
   if (is.null(start)) {
-    pstart=DATE_MIN
+    pstart=rjd3toolkit:::DATE_MIN
   }else{
-    pstart=parseDate(start)
+    pstart=rjd3toolkit:::parseDate(start)
   }
   if (is.null(end)){
-    pend=DATE_MAX
+    pend=rjd3toolkit:::DATE_MAX
   }else{
-    pend=parseDate(end)
+    pend=rjd3toolkit:::parseDate(end)
   }
   vp$start<-pstart
   vp$end<-pend
@@ -153,7 +155,7 @@ calendar.easter<-function(calendar, offset, julian=FALSE, weight=1, start=NULL, 
 #' MAYDAY         \tab Fixed holiday, falls on May, 1.                                                      \cr
 #' ASSUMPTION     \tab Fixed holiday, falls on August, 15.                                                  \cr
 #' HALLOWEEN      \tab Fixed holiday, falls on October, 31.                                                 \cr
-#' ALLSAINTDAY    \tab Fixed holiday, falls on November, 1.                                                 \cr
+#' ALLSAINTSDAY    \tab Fixed holiday, falls on November, 1.                                                 \cr
 #' ARMISTICE      \tab Fixed holiday, falls on November, 11.                                                \cr
 #' CHRISTMAS      \tab Fixed holiday, falls on December, 25.
 #' }
@@ -165,7 +167,7 @@ calendar.easter<-function(calendar, offset, julian=FALSE, weight=1, start=NULL, 
 #' calendar.holiday(calendar, "EASTERMONDAY") # add Easter Monday
 calendar.holiday<-function(calendar, event, offset=0, weight=1, start=NULL, end=NULL){
   pd<-jd3.PrespecifiedHoliday$new()
-  pd$event<-.JD3_ENV$enum_of(jd3.CalendarEvent, event, "HOLIDAY")
+  pd$event<-rjd3toolkit:::enum_of(jd3.CalendarEvent, event, "HOLIDAY")
   pd$offset<-offset
   pd$weight<-weight
   pd$validity<-validityPeriod(start, end)
@@ -204,11 +206,11 @@ group_names <- function(x, contrasts = TRUE){
 #'
 #' @examples
 td<-function(frequency, start, length, groups=c(1,2,3,4,5,6,0), contrasts=TRUE){
-  jdom<-tsdomain_r2jd(frequency, start[1], start[2], length)
+  jdom<-rjd3toolkit:::tsdomain_r2jd(frequency, start[1], start[2], length)
   igroups<-as.integer(groups)
   jm<-.jcall("demetra/modelling/r/Variables", "Ldemetra/math/matrices/Matrix;",
              "td", jdom, igroups, contrasts)
-  data <- matrix_jd2r(jm)
+  data <- rjd3toolkit:::matrix_jd2r(jm)
   data <- group_names(data, contrasts = contrasts)
   return (ts(data, start = start, frequency = frequency))
 }
@@ -225,6 +227,7 @@ td.forTs<-function(s, groups=c(1,2,3,4,5,6,0), contrasts=TRUE){
 #'
 #' @inheritParams td
 #' @param calendar The calendar.
+#' @param holiday Day for holidays (holidays are considered as that day). 1 for Monday... 7 for Sunday. Doesn't necessary belong to the 0-group
 #' @param meanCorrection boolean indicating if the regressors are corrected for long-term term.
 #' By default the correction is done if \code{contrasts = TRUE}.
 #'
@@ -233,15 +236,13 @@ td.forTs<-function(s, groups=c(1,2,3,4,5,6,0), contrasts=TRUE){
 #' @export
 #'
 #' @examples
-htd<-function(calendar,frequency, start, length, groups=c(1,2,3,4,5,6,0), contrasts=TRUE,
+htd<-function(calendar,frequency, start, length, groups=c(1,2,3,4,5,6,0), holiday=7, contrasts=TRUE,
               meanCorrection = contrasts){
-  jdom<-tsdomain_r2jd(frequency, start[1], start[2], length)
+  jdom<-rjd3toolkit:::tsdomain_r2jd(frequency, start[1], start[2], length)
   jcal<-p2jd_calendar(calendar)
-  r.Variables <- J("demetra/modelling/r/Variables")
-  # jm<-.jcall("demetra/modelling/r/Variables", "Ldemetra/math/matrices/Matrix;",
-  #            "htd", jcal, jdom, as.integer(groups), contrasts, meanCorrection)
-  jm <- r.Variables$htd(jcal, jdom, as.integer(groups), contrasts, meanCorrection)
-  return <- matrix_jd2r(jm)
+  jm<-.jcall("demetra/modelling/r/Variables", "Ldemetra/math/matrices/Matrix;",
+              "htd", jcal, jdom, as.integer(groups), as.integer(holiday), contrasts, meanCorrection)
+  return <- rjd3toolkit:::matrix_jd2r(jm)
   return <- group_names(return, contrasts = contrasts)
   return (ts(return, start = start, frequency = frequency))
 }
@@ -249,9 +250,9 @@ htd<-function(calendar,frequency, start, length, groups=c(1,2,3,4,5,6,0), contra
 #' @param s The time series.
 #' @export
 #' @rdname htd
-htd.forTs<-function(s, calendar, groups = c(1,2,3,4,5,6,0), contrasts = TRUE){
+htd.forTs<-function(s, calendar, groups = c(1,2,3,4,5,6,0), holiday=7, contrasts = TRUE){
   if (! is.ts(s)) stop("s should be a time series")
-  return (htd(calendar, frequency(s), start(s), length_ts(s), groups, contrasts))
+  return (htd(calendar, frequency(s), start(s), length_ts(s), groups, as.integer(holiday), contrasts))
 }
 
 
@@ -278,7 +279,7 @@ htd.forTs<-function(s, calendar, groups = c(1,2,3,4,5,6,0), contrasts = TRUE){
 #' calendar.holiday(belgiumCalendar, "EASTERMONDAY")
 #' calendar.holiday(belgiumCalendar, "WHITMONDAY")
 #' calendar.holiday(belgiumCalendar, "ASSUMPTION")
-#' calendar.holiday(belgiumCalendar, "ALLSAINTDAY")
+#' calendar.holiday(belgiumCalendar, "ALLSAINTSDAY")
 #' calendar.holiday(belgiumCalendar, "ARMISTICE")
 #' q<-holidays(belgiumCalendar, "2021-01-01", 365.25*10, type="NextWorkingDay")
 #' plot(apply(q,1, max))
@@ -288,7 +289,7 @@ holidays<-function(calendar, start, length, nonworking=c(6,7), type=c("Skip", "A
   jcal<-p2jd_calendar(calendar)
   jm<-.jcall("demetra/calendar/r/Calendars", "Ldemetra/math/matrices/Matrix;",
              "holidays", jcal, as.character(start), as.integer(length), .jarray(as.integer(nonworking)), type)
-  res <- matrix_jd2r(jm)
+  res <- rjd3toolkit:::matrix_jd2r(jm)
   rownames(res) <- as.character(seq(as.Date(start), length.out = nrow(res), by="days"))
   return (res)
 
@@ -302,11 +303,11 @@ holidays<-function(calendar, start, length, nonworking=c(6,7), type=c("Skip", "A
 #' @export
 #'
 #' @examples
-longTermMean<-function(calendar,frequency,groups=c(1,2,3,4,5,6,0)){
+longTermMean<-function(calendar,frequency,groups=c(1,2,3,4,5,6,0), holiday=7){
   jcal<-p2jd_calendar(calendar)
   jm<-.jcall("demetra/calendar/r/Calendars", "Ldemetra/math/matrices/Matrix;",
-             "longTermMean", jcal, as.integer(frequency), as.integer(groups))
-  res <- matrix_jd2r(jm)
+             "longTermMean", jcal, as.integer(frequency), as.integer(groups), as.integer(holiday))
+  res <- rjd3toolkit:::matrix_jd2r(jm)
   return (group_names(res, contrasts = FALSE))
 }
 
@@ -330,10 +331,9 @@ easter.dates<-function(year0, year1, julian = FALSE){
 #' @param w indicates day of the month when inventories and other stock are reported (to denote the last day of the month enter 31).
 #' @export
 stock.td<-function(frequency, start, length, w = 31){
-  jdom <- tsdomain_r2jd(frequency, start[1], start[2], length)
-  r.Variables <- J("demetra/modelling/r/Variables")
-  data <-r.Variables$stockTradingDays(jdom, as.integer(w))
-  data <- matrix_jd2r(data)
+  jdom <- rjd3toolkit:::tsdomain_r2jd(frequency, start[1], start[2], length)
+  jm<-.jcall("demetra/modelling/r/Variables", "Ldemetra/math/matrices/Matrix;", "stockTradingDays", jdom, as.integer(w))
+  data <- rjd3toolkit:::matrix_jd2r(jm)
   colnames(data) <- c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
   return (ts(data, frequency = frequency, start= start))
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/arima.R
 \name{sarima.model}
 \alias{sarima.model}
-\title{Title}
+\title{Seasonal ARIMA model (Box-Jenkins)}
 \usage{
 sarima.model(
   name = "sarima",
@@ -16,11 +16,25 @@ sarima.model(
 )
 }
 \arguments{
-\item{name}{}
+\item{name}{Name of the model}
+
+\item{period}{Period of the model}
+
+\item{phi}{Coefficients of the regular auto-regressive polynomial (1 + phi(1)B + phi(2)B + ...). True signs}
+
+\item{d}{Regular differencing order}
+
+\item{theta}{Coefficients of the regular moving average polynomial (1 + theta(1)B + theta(2)B + ...). True signs}
+
+\item{bphi}{Coefficients of the seasonal auto-regressive polynomial. True signs}
+
+\item{bd}{Seasonal differencing order}
+
+\item{btheta}{Coefficients of the seasonal moving average polynomial. True signs}
 }
 \value{
 
 }
 \description{
-Title
+Seasonal ARIMA model (Box-Jenkins)
 }
