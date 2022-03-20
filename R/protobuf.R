@@ -31,10 +31,10 @@ p2r_spec_sarima<-function(spec){
     period=spec$period,
     d=spec$d,
     bd=spec$bd,
-    phi=rjd3toolkit:::p2r_parameters(spec$phi),
-    theta=rjd3toolkit:::p2r_parameters(spec$theta),
-    bphi=rjd3toolkit:::p2r_parameters(spec$bphi),
-    btheta=rjd3toolkit:::p2r_parameters(spec$btheta)
+    phi=rjd3toolkit::p2r_parameters(spec$phi),
+    theta=rjd3toolkit::p2r_parameters(spec$theta),
+    bphi=rjd3toolkit::p2r_parameters(spec$bphi),
+    btheta=rjd3toolkit::p2r_parameters(spec$btheta)
   ),
   class="JD3_SARIMA_ESTIMATION"))
 }
@@ -44,19 +44,19 @@ r2p_spec_sarima<-function(r){
   p$period<-r$period
   p$d<-r$d
   p$bd<-r$bd
-  p$phi<-rjd3toolkit:::r2p_parameters(r$phi)
-  p$theta<-rjd3toolkit:::r2p_parameters(r$theta)
-  p$bphi<-rjd3toolkit:::r2p_parameters(r$bphi)
-  p$btheta<-rjd3toolkit:::r2p_parameters(r$btheta)
+  p$phi<-rjd3toolkit::r2p_parameters(r$phi)
+  p$theta<-rjd3toolkit::r2p_parameters(r$theta)
+  p$bphi<-rjd3toolkit::r2p_parameters(r$bphi)
+  p$btheta<-rjd3toolkit::r2p_parameters(r$btheta)
   return (p)
 }
 
 p2r_outlier<-function(p){
   return (list(
     name=p$name,
-    pos=rjd3toolkit:::p2r_date(p$position),
+    pos=rjd3toolkit::p2r_date(p$position),
     code=p$code,
-    coef=rjd3toolkit:::p2r_parameter(p$coefficient)
+    coef=rjd3toolkit::p2r_parameter(p$coefficient)
   ))
 }
 
@@ -64,8 +64,8 @@ r2p_outlier<-function(r){
   p<-modelling.Outlier$new()
   p$name=r$name
   p$code<-r$code
-  p$position<-rjd3toolkit:::r2p_date(r$pos)
-  p$coefficient<-rjd3toolkit:::r2p_parameter(r$coef)
+  p$position<-rjd3toolkit::r2p_date(r$pos)
+  p$coefficient<-rjd3toolkit::r2p_parameter(r$coef)
   return (p)
 }
 
@@ -83,18 +83,18 @@ r2p_outliers<-function(r){
 p2r_ramp<-function(p){
   return (list(
     name=p$name,
-    start=rjd3toolkit:::p2r_date(p$start),
-    end=rjd3toolkit:::p2r_date(p$end),
-    coef=rjd3toolkit:::p2r_parameter(p$coefficient)
+    start=rjd3toolkit::p2r_date(p$start),
+    end=rjd3toolkit::p2r_date(p$end),
+    coef=rjd3toolkit::p2r_parameter(p$coefficient)
   ))
 }
 
 r2p_ramp<-function(r){
   p<-modelling.Ramp$new()
   p$name<-r$name
-  p$start<-rjd3toolkit:::r2p_date(r$start)
-  p$end<-rjd3toolkit:::r2p_date(r$end)
-  p$coefficient<-rjd3toolkit:::r2p_parameter(r$coefficient)
+  p$start<-rjd3toolkit::r2p_date(r$start)
+  p$end<-rjd3toolkit::r2p_date(r$end)
+  p$coefficient<-rjd3toolkit::r2p_parameter(r$coefficient)
   return (p)
 }
 
@@ -132,7 +132,7 @@ p2r_uservar<-function(p){
     id=p$id,
     name=p$name,
     lags=rlags(l0, l1),
-    coef=rjd3toolkit:::p2r_parameter(p$coefficient),
+    coef=rjd3toolkit::p2r_parameter(p$coefficient),
     regeffect=regeffect(p$metadata)
   ))
 }
@@ -151,7 +151,7 @@ r2p_uservar<-function(r){
     }else
       stop("Invalid lags")
   }
-  p$coefficient<-rjd3toolkit:::r2p_parameters(r$coef)
+  p$coefficient<-rjd3toolkit::r2p_parameters(r$coef)
   p$metadata<-list(list(key="regeffect", value=r$regeffect))
   return (p)
 }
@@ -173,8 +173,8 @@ p2r_variables<-function(p){
 
 p2r_variable<-function(p){
   name<-p$name
-  type<-rjd3toolkit:::enum_extract(modelling.VariableType, p$var_type)
-  coeff<-rjd3toolkit:::p2r_parameters_rsltx(p$coefficients)
+  type<-rjd3toolkit::enum_extract(modelling.VariableType, p$var_type)
+  coeff<-rjd3toolkit::p2r_parameters_rsltx(p$coefficients)
   return (list(name=name, type=type, coeff=coeff))
 }
 

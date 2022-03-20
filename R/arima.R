@@ -228,7 +228,7 @@ ucarima.estimate<-function(ucm, data, stdev=T){
   jucm<-r2jd_ucarima(ucm)
   jcmps<-.jcall("demetra/arima/r/UcarimaModels", "Ldemetra/math/matrices/Matrix;", "estimate",
                 as.numeric(data), jucm, as.logical(stdev))
-  return (rjd3toolkit:::matrix_jd2r(jcmps))
+  return (rjd3toolkit::matrix_jd2r(jcmps))
 }
 
 
