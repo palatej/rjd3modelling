@@ -43,5 +43,17 @@ y_t - \bar y =\beta TD_t +  \varepsilon_t
 \mjsdeqn{
 \Delta_s\Delta y_t - \overline{\Delta_s \Delta y} =\beta \Delta_s \Delta TD_t +  \varepsilon_t
 }
+\item \code{model = "AIRLINE"} the following model is used:
+\mjsdeqn{
+y_t =\beta TD_t +  \varepsilon_t \text{ with }\varepsilon_t \sim ARIMA(0,1,1)(0,1,1)
+}
+\item \code{model = "R011"} the following model is used:
+\mjsdeqn{
+y_t =\beta TD_t +  \varepsilon_t \text{ with }\varepsilon_t \sim ARIMA(0,1,1)(0,1,1)
+}
+\item \code{model = "R100"} the following model is used:
+\mjsdeqn{
+y_t =\alpha_0 + \alpha_1 y_{t-1} + \beta TD_t +  \varepsilon_t
+}
 }
 }

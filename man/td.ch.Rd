@@ -2,16 +2,18 @@
 % Please edit documentation in R/td.R
 \name{td.ch}
 \alias{td.ch}
-\title{Title}
+\title{Canova-Hansen Trading Days test}
 \usage{
 td.ch(s, differencing)
 }
 \arguments{
-\item{differencing}{}
+\item{s}{a \code{ts} object that corresponds to the input time series to test.}
+
+\item{differencing}{differencing lags}
 }
 \value{
 
 }
 \description{
-Title
+Canova-Hansen Trading Days test
 }
