@@ -42,9 +42,10 @@ NULL
 #' y_t =\alpha_0 + \alpha_1 y_{t-1} + \beta TD_t +  \varepsilon_t
 #' }
 #' }
-#' @export
 #'
 #' @examples
+#' td.f(rjd3toolkit::ABS$X0.2.09.10.M)
+#' @export
 td.f<-function(s, model=c("D1", "DY", "DYD1", "WN", "AIRLINE", "R011", "R100"), nyears=0){
   model<-match.arg(model)
   jts<-rjd3toolkit::ts_r2jd(s)

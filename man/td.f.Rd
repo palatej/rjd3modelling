@@ -57,3 +57,6 @@ y_t =\alpha_0 + \alpha_1 y_{t-1} + \beta TD_t +  \varepsilon_t
 }
 }
 }
+\examples{
+td.f(rjd3toolkit::ABS$X0.2.09.10.M)
+}
