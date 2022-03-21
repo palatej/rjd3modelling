@@ -43,14 +43,14 @@ calendar.new<-function(){
 validityPeriod<-function(start, end){
   vp<-jd3.ValidityPeriod$new()
   if (is.null(start)) {
-    pstart=rjd3toolkit:::DATE_MIN
+    pstart=rjd3toolkit::DATE_MIN
   }else{
-    pstart=rjd3toolkit:::parseDate(start)
+    pstart=rjd3toolkit::parseDate(start)
   }
   if (is.null(end)){
-    pend=rjd3toolkit:::DATE_MAX
+    pend=rjd3toolkit::DATE_MAX
   }else{
-    pend=rjd3toolkit:::parseDate(end)
+    pend=rjd3toolkit::parseDate(end)
   }
   vp$start<-pstart
   vp$end<-pend
@@ -167,7 +167,7 @@ calendar.easter<-function(calendar, offset, julian=FALSE, weight=1, start=NULL, 
 #' calendar.holiday(calendar, "EASTERMONDAY") # add Easter Monday
 calendar.holiday<-function(calendar, event, offset=0, weight=1, start=NULL, end=NULL){
   pd<-jd3.PrespecifiedHoliday$new()
-  pd$event<-rjd3toolkit:::enum_of(jd3.CalendarEvent, event, "HOLIDAY")
+  pd$event<-rjd3toolkit::enum_of(jd3.CalendarEvent, event, "HOLIDAY")
   pd$offset<-offset
   pd$weight<-weight
   pd$validity<-validityPeriod(start, end)
@@ -206,11 +206,11 @@ group_names <- function(x, contrasts = TRUE){
 #'
 #' @examples
 td<-function(frequency, start, length, groups=c(1,2,3,4,5,6,0), contrasts=TRUE){
-  jdom<-rjd3toolkit:::tsdomain_r2jd(frequency, start[1], start[2], length)
+  jdom<-rjd3toolkit::tsdomain_r2jd(frequency, start[1], start[2], length)
   igroups<-as.integer(groups)
   jm<-.jcall("demetra/modelling/r/Variables", "Ldemetra/math/matrices/Matrix;",
              "td", jdom, igroups, contrasts)
-  data <- rjd3toolkit:::matrix_jd2r(jm)
+  data <- rjd3toolkit::matrix_jd2r(jm)
   data <- group_names(data, contrasts = contrasts)
   return (ts(data, start = start, frequency = frequency))
 }
@@ -238,11 +238,11 @@ td.forTs<-function(s, groups=c(1,2,3,4,5,6,0), contrasts=TRUE){
 #' @examples
 htd<-function(calendar,frequency, start, length, groups=c(1,2,3,4,5,6,0), holiday=7, contrasts=TRUE,
               meanCorrection = contrasts){
-  jdom<-rjd3toolkit:::tsdomain_r2jd(frequency, start[1], start[2], length)
+  jdom<-rjd3toolkit::tsdomain_r2jd(frequency, start[1], start[2], length)
   jcal<-p2jd_calendar(calendar)
   jm<-.jcall("demetra/modelling/r/Variables", "Ldemetra/math/matrices/Matrix;",
               "htd", jcal, jdom, as.integer(groups), as.integer(holiday), contrasts, meanCorrection)
-  return <- rjd3toolkit:::matrix_jd2r(jm)
+  return <- rjd3toolkit::matrix_jd2r(jm)
   return <- group_names(return, contrasts = contrasts)
   return (ts(return, start = start, frequency = frequency))
 }
@@ -289,7 +289,7 @@ holidays<-function(calendar, start, length, nonworking=c(6,7), type=c("Skip", "A
   jcal<-p2jd_calendar(calendar)
   jm<-.jcall("demetra/calendar/r/Calendars", "Ldemetra/math/matrices/Matrix;",
              "holidays", jcal, as.character(start), as.integer(length), .jarray(as.integer(nonworking)), type)
-  res <- rjd3toolkit:::matrix_jd2r(jm)
+  res <- rjd3toolkit::matrix_jd2r(jm)
   rownames(res) <- as.character(seq(as.Date(start), length.out = nrow(res), by="days"))
   return (res)
 
@@ -307,7 +307,7 @@ longTermMean<-function(calendar,frequency,groups=c(1,2,3,4,5,6,0), holiday=7){
   jcal<-p2jd_calendar(calendar)
   jm<-.jcall("demetra/calendar/r/Calendars", "Ldemetra/math/matrices/Matrix;",
              "longTermMean", jcal, as.integer(frequency), as.integer(groups), as.integer(holiday))
-  res <- rjd3toolkit:::matrix_jd2r(jm)
+  res <- rjd3toolkit::matrix_jd2r(jm)
   return (group_names(res, contrasts = FALSE))
 }
 
@@ -331,9 +331,9 @@ easter.dates<-function(year0, year1, julian = FALSE){
 #' @param w indicates day of the month when inventories and other stock are reported (to denote the last day of the month enter 31).
 #' @export
 stock.td<-function(frequency, start, length, w = 31){
-  jdom <- rjd3toolkit:::tsdomain_r2jd(frequency, start[1], start[2], length)
+  jdom <- rjd3toolkit::tsdomain_r2jd(frequency, start[1], start[2], length)
   jm<-.jcall("demetra/modelling/r/Variables", "Ldemetra/math/matrices/Matrix;", "stockTradingDays", jdom, as.integer(w))
-  data <- rjd3toolkit:::matrix_jd2r(jm)
+  data <- rjd3toolkit::matrix_jd2r(jm)
   colnames(data) <- c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
   return (ts(data, frequency = frequency, start= start))
 }
