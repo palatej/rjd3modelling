@@ -53,7 +53,7 @@ createRamp<-function(start, end, name = NULL, coef=NULL){
 #'
 #' @examples
 createOutlier<-function(code, pos, name = NULL, coef=NULL){
-  return (list(name=name, code=code, pos=pos, coef=fixedParameters(coef)))
+  return (list(name=name, pos=pos, code=code, coef=fixedParameters(coef)))
 }
 
 #' Easter regressors
