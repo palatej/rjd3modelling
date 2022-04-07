@@ -33,5 +33,6 @@ Collate:
     'differencing.R'
     'regarima_rslts.R'
     'td.R'
+    'utility_spec.R'
     'variables.R'
     'zzz.R'
