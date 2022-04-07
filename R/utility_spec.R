@@ -8,19 +8,26 @@
 #' @export
 createVariable<-function(id, name = NULL, lag0 = 0, lag1 = 0, coef = NULL, regeffect=c("Undefined", "Trend", "Seasonal", "Irregular", "Series", "SeasonallyAdjusted")){
   regeffect=match.arg(regeffect)
-  if (is.null(name)) {name<-id}
-
-  return (list(id=id, name=name, lags=rlags(lag0, lag1), coef=fixedParameters(coef), regeffect=regeffect))
+  if (is.null(name)) {
+    name<-id
+  }
+  res = list(id=id, name=name, lags=rlags(lag0, lag1), coef = NULL, regeffect=regeffect)
+  res["coef"] = fixedParameters(coef)
+  return (res)
 }
 
 #' @rdname utility-spec
 #' @export
 createRamp<-function(start, end, name = NULL, coef=NULL){
-  return (list(name=name, start=start, end=end, coef=fixedParameters(coef) ))
+  res = list(name=name, start=start, end=end, coef = NULL)
+  res["coef"] = fixedParameters(coef)
+  return (res)
 }
 #' @rdname utility-spec
 #' @export
 createOutlier<-function(code, pos, name = NULL, coef=NULL){
-  return (list(name=name, pos=pos, code=code, coef=fixedParameters(coef)))
+  res = list(name=name, pos=pos, code=code, coef = NULL)
+  res["coef"] = fixedParameters(coef)
+  return (res)
 }
 
