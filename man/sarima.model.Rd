@@ -33,7 +33,7 @@ sarima.model(
 \item{btheta}{Coefficients of the seasonal moving average polynomial. True signs}
 }
 \value{
-
+a \code{"JD3_SARIMA"} model
 }
 \description{
 Seasonal ARIMA model (Box-Jenkins)

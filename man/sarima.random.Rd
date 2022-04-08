@@ -2,16 +2,26 @@
 % Please edit documentation in R/arima.R
 \name{sarima.random}
 \alias{sarima.random}
-\title{Title}
+\title{Simulate Seasonal ARIMA}
 \usage{
 sarima.random(model, length, stde = 5)
 }
 \arguments{
-\item{stde}{}
+\item{model}{a \code{"JD3_SARIMA"} model (see \code{\link[=sarima.model]{sarima.model()}} function).}
+
+\item{length}{length of the output series.}
+
+\item{stde}{the standard deviation of the simulated series}
 }
 \value{
 
 }
 \description{
-Title
+Simulate Seasonal ARIMA
+}
+\examples{
+# Airline model
+s_model <- sarima.model(period = 12, d =1, bd = 1, theta = 0.2, btheta = 0.2)
+x <- sarima.random(s_model, length = 64)
+plot(x, type = "line")
 }

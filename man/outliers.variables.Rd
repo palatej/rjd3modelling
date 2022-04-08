@@ -37,18 +37,18 @@ Outliers regressors
 \loadmathjax
 An additive outlier (AO, \code{ao.variable}) is defined as:
 \mjsdeqn{AO_t = \begin{cases}1 &\text{if } t=t_0 \newline
- 0 & \text{if }t\ne t_0\end{cases}}
+0 & \text{if }t\ne t_0\end{cases}}
 
 A level shift (LS, \code{ls.variable}) is defined as (if \code{zeroended = FALSE}):
 \mjsdeqn{LS_t = \begin{cases}-1 &\text{if } t < t_0 \newline
- 0 & \text{if }t\geq t_0 \end{cases}}
+0 & \text{if }t\geq t_0 \end{cases}}
 A transitory change (TC, \code{tc.variable}) is defined as:
 \mjsdeqn{TC_t = \begin{cases} 0 &\text{if }t < t_0 \newline
 \alpha^{t-t_0} & t\geq t_0 \end{cases}}
 A seasonal outlier (SO, \code{so.variable}) is defined as (if \code{zeroended = FALSE}):
 \mjsdeqn{SO_t = \begin{cases} 0 &\text{if }t\geq t_0 \newline
 -1 & \text{if }t < t_0 \text{ and $t$ same periode as }t_0\newline
- -\frac{1}{s-1} & \text{otherwise }\end{cases}}
+-\frac{1}{s-1} & \text{otherwise }\end{cases}}
 }
 \examples{
 #Outliers in February 2002

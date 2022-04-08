@@ -13,26 +13,28 @@ NULL
 #' @param btheta Coefficients of the seasonal moving average polynomial. True signs
 #' @param name Name of the model
 #'
-#' @return
+#' @return a `"JD3_SARIMA"` model
 #' @export
-#'
-#' @examples
 sarima.model<-function(name="sarima", period, phi=NULL, d=0, theta=NULL, bphi=NULL, bd=0, btheta=NULL){
   return (structure(
     list(name=name, period=period, phi = phi, d=d, theta=theta,
                          bphi = bphi, bd = bd, btheta = btheta), class="JD3_SARIMA"))
 }
 
-#' Title
+#' Simulate Seasonal ARIMA
 #'
-#' @param model
-#' @param length
-#' @param stde
+#' @param model a `"JD3_SARIMA"` model (see [sarima.model()] function).
+#' @param length length of the output series.
+#' @param stde the standard deviation of the simulated series
 #'
-#' @return
 #' @export
 #'
 #' @examples
+#' # Airline model
+#' s_model <- sarima.model(period = 12, d =1, bd = 1, theta = 0.2, btheta = 0.2)
+#' x <- sarima.random(s_model, length = 64)
+#' plot(x, type = "line")
+#' @return
 sarima.random<-function(model, length, stde=5){
   if (class(model) != "JD3_SARIMA") stop("Invalid model")
   return (.jcall("demetra/arima/r/SarimaModels", "[D", "random",

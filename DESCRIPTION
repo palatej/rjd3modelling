@@ -22,6 +22,7 @@ Suggests:
     knitr,
     rmarkdown
 RoxygenNote: 7.1.2
+Roxygen: list(markdown = TRUE)
 BugReports: https://github.com/jdemetra/rjdemetra3/issues
 Encoding: UTF-8
 RdMacros: mathjaxr
