@@ -1,13 +1,6 @@
 #' @include protobuf.R jd3_r.R
 NULL
 
-fixedParameters<-function(coef){
-  if (length(coef) == 0)return (NULL)
-  if (coef == 0) return (NULL)
-  return (lapply(coef, function(z){list(value=z, type="FIXED")}))
-}
-
-
 #' Easter regressors
 #'
 #' @inheritParams td
@@ -240,13 +233,13 @@ periodic.contrasts <-function(frequency, start, length){
 #' By default the fundamental seasonal frequency and all the harmonics are used.
 #'
 #' @details \loadmathjax
-#' Denote by \mjseqn{P} the value of \code{frequency} (= the period) and
+#' Denote by \mjseqn{P} the value of `frequency` (= the period) and
 #' \mjseqn{f_1}, ..., \mjseqn{f_n} the frequencies provides by \code{seasonal_frequency}
 #' (if \code{seasonal_frequency = NULL} then \mjseqn{n=\lfloor P/2\rfloor} and \mjseqn{f_i}=i).
 #'
 #' \code{trigonometric.variables} returns a matrix of size \mjseqn{length\times(2n)}.
 #'
-#' For each date \mjseqn{t} associated to the period \mjseqn{m} (\mjseqn{m \in [1,P]}),
+#' For each date \mjseqn{t} associated to the period \mjseqn{m} (\mjseqn{m \in \[1,P\]}),
 #' the columns \mjseqn{2i} and \mjseqn{2i-1} are equal to:
 #' \mjsdeqn{
 #' \cos \left(
