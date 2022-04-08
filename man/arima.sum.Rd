@@ -2,16 +2,30 @@
 % Please edit documentation in R/arima.R
 \name{arima.sum}
 \alias{arima.sum}
-\title{Title}
+\title{Sum ARIMA Models}
 \usage{
 arima.sum(...)
 }
 \arguments{
-\item{...}{}
+\item{...}{list of ARIMA models (created with \code{\link[=arima.model]{arima.model()}}).}
 }
 \value{
-
+a \code{"JD3_ARIMA"} model.
 }
 \description{
-Title
+Sum ARIMA Models
+}
+\details{
+Adds several Arima models, considering that their innovations are independent.
+The sum of two Arima models is computed as follows:
+the auto-regressive parts (stationary and non stationary of the aggregated
+model are the smaller common multiple of the corresponding polynomials of
+the components. The sum of the acf of the modified moving average
+polynomials is then computed and factorized, to get the moving average
+polynomial and innovation variance of the sum.
+}
+\examples{
+mod1 = arima.model(ar = c(0.1, 0.2), delta = 0, ma = 0)
+mod2 = arima.model(ar = 0, delta = 0, ma = c(0.4))
+arima.sum(mod1, mod2)
 }

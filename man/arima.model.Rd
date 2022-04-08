@@ -2,16 +2,24 @@
 % Please edit documentation in R/arima.R
 \name{arima.model}
 \alias{arima.model}
-\title{Title}
+\title{ARIMA Model}
 \usage{
 arima.model(name = "arima", ar = 1, delta = 1, ma = 1, variance = 1)
 }
 \arguments{
-\item{variance}{}
+\item{name}{Name of the model.}
+
+\item{ar}{Coefficients of the regular auto-regressive polynomial (1 + ar(1)B + ar(2)B + ...). True signs.}
+
+\item{delta}{The non stationary auto-regressive polynomial.}
+
+\item{ma}{Coefficients of the regular moving average polynomial (1 + ma(1)B + ma(2)B + ...). True signs.}
+
+\item{variance}{the innovation variance}
 }
 \value{
-
+a \code{"JD3_ARIMA"} model.
 }
 \description{
-Title
+ARIMA Model
 }

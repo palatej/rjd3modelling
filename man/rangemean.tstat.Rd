@@ -7,11 +7,16 @@
 rangemean.tstat(data, period = 0, groupsize = 0, trim = 0)
 }
 \arguments{
-\item{period}{}
+\item{data}{data to test.}
+
+\item{period}{periodicity of the data.}
+
+\item{trim}{}
 }
 \value{
-
+T-Stat of the range-mean regression.
 }
 \description{
-Title
+Function to perform a trimmed range mean regression test used in TRAMO
+to select whether the original series will be transformed into log or maintain the level.
 }

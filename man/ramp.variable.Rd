@@ -16,9 +16,6 @@ ramp.variable(frequency, start, length, range)
 \item{range}{the range of the regressor. A vector of length 2 containing the datesin the format \code{"YYYY-MM-DD"}
 or the position in period compared to the first date.}
 }
-\value{
-
-}
 \description{
 Ramp regressor
 }

@@ -16,24 +16,24 @@ sarima.model(
 )
 }
 \arguments{
-\item{name}{Name of the model}
+\item{name}{Name of the model.}
 
-\item{period}{Period of the model}
+\item{period}{Period of the model.}
 
-\item{phi}{Coefficients of the regular auto-regressive polynomial (1 + phi(1)B + phi(2)B + ...). True signs}
+\item{phi}{Coefficients of the regular auto-regressive polynomial (1 + phi(1)B + phi(2)B + ...). True signs.}
 
-\item{d}{Regular differencing order}
+\item{d}{Regular differencing order.}
 
-\item{theta}{Coefficients of the regular moving average polynomial (1 + theta(1)B + theta(2)B + ...). True signs}
+\item{theta}{Coefficients of the regular moving average polynomial (1 + theta(1)B + theta(2)B + ...). True signs.}
 
-\item{bphi}{Coefficients of the seasonal auto-regressive polynomial. True signs}
+\item{bphi}{Coefficients of the seasonal auto-regressive polynomial. True signs.}
 
-\item{bd}{Seasonal differencing order}
+\item{bd}{Seasonal differencing order.}
 
-\item{btheta}{Coefficients of the seasonal moving average polynomial. True signs}
+\item{btheta}{Coefficients of the seasonal moving average polynomial. True signs.}
 }
 \value{
-a \code{"JD3_SARIMA"} model
+a \code{"JD3_SARIMA"} model.
 }
 \description{
 Seasonal ARIMA model (Box-Jenkins)

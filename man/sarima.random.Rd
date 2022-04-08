@@ -11,10 +11,7 @@ sarima.random(model, length, stde = 5)
 
 \item{length}{length of the output series.}
 
-\item{stde}{the standard deviation of the simulated series}
-}
-\value{
-
+\item{stde}{the standard deviation of the simulated series.}
 }
 \description{
 Simulate Seasonal ARIMA

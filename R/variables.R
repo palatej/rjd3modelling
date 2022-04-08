@@ -39,7 +39,6 @@ julianeaster.variable<-function(frequency, start, length, duration=6){
 #' @param type the modelisation of the leap year effect: as a contrast variable (\code{type = "LeapYear"}, default)
 #' or by a length-of-month (or length-of-quarter; \code{type = "LengthOfPeriod"}).
 #'
-#' @return
 #' @export
 #'
 #' @examples
@@ -151,7 +150,6 @@ so.variable<-function(frequency, start, length, pos, date=NULL, zeroended=TRUE){
 #' \end{cases}
 #' }
 #'
-#' @return
 #' @export
 #'
 #' @examples
@@ -177,15 +175,27 @@ ramp.variable<-function(frequency, start, length, range){
 #' Intervention variable
 #'
 #' @inheritParams outliers.variables
-#' @param starts
-#' @param ends
-#' @param delta
-#' @param seasonaldelta
+#' @param starts,ends characters specifying sequences of starts/ends dates for the intervention variable.
+#' Can be characters or integers.
+#' @param delta regular differencing order.
+#' @param seasonaldelta segular differencing order.
+#' @details \loadmathjax
+#' Intervention variables are combinations of any possible sequence of ones and zeros
+#' (the sequence of ones being defined by  by the parameters `starts` and `ends`)
+#' and of \mjseqn{\frac{1}{(1-B)^d}} and \mjseqn{\frac{1}{(1-B^s)^D}} where \eqn{B} is the
+#' backwar operation, \eqn{s} is the frequency of the time series,
+#' \eqn{d} and \eqn{D} are the parameters `delta` and `seasonaldelta`.
 #'
-#' @return
-#' @export
+#' For example, with `delta = 0` and `seasonaldelta = 0` we get temporary level shifts defined
+#' by the parameters `starts` and `ends`. With `delta = 1` and `seasonaldelta = 0` we get
+#' the cumulative sum of temporary level shifts.
 #'
 #' @examples
+#' intervention.variable(12, c(2000, 1), 60,
+#'     starts = "2001-01-01", ends = "2001-12-01")
+#' intervention.variable(12, c(2000, 1), 60,
+#'     starts = "2001-01-01", ends = "2001-12-01", delta = 1)
+#' @export
 intervention.variable<-function(frequency, start, length, starts, ends, delta=0, seasonaldelta=0){
   if (length(starts) != length(ends)) stop("Invalid spans in intervention variable")
 

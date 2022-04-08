@@ -59,7 +59,6 @@ do.stationary<-function(data, period){
 #' * differences:
 #'    * lag: ddata(t)=data(t)-data(t-lag)
 #'    * order: order of the differencing
-#' @md
 #' @export
 #'
 #' @examples
@@ -93,10 +92,15 @@ differences<-function(data, lags=1, mean=TRUE){
 
 #' Title
 #'
-#' @param data
-#' @param period
+#' Function to perform a trimmed range mean regression test used in TRAMO
+#' to select whether the original series will be transformed into log or maintain the level.
 #'
-#' @return
+#' @param data data to test.
+#' @param period periodicity of the data.
+#' @param groupsize
+#' @param trim
+#'
+#' @return T-Stat of the range-mean regression.
 #' @export
 #'
 #' @examples

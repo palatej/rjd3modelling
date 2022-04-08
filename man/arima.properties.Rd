@@ -2,16 +2,21 @@
 % Please edit documentation in R/arima.R
 \name{arima.properties}
 \alias{arima.properties}
-\title{Title}
+\title{ARIMA Properties}
 \usage{
 arima.properties(model, nspectrum = 601, nacf = 36)
 }
 \arguments{
-\item{nacf}{}
-}
-\value{
+\item{model}{a \code{"JD3_ARIMA"} model (created with \code{\link[=arima.model]{arima.model()}}).}
 
+\item{nspectrum}{number of points in [0, pi] to calculate the spectrum.}
+
+\item{nacf}{maximum lag at which to calculate the acf.}
 }
 \description{
-Title
+ARIMA Properties
+}
+\examples{
+mod1 = arima.model(ar = c(0.1, 0.2), delta = 0, ma = 0)
+arima.properties(mod1)
 }
