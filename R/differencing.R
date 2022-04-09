@@ -92,18 +92,57 @@ differences<-function(data, lags=1, mean=TRUE){
 
 #' Title
 #'
-#' Function to perform a trimmed range mean regression test used in TRAMO
-#' to select whether the original series will be transformed into log or maintain the level.
+#' Function to perform a range-mean regression, trimmed to avoid outlier distortion.
+#' The slope is used in TRAMO to select whether the original series will be transformed into log or maintain the level.
 #'
 #' @param data data to test.
 #' @param period periodicity of the data.
-#' @param groupsize
-#' @param trim
+#' @param groupsize number of observations per group (before being trimmed).
+#' The default group size (`groupsize = 0`) is computed as followed:
+#' - if `period = 12` or `period = 6`, it is equal to `12`;
+#' - if `period = 4` it is equal to `12` if the data has at least 166 observations,
+#' `8` otherwise;
+#' - if `period = 3` or `period = 2` it is equal to `12` if the data has at least 166 observations,
+#' `6` otherwise;
+#' - if `period = 1` it is equal to `9` if the data has at least 166 observations,
+#' `5` otherwise;
+#' - it is equal to `period` otherwise.
+#' @param trim number of trimmed observations.
 #'
-#' @return T-Stat of the range-mean regression.
-#' @export
+#' @details \loadmathjax
+#' First, the data is divided into \eqn{n} groups of successive observations of length \eqn{l} (`groupsize`).
+#' That is, the first group is formed with the first \eqn{l} observations,
+#' the second group is formed with observations \eqn{1+l} to \eqn{2l}, etc.
+#' Then, for each group \eqn{i}, the observations are sorted and the `trim` smallest and largest
+#' observations are rejected (to avoid outlier distortion).
+#' With the other observations, the range (noted \mjseqn{y_i}) and mean (noted \mjseqn{m_i}) are computed.
+#'
+#' Finally, the following regression is performed :
+#' \mjsdeqn{
+#' y_t = \alpha + \beta m_t + u_t.
+#' }
+#' The function `rangemean.tstat` returns the T-statistic associated to \mjseqn{\beta}.
+#' If it is significantly higher than 0, log transformation is recommended.
+#'
+#' @return T-Stat of the slope of the range-mean regression.
 #'
 #' @examples
+#' y = rjd3toolkit::ABS$X0.2.09.10.M
+#' # Multiplicative pattern
+#' plot(y)
+#' period = 12
+#' rm_t = rangemean.tstat(y, period = period, groupsize = period)
+#' rm_t # higher than 0
+#' # Can be tested:
+#' pt(rm_t, period - 2, lower.tail = FALSE)
+#' # Or :
+#' 1-rjd3toolkit::cdfT(period-2, rm_t)
+#'
+#' # Close to 0
+#' rm_t_log = rangemean.tstat(log(y), period = period, groupsize = period)
+#' rm_t_log
+#' pt(rm_t_log, period - 2, lower.tail = FALSE)
+#' @export
 rangemean.tstat<-function(data, period=0, groupsize = 0, trim = 0){
   return (.jcall("demetra/modelling/r/AutoModelling", "D", "rangeMean",
                  as.numeric(data), as.integer(period), as.integer(groupsize), as.integer(trim)))

@@ -18,9 +18,6 @@ SystemRequirements: Java SE 8 or higher
 License: EUPL
 URL: https://github.com/jdemetra/rjd3modelling
 LazyData: TRUE
-Suggests:
-    knitr,
-    rmarkdown
 RoxygenNote: 7.1.2
 Roxygen: list(markdown = TRUE)
 BugReports: https://github.com/jdemetra/rjdemetra3/issues
