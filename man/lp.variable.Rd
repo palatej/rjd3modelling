@@ -16,9 +16,6 @@ lp.variable(frequency, start, length, type = c("LeapYear", "LengthOfPeriod"))
 \item{type}{the modelisation of the leap year effect: as a contrast variable (\code{type = "LeapYear"}, default)
 or by a length-of-month (or length-of-quarter; \code{type = "LengthOfPeriod"}).}
 }
-\value{
-
-}
 \description{
 Leap Year regressor
 }

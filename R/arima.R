@@ -4,35 +4,35 @@ NULL
 
 #' Seasonal ARIMA model (Box-Jenkins)
 #'
-#' @param period Period of the model
-#' @param phi Coefficients of the regular auto-regressive polynomial (1 + phi(1)B + phi(2)B + ...). True signs
-#' @param d Regular differencing order
-#' @param theta Coefficients of the regular moving average polynomial (1 + theta(1)B + theta(2)B + ...). True signs
-#' @param bphi Coefficients of the seasonal auto-regressive polynomial. True signs
-#' @param bd Seasonal differencing order
-#' @param btheta Coefficients of the seasonal moving average polynomial. True signs
-#' @param name Name of the model
+#' @param period Period of the model.
+#' @param phi Coefficients of the regular auto-regressive polynomial (1 + phi(1)B + phi(2)B + ...). True signs.
+#' @param d Regular differencing order.
+#' @param theta Coefficients of the regular moving average polynomial (1 + theta(1)B + theta(2)B + ...). True signs.
+#' @param bphi Coefficients of the seasonal auto-regressive polynomial. True signs.
+#' @param bd Seasonal differencing order.
+#' @param btheta Coefficients of the seasonal moving average polynomial. True signs.
+#' @param name Name of the model.
 #'
-#' @return
+#' @return a `"JD3_SARIMA"` model.
 #' @export
-#'
-#' @examples
 sarima.model<-function(name="sarima", period, phi=NULL, d=0, theta=NULL, bphi=NULL, bd=0, btheta=NULL){
   return (structure(
     list(name=name, period=period, phi = phi, d=d, theta=theta,
                          bphi = bphi, bd = bd, btheta = btheta), class="JD3_SARIMA"))
 }
 
-#' Title
+#' Simulate Seasonal ARIMA
 #'
-#' @param model
-#' @param length
-#' @param stde
-#'
-#' @return
-#' @export
+#' @param model a `"JD3_SARIMA"` model (see [sarima.model()] function).
+#' @param length length of the output series.
+#' @param stde the standard deviation of the simulated series.
 #'
 #' @examples
+#' # Airline model
+#' s_model <- sarima.model(period = 12, d =1, bd = 1, theta = 0.2, btheta = 0.2)
+#' x <- sarima.random(s_model, length = 64)
+#' plot(x, type = "line")
+#' @export
 sarima.random<-function(model, length, stde=5){
   if (class(model) != "JD3_SARIMA") stop("Invalid model")
   return (.jcall("demetra/arima/r/SarimaModels", "[D", "random",
@@ -47,15 +47,15 @@ sarima.random<-function(model, length, stde=5){
          stde))
 }
 
-#' Title
+#' ARIMA Model
 #'
-#' @param name
-#' @param ar
-#' @param delta
-#' @param ma
-#' @param variance
+#' @param name Name of the model.
+#' @param ar Coefficients of the regular auto-regressive polynomial (1 + ar(1)B + ar(2)B + ...). True signs.
+#' @param delta The non stationary auto-regressive polynomial.
+#' @param ma Coefficients of the regular moving average polynomial (1 + ma(1)B + ma(2)B + ...). True signs.
+#' @param variance the innovation variance
 #'
-#' @return
+#' @return a `"JD3_ARIMA"` model.
 #' @export
 #'
 #' @examples
@@ -102,14 +102,27 @@ r2jd_arima<-function(model){
                  as.numeric(model$var), F))
 }
 
-#' Title
+#' Sum ARIMA Models
 #'
-#' @param ...
+#' @param ... list of ARIMA models (created with [arima.model()]).
 #'
-#' @return
-#' @export
+#' @return a `"JD3_ARIMA"` model.
+#'
+#'
+#' @details
+#' Adds several Arima models, considering that their innovations are independent.
+#' The sum of two Arima models is computed as follows:
+#' the auto-regressive parts (stationary and non stationary of the aggregated
+#' model are the smaller common multiple of the corresponding polynomials of
+#' the components. The sum of the acf of the modified moving average
+#' polynomials is then computed and factorized, to get the moving average
+#' polynomial and innovation variance of the sum.
 #'
 #' @examples
+#' mod1 = arima.model(ar = c(0.1, 0.2), delta = 0, ma = 0)
+#' mod2 = arima.model(ar = 0, delta = 0, ma = c(0.4))
+#' arima.sum(mod1, mod2)
+#' @export
 arima.sum<-function(...){
   components<-list(...)
   return (arima.lsum(components))
@@ -121,16 +134,16 @@ arima.lsum<-function(components){
   return (jd2r_arima(jsum))
 }
 
-#' Title
+#' ARIMA Properties
 #'
-#' @param model
-#' @param nspectrum
-#' @param nacf
-#'
-#' @return
-#' @export
+#' @param model a `"JD3_ARIMA"` model (created with [arima.model()]).
+#' @param nspectrum number of points in \[0, pi\] to calculate the spectrum.
+#' @param nacf maximum lag at which to calculate the acf.
 #'
 #' @examples
+#' mod1 = arima.model(ar = c(0.1, 0.2), delta = 0, ma = 0)
+#' arima.properties(mod1)
+#' @export
 arima.properties<-function(model, nspectrum=601, nacf=36){
   jmodel<-r2jd_arima(model)
   spectrum<-.jcall("demetra/arima/r/ArimaModels", "[D", "spectrum", jmodel, as.integer(nspectrum))

@@ -21,11 +21,31 @@ intervention.variable(
 
 \item{length}{Length of the variables}
 
-\item{seasonaldelta}{}
-}
-\value{
+\item{starts, ends}{characters specifying sequences of starts/ends dates for the intervention variable.
+Can be characters or integers.}
 
+\item{delta}{regular differencing order.}
+
+\item{seasonaldelta}{segular differencing order.}
 }
 \description{
 Intervention variable
+}
+\details{
+\loadmathjax
+Intervention variables are combinations of any possible sequence of ones and zeros
+(the sequence of ones being defined by  by the parameters \code{starts} and \code{ends})
+and of \mjseqn{\frac{1}{(1-B)^d}} and \mjseqn{\frac{1}{(1-B^s)^D}} where \eqn{B} is the
+backwar operation, \eqn{s} is the frequency of the time series,
+\eqn{d} and \eqn{D} are the parameters \code{delta} and \code{seasonaldelta}.
+
+For example, with \code{delta = 0} and \code{seasonaldelta = 0} we get temporary level shifts defined
+by the parameters \code{starts} and \code{ends}. With \code{delta = 1} and \code{seasonaldelta = 0} we get
+the cumulative sum of temporary level shifts.
+}
+\examples{
+intervention.variable(12, c(2000, 1), 60,
+    starts = "2001-01-01", ends = "2001-12-01")
+intervention.variable(12, c(2000, 1), 60,
+    starts = "2001-01-01", ends = "2001-12-01", delta = 1)
 }

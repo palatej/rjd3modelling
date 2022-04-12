@@ -1,61 +1,6 @@
 #' @include protobuf.R jd3_r.R
 NULL
 
-fixedParameters<-function(coef){
-  if (length(coef) == 0)return (NULL)
-  if (coef == 0) return (NULL)
-  return (lapply(coef, function(z){list(value=z, type="FIXED")}))
-}
-
-#' Title
-#'
-#' @param name
-#' @param id
-#' @param lag0
-#' @param lag1
-#' @param regeffect
-#'
-#' @return
-#' @export
-#'
-#' @examples
-createVariable<-function(id, name = NULL, lag0 = 0, lag1 = 0, coef = NULL, regeffect=c("Undefined", "Trend", "Seasonal", "Irregular", "Series", "SeasonallyAdjusted")){
-  regeffect=match.arg(regeffect)
-  if (is.null(name)) {name<-id}
-
-  return (list(id=id, name=name, lags=rlags(lag0, lag1), coef=fixedParameters(coef), regeffect=regeffect))
-}
-
-#' Title
-#'
-#' @param start
-#' @param end
-#' @param name
-#' @param coef
-#'
-#' @return
-#' @export
-#'
-#' @examples
-createRamp<-function(start, end, name = NULL, coef=NULL){
-  return (list(name=name, start=start, end=end, coef=fixedParameters(coef) ))
-}
-
-#' Title
-#'
-#' @param code
-#' @param pos
-#' @param name
-#' @param coef
-#'
-#' @return
-#' @export
-#'
-#' @examples
-createOutlier<-function(code, pos, name = NULL, coef=NULL){
-  return (list(name=name, code=code, pos=pos, coef=fixedParameters(coef)))
-}
-
 #' Easter regressors
 #'
 #' @inheritParams td
@@ -94,7 +39,6 @@ julianeaster.variable<-function(frequency, start, length, duration=6){
 #' @param type the modelisation of the leap year effect: as a contrast variable (\code{type = "LeapYear"}, default)
 #' or by a length-of-month (or length-of-quarter; \code{type = "LengthOfPeriod"}).
 #'
-#' @return
 #' @export
 #'
 #' @examples
@@ -206,7 +150,6 @@ so.variable<-function(frequency, start, length, pos, date=NULL, zeroended=TRUE){
 #' \end{cases}
 #' }
 #'
-#' @return
 #' @export
 #'
 #' @examples
@@ -232,15 +175,27 @@ ramp.variable<-function(frequency, start, length, range){
 #' Intervention variable
 #'
 #' @inheritParams outliers.variables
-#' @param starts
-#' @param ends
-#' @param delta
-#' @param seasonaldelta
+#' @param starts,ends characters specifying sequences of starts/ends dates for the intervention variable.
+#' Can be characters or integers.
+#' @param delta regular differencing order.
+#' @param seasonaldelta segular differencing order.
+#' @details \loadmathjax
+#' Intervention variables are combinations of any possible sequence of ones and zeros
+#' (the sequence of ones being defined by  by the parameters `starts` and `ends`)
+#' and of \mjseqn{\frac{1}{(1-B)^d}} and \mjseqn{\frac{1}{(1-B^s)^D}} where \eqn{B} is the
+#' backwar operation, \eqn{s} is the frequency of the time series,
+#' \eqn{d} and \eqn{D} are the parameters `delta` and `seasonaldelta`.
 #'
-#' @return
-#' @export
+#' For example, with `delta = 0` and `seasonaldelta = 0` we get temporary level shifts defined
+#' by the parameters `starts` and `ends`. With `delta = 1` and `seasonaldelta = 0` we get
+#' the cumulative sum of temporary level shifts.
 #'
 #' @examples
+#' intervention.variable(12, c(2000, 1), 60,
+#'     starts = "2001-01-01", ends = "2001-12-01")
+#' intervention.variable(12, c(2000, 1), 60,
+#'     starts = "2001-01-01", ends = "2001-12-01", delta = 1)
+#' @export
 intervention.variable<-function(frequency, start, length, starts, ends, delta=0, seasonaldelta=0){
   if (length(starts) != length(ends)) stop("Invalid spans in intervention variable")
 
@@ -288,13 +243,13 @@ periodic.contrasts <-function(frequency, start, length){
 #' By default the fundamental seasonal frequency and all the harmonics are used.
 #'
 #' @details \loadmathjax
-#' Denote by \mjseqn{P} the value of \code{frequency} (= the period) and
+#' Denote by \mjseqn{P} the value of `frequency` (= the period) and
 #' \mjseqn{f_1}, ..., \mjseqn{f_n} the frequencies provides by \code{seasonal_frequency}
 #' (if \code{seasonal_frequency = NULL} then \mjseqn{n=\lfloor P/2\rfloor} and \mjseqn{f_i}=i).
 #'
 #' \code{trigonometric.variables} returns a matrix of size \mjseqn{length\times(2n)}.
 #'
-#' For each date \mjseqn{t} associated to the period \mjseqn{m} (\mjseqn{m \in [1,P]}),
+#' For each date \mjseqn{t} associated to the period \mjseqn{m} (\mjseqn{m \in \[1,P\]}),
 #' the columns \mjseqn{2i} and \mjseqn{2i-1} are equal to:
 #' \mjsdeqn{
 #' \cos \left(
