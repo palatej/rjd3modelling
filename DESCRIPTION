@@ -11,7 +11,7 @@ Depends:
 Imports:
   rJava (>= 1.0-6),
 	RProtoBuf (>= 0.4.17),
-  rjd3toolkit (>= 0.2.0),
+  rjd3toolkit (>= 0.3.0),
   methods,
   mathjaxr
 SystemRequirements: Java SE 8 or higher
