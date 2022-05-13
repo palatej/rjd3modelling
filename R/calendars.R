@@ -18,6 +18,7 @@ NULL
 #' calendar.holiday(belgiumCalendar, "ASSUMPTION")
 #' calendar.holiday(belgiumCalendar, "ALLSAINTSDAY")
 #' calendar.holiday(belgiumCalendar, "ARMISTICE")
+#' calendar.singledate(belgiumCalendar, "2022-05-13")
 #' M<-td(12, c(1980,1), 120, c(1,1,1,1,2,3,0), contrasts = FALSE)
 #'
 #' H<-htd(belgiumCalendar, 12, c(1980,1), 120, c(1,1,1,1,1,2,0), contrasts = FALSE)
@@ -128,6 +129,25 @@ calendar.easter<-function(calendar, offset, julian=FALSE, weight=1, start=NULL, 
   n<-1+length(calendar$easter_related_days)
   calendar$easter_related_days[[n]]<-ed
 }
+
+#' Title
+#'
+#' @param calendar
+#' @param date
+#' @param weight
+#'
+#' @return
+#' @export
+#'
+#' @examples
+calendar.singledate<-function(calendar, date, weight=1){
+  sd<-jd3.SingleDate$new()
+  sd$date<-rjd3toolkit::parseDate(date)
+  sd$weight<-weight
+  n<-1+length(calendar$single_dates)
+  calendar$single_dates[[n]]<-sd
+}
+
 
 #' Add specific holiday to a calendar
 #'
@@ -266,7 +286,7 @@ htd.forTs<-function(s, calendar, groups = c(1,2,3,4,5,6,0), holiday=7, contrasts
 #' \code{"PreviousWorkingDay"},
 #' \code{"Skip"} (holidays corresponding to non working days are simply skipped in the matrix),
 #' \code{"All"} (holidays are always put in the matrix, even if they correspond to a non working day).
-#'
+#' @param single Single variable or matrix containing the different holidays in separate columns
 #' @returns A matrix where each column is associated to a holiday (in the order of creation of the holiday) and each row to a date.
 #'
 #' @examples
@@ -284,11 +304,11 @@ htd.forTs<-function(s, calendar, groups = c(1,2,3,4,5,6,0), holiday=7, contrasts
 #' q<-holidays(belgiumCalendar, "2021-01-01", 365.25*10, type="NextWorkingDay")
 #' plot(apply(q,1, max))
 #' @export
-holidays<-function(calendar, start, length, nonworking=c(6,7), type=c("Skip", "All", "NextWorkingDay", "PreviousWorkingDay")){
+holidays<-function(calendar, start, length, nonworking=c(6,7), type=c("Skip", "All", "NextWorkingDay", "PreviousWorkingDay"), single=FALSE){
   type<-match.arg(type)
   jcal<-p2jd_calendar(calendar)
   jm<-.jcall("demetra/calendar/r/Calendars", "Ldemetra/math/matrices/Matrix;",
-             "holidays", jcal, as.character(start), as.integer(length), .jarray(as.integer(nonworking)), type)
+             "holidays", jcal, as.character(start), as.integer(length), .jarray(as.integer(nonworking)), type,  as.logical(single))
   res <- rjd3toolkit::matrix_jd2r(jm)
   rownames(res) <- as.character(seq(as.Date(start), length.out = nrow(res), by="days"))
   return (res)

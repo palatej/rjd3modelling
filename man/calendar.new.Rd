@@ -20,6 +20,7 @@ calendar.holiday(belgiumCalendar, "WHITMONDAY")
 calendar.holiday(belgiumCalendar, "ASSUMPTION")
 calendar.holiday(belgiumCalendar, "ALLSAINTSDAY")
 calendar.holiday(belgiumCalendar, "ARMISTICE")
+calendar.singledate(belgiumCalendar, "2022-05-13")
 M<-td(12, c(1980,1), 120, c(1,1,1,1,2,3,0), contrasts = FALSE)
 
 H<-htd(belgiumCalendar, 12, c(1980,1), 120, c(1,1,1,1,1,2,0), contrasts = FALSE)

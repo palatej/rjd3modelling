@@ -9,7 +9,8 @@ holidays(
   start,
   length,
   nonworking = c(6, 7),
-  type = c("Skip", "All", "NextWorkingDay", "PreviousWorkingDay")
+  type = c("Skip", "All", "NextWorkingDay", "PreviousWorkingDay"),
+  single = FALSE
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ holidays(
 \code{"PreviousWorkingDay"},
 \code{"Skip"} (holidays corresponding to non working days are simply skipped in the matrix),
 \code{"All"} (holidays are always put in the matrix, even if they correspond to a non working day).}
+
+\item{single}{Single variable or matrix containing the different holidays in separate columns}
 }
 \value{
 A matrix where each column is associated to a holiday (in the order of creation of the holiday) and each row to a date.
