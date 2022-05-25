@@ -4,14 +4,14 @@
 \alias{ramp.variable}
 \title{Ramp regressor}
 \usage{
-ramp.variable(frequency, start, length, range)
+ramp.variable(frequency, start, length, s, range)
 }
 \arguments{
-\item{frequency}{Annual frequency. Should be a divisor of 12.}
+\item{frequency, start, length}{Annual frequency (divisor of 12), first date (array with the first year and the first period)
+(for instance \code{c(1980, 1)}) and number of periods of the output variables. Can also be provided with the \code{s} argument}
 
-\item{start}{Array with the first year and the first period (for instance \code{c(1980, 1)}).}
-
-\item{length}{Length of the variables}
+\item{s}{time series used to get the dates for the trading days variables. If supplied the
+parameters \code{frequency}, \code{start} and \code{length} are ignored.}
 
 \item{range}{the range of the regressor. A vector of length 2 containing the datesin the format \code{"YYYY-MM-DD"}
 or the position in period compared to the first date.}
@@ -20,9 +20,8 @@ or the position in period compared to the first date.}
 Ramp regressor
 }
 \details{
-\loadmathjax
-A ramp between two dates \mjseqn{t_0} and \mjseqn{t_1} is defined as:
-\mjsdeqn{RP_t=
+A ramp between two dates \eqn{t_0} and \eqn{t_1} is defined as:
+\deqn{RP_t=
 \begin{cases}
 -1 & \text{if }t\geq t_0 \newline
 \frac{t-t_0}{t_1-t_0}-1 & t_0< t < t_1 \newlin

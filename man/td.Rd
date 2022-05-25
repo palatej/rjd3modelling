@@ -2,19 +2,23 @@
 % Please edit documentation in R/calendars.R
 \name{td}
 \alias{td}
-\alias{td.forTs}
 \title{Usual trading days variables}
 \usage{
-td(frequency, start, length, groups = c(1, 2, 3, 4, 5, 6, 0), contrasts = TRUE)
-
-td.forTs(s, groups = c(1, 2, 3, 4, 5, 6, 0), contrasts = TRUE)
+td(
+  frequency,
+  start,
+  length,
+  s,
+  groups = c(1, 2, 3, 4, 5, 6, 0),
+  contrasts = TRUE
+)
 }
 \arguments{
-\item{frequency}{Annual frequency. Should be a divisor of 12.}
+\item{frequency, start, length}{Annual frequency (divisor of 12), first date (array with the first year and the first period)
+(for instance \code{c(1980, 1)}) and number of periods of the output variables. Can also be provided with the \code{s} argument}
 
-\item{start}{Array with the first year and the first period (for instance \code{c(1980, 1)}).}
-
-\item{length}{Length of the variables}
+\item{s}{time series used to get the dates for the trading days variables. If supplied the
+parameters \code{frequency}, \code{start} and \code{length} are ignored.}
 
 \item{groups}{Groups of days. The length of the array must be 7. It indicates to what group each week day
 belongs. The first item corresponds to Mondays and the last one to Sundays. The group used for contrasts (usually Sundays) is identified by 0.
@@ -22,8 +26,6 @@ The other groups are identified by 1, 2,... n (<= 6). For instance, usual tradin
 week days by c(1,1,1,1,1,0,0), week days, Saturdays, Sundays by c(1,1,1,1,1,2,0) etc...}
 
 \item{contrasts}{If true, the variables are defined by contrasts with the 0-group. Otherwise, raw number of days are provided}
-
-\item{s}{time series used to get the dates for the trading days variables.}
 }
 \value{
 The variables corresponding to each group, starting with the 0-group (\code{contrasts = FALSE})

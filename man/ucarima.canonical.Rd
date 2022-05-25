@@ -9,9 +9,6 @@ ucarima.canonical(ucm, cmp = 0, adjust = T)
 \arguments{
 \item{adjust}{}
 }
-\value{
-
-}
 \description{
 Title
 }

@@ -12,17 +12,15 @@ Imports:
   rJava (>= 1.0-6),
 	RProtoBuf (>= 0.4.17),
   rjd3toolkit (>= 0.3.1),
-  methods,
-  mathjaxr
+  methods
 SystemRequirements: Java SE 8 or higher
 License: EUPL
 URL: https://github.com/jdemetra/rjd3modelling
 LazyData: TRUE
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.0
 Roxygen: list(markdown = TRUE)
 BugReports: https://github.com/jdemetra/rjdemetra3/issues
 Encoding: UTF-8
-RdMacros: mathjaxr
 Collate: 
     'jd3_r.R'
     'protobuf.R'

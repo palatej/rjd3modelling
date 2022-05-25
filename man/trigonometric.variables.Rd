@@ -4,14 +4,14 @@
 \alias{trigonometric.variables}
 \title{Trigonometric variables}
 \usage{
-trigonometric.variables(frequency, start, length, seasonal_frequency = NULL)
+trigonometric.variables(frequency, start, length, s, seasonal_frequency = NULL)
 }
 \arguments{
-\item{frequency}{Annual frequency. Should be a divisor of 12.}
+\item{frequency, start, length}{Annual frequency (divisor of 12), first date (array with the first year and the first period)
+(for instance \code{c(1980, 1)}) and number of periods of the output variables. Can also be provided with the \code{s} argument}
 
-\item{start}{Array with the first year and the first period (for instance \code{c(1980, 1)}).}
-
-\item{length}{Length of the variables}
+\item{s}{time series used to get the dates for the trading days variables. If supplied the
+parameters \code{frequency}, \code{start} and \code{length} are ignored.}
 
 \item{seasonal_frequency}{the seasonal frequencies.
 By default the fundamental seasonal frequency and all the harmonics are used.}
@@ -20,16 +20,15 @@ By default the fundamental seasonal frequency and all the harmonics are used.}
 Computes trigonometric variables at different frequencies
 }
 \details{
-\loadmathjax
-Denote by \mjseqn{P} the value of \code{frequency} (= the period) and
-\mjseqn{f_1}, ..., \mjseqn{f_n} the frequencies provides by \code{seasonal_frequency}
-(if \code{seasonal_frequency = NULL} then \mjseqn{n=\lfloor P/2\rfloor} and \mjseqn{f_i}=i).
+Denote by \eqn{P} the value of \code{frequency} (= the period) and
+\eqn{f_1}, ..., \eqn{f_n} the frequencies provides by \code{seasonal_frequency}
+(if \code{seasonal_frequency = NULL} then \eqn{n=\lfloor P/2\rfloor} and \eqn{f_i}=i).
 
-\code{trigonometric.variables} returns a matrix of size \mjseqn{length\times(2n)}.
+\code{trigonometric.variables} returns a matrix of size \eqn{length\times(2n)}.
 
-For each date \mjseqn{t} associated to the period \mjseqn{m} (\mjseqn{m \in [1,P]}),
-the columns \mjseqn{2i} and \mjseqn{2i-1} are equal to:
-\mjsdeqn{
+For each date \eqn{t} associated to the period \eqn{m} (\eqn{m\in[1,P]}),
+the columns \eqn{2i} and \eqn{2i-1} are equal to:
+\deqn{
 \cos \left(
 \frac{2 \pi}{P}  \times m \times f_i
 \right)
@@ -40,10 +39,10 @@ the columns \mjseqn{2i} and \mjseqn{2i-1} are equal to:
 }
 Take for example the case when the first date (\code{date}) is a January, \code{frequency = 12}
 (monthly time series), \code{length = 12} and \code{seasonal_frequency = NULL}.
-The first frequency, \mjseqn{\lambda_1 = 2\pi /12} represent the fundamental seasonal frequency and the
-other frequencies (\mjseqn{\lambda_2 = 2\pi /12 \times 2}, ..., \mjseqn{\lambda_6 = 2\pi /12 \times 6})
+The first frequency, \eqn{\lambda_1 = 2\pi /12} represent the fundamental seasonal frequency and the
+other frequencies (\eqn{\lambda_2 = 2\pi /12 \times 2}, ..., \eqn{\lambda_6 = 2\pi /12 \times 6})
 are the five harmonics. The output matrix will be equal to:
-\mjsdeqn{
+\deqn{
 \begin{pmatrix}
 \cos(\lambda_1) & \sin (\lambda_1) & \cdots &
 \cos(\lambda_6) & \sin (\lambda_6) \newline

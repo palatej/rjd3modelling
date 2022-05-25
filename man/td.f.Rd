@@ -23,36 +23,35 @@ By default (\code{nyears = 0}), the entire sample is used.}
 Trading Days Test
 }
 \details{
-\loadmathjax
 The function performs a residual seasonality test that is a joint F-Test on the coefficients of trading days regressors.
 Several specifications can be used on the model:
 \itemize{
 \item \code{model = "WN"} the following model is used:
-\mjsdeqn{
+\deqn{
 y_t - \bar y =\beta TD_t +  \varepsilon_t
 }
 \item \code{model = "D1"} (the default) the following model is used:
-\mjsdeqn{
+\deqn{
 \Delta y_t - \overline{\Delta y} =\beta \Delta TD_t +  \varepsilon_t
 }
 \item \code{model = "DY"} the following model is used:
-\mjsdeqn{
+\deqn{
 \Delta_s y_t - \overline{\Delta_s y} =\beta \Delta_s TD_t +  \varepsilon_t
 }
 \item \code{model = "DYD1"} the following model is used:
-\mjsdeqn{
+\deqn{
 \Delta_s\Delta y_t - \overline{\Delta_s \Delta y} =\beta \Delta_s \Delta TD_t +  \varepsilon_t
 }
 \item \code{model = "AIRLINE"} the following model is used:
-\mjsdeqn{
+\deqn{
 y_t =\beta TD_t +  \varepsilon_t \text{ with }\varepsilon_t \sim ARIMA(0,1,1)(0,1,1)
 }
 \item \code{model = "R011"} the following model is used:
-\mjsdeqn{
+\deqn{
 y_t =\beta TD_t +  \varepsilon_t \text{ with }\varepsilon_t \sim ARIMA(0,1,1)(0,1,1)
 }
 \item \code{model = "R100"} the following model is used:
-\mjsdeqn{
+\deqn{
 y_t =\alpha_0 + \alpha_1 y_{t-1} + \beta TD_t +  \varepsilon_t
 }
 }

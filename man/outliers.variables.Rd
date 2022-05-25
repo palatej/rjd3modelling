@@ -8,20 +8,20 @@
 \alias{so.variable}
 \title{Outliers regressors}
 \usage{
-ao.variable(frequency, start, length, pos, date = NULL)
+ao.variable(frequency, start, length, s, pos, date = NULL)
 
-tc.variable(frequency, start, length, pos, date = NULL, rate = 0.7)
+tc.variable(frequency, start, length, s, pos, date = NULL, rate = 0.7)
 
-ls.variable(frequency, start, length, pos, date = NULL, zeroended = TRUE)
+ls.variable(frequency, start, length, s, pos, date = NULL, zeroended = TRUE)
 
-so.variable(frequency, start, length, pos, date = NULL, zeroended = TRUE)
+so.variable(frequency, start, length, s, pos, date = NULL, zeroended = TRUE)
 }
 \arguments{
-\item{frequency}{Annual frequency. Should be a divisor of 12.}
+\item{frequency, start, length}{Annual frequency (divisor of 12), first date (array with the first year and the first period)
+(for instance \code{c(1980, 1)}) and number of periods of the output variables. Can also be provided with the \code{s} argument}
 
-\item{start}{Array with the first year and the first period (for instance \code{c(1980, 1)}).}
-
-\item{length}{Length of the variables}
+\item{s}{time series used to get the dates for the trading days variables. If supplied the
+parameters \code{frequency}, \code{start} and \code{length} are ignored.}
 
 \item{pos, date}{the date of the outlier, defined by the position in period compared to the first date (\code{pos} parameter)
 or by a specific \code{date} defined in the format \code{"YYYY-MM-DD"}.}
@@ -34,21 +34,20 @@ or by a specific \code{date} defined in the format \code{"YYYY-MM-DD"}.}
 Outliers regressors
 }
 \details{
-\loadmathjax
 An additive outlier (AO, \code{ao.variable}) is defined as:
-\mjsdeqn{AO_t = \begin{cases}1 &\text{if } t=t_0 \newline
-0 & \text{if }t\ne t_0\end{cases}}
+\deqn{AO_t = \begin{cases}1 &\text{if } t=t_0 \newline
+ 0 & \text{if }t\ne t_0\end{cases}}
 
 A level shift (LS, \code{ls.variable}) is defined as (if \code{zeroended = FALSE}):
-\mjsdeqn{LS_t = \begin{cases}-1 &\text{if } t < t_0 \newline
-0 & \text{if }t\geq t_0 \end{cases}}
+\deqn{LS_t = \begin{cases}-1 &\text{if } t < t_0 \newline
+ 0 & \text{if }t\geq t_0 \end{cases}}
 A transitory change (TC, \code{tc.variable}) is defined as:
-\mjsdeqn{TC_t = \begin{cases} 0 &\text{if }t < t_0 \newline
+\deqn{TC_t = \begin{cases} 0 &\text{if }t < t_0 \newline
 \alpha^{t-t_0} & t\geq t_0 \end{cases}}
 A seasonal outlier (SO, \code{so.variable}) is defined as (if \code{zeroended = FALSE}):
-\mjsdeqn{SO_t = \begin{cases} 0 &\text{if }t\geq t_0 \newline
+\deqn{SO_t = \begin{cases} 0 &\text{if }t\geq t_0 \newline
 -1 & \text{if }t < t_0 \text{ and $t$ same periode as }t_0\newline
--\frac{1}{s-1} & \text{otherwise }\end{cases}}
+ -\frac{1}{s-1} & \text{otherwise }\end{cases}}
 }
 \examples{
 #Outliers in February 2002

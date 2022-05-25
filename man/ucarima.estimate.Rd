@@ -9,9 +9,6 @@ ucarima.estimate(ucm, data, stdev = T)
 \arguments{
 \item{stdev}{}
 }
-\value{
-
-}
 \description{
 Title
 }
