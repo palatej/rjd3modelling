@@ -2,7 +2,7 @@
 % Please edit documentation in R/differencing.R
 \name{rangemean.tstat}
 \alias{rangemean.tstat}
-\title{Title}
+\title{Range-Mean Regression}
 \usage{
 rangemean.tstat(data, period = 0, groupsize = 0, trim = 0)
 }
@@ -31,7 +31,7 @@ T-Stat of the slope of the range-mean regression.
 }
 \description{
 Function to perform a range-mean regression, trimmed to avoid outlier distortion.
-The slope is used in TRAMO to select whether the original series will be transformed into log or maintain the level.
+The slope is used in TRAMO to select whether the original series will be transformed into log or maintain in level.
 }
 \details{
 First, the data is divided into \eqn{n} groups of successive observations of length \eqn{l} (\code{groupsize}).

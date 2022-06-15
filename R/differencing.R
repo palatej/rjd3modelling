@@ -90,10 +90,10 @@ differences<-function(data, lags=1, mean=TRUE){
                  as.numeric(data), .jarray(as.integer(lags)), mean))
 }
 
-#' Title
+#' Range-Mean Regression
 #'
 #' Function to perform a range-mean regression, trimmed to avoid outlier distortion.
-#' The slope is used in TRAMO to select whether the original series will be transformed into log or maintain the level.
+#' The slope is used in TRAMO to select whether the original series will be transformed into log or maintain in level.
 #'
 #' @param data data to test.
 #' @param period periodicity of the data.
@@ -109,7 +109,7 @@ differences<-function(data, lags=1, mean=TRUE){
 #' - it is equal to `period` otherwise.
 #' @param trim number of trimmed observations.
 #'
-#' @details 
+#' @details
 #' First, the data is divided into \eqn{n} groups of successive observations of length \eqn{l} (`groupsize`).
 #' That is, the first group is formed with the first \eqn{l} observations,
 #' the second group is formed with observations \eqn{1+l} to \eqn{2l}, etc.

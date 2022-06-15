@@ -7,7 +7,9 @@
 stock.td(frequency, start, length, w = 31)
 }
 \arguments{
-\item{frequency, start, length}{Annual frequency (divisor of 12), first date (array with the first year and the first period)
+\item{frequency}{Annual frequency (divisor of 12).}
+
+\item{start, length}{First date (array with the first year and the first period)
 (for instance \code{c(1980, 1)}) and number of periods of the output variables. Can also be provided with the \code{s} argument}
 
 \item{w}{indicates day of the month when inventories and other stock are reported (to denote the last day of the month enter 31).}

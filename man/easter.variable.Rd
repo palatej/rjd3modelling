@@ -18,7 +18,9 @@ easter.variable(
 julianeaster.variable(frequency, start, length, s, duration = 6)
 }
 \arguments{
-\item{frequency, start, length}{Annual frequency (divisor of 12), first date (array with the first year and the first period)
+\item{frequency}{Annual frequency (divisor of 12).}
+
+\item{start, length}{First date (array with the first year and the first period)
 (for instance \code{c(1980, 1)}) and number of periods of the output variables. Can also be provided with the \code{s} argument}
 
 \item{s}{time series used to get the dates for the trading days variables. If supplied the

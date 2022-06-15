@@ -209,7 +209,8 @@ group_names <- function(x, contrasts = TRUE){
 
 #' Usual trading days variables
 #'
-#' @param frequency,start,length Annual frequency (divisor of 12), first date (array with the first year and the first period)
+#' @param frequency Annual frequency (divisor of 12).
+#' @param start,length First date (array with the first year and the first period)
 #' (for instance `c(1980, 1)`) and number of periods of the output variables. Can also be provided with the `s` argument
 #' @param s time series used to get the dates for the trading days variables. If supplied the
 #' parameters `frequency`, `start` and `length` are ignored.
