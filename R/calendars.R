@@ -39,9 +39,8 @@ calendar.new<-function(){
   return (jd3.Calendar$new())
 }
 
-
-
-validityPeriod<-function(start, end){
+#' @export
+r2p_validityPeriod<-function(start, end){
   vp<-jd3.ValidityPeriod$new()
   if (is.null(start)) {
     pstart=rjd3toolkit::DATE_MIN
@@ -57,6 +56,25 @@ validityPeriod<-function(start, end){
   vp$end<-pend
   return (vp)
 }
+
+
+#' @export
+p2r_validityPeriod<-function(vp){
+  pstart<-vp$start
+  if (pstart == rjd3toolkit::DATE_MIN)
+    start<-NULL
+  else
+    start<-as.Date(sprintf("%04i-%02i-%02i", pstart$year, pstart$month, pstart$day))
+
+  pend<-vp$end
+  if (pend == rjd3toolkit::DATE_MAX)
+    end<-NULL
+  else
+    end<-as.Date(sprintf("%04i-%02i-%02i", pend$year, pend$month, pend$day))
+
+  return (list(start=start, end=end))
+}
+
 #' @importFrom stats is.mts ts
 length_ts <- function(s){
   if(is.mts(s)){
@@ -76,16 +94,37 @@ length_ts <- function(s){
 #' @examples
 #' calendar <-calendar.new()
 #' calendar.fixedday(calendar, 1, 1) # add New-Year
-#' calendar.fixedday(calendar, 12, 24) # add Christmas
+#' calendar.fixedday(calendar, 12, 25) # add Christmas
 #' @export
 calendar.fixedday<-function(calendar, month, day, weight=1, start=NULL, end=NULL){
   fd<-jd3.FixedDay$new()
   fd$month<-month
   fd$day<-day
   fd$weight<-weight
-  fd$validity<-validityPeriod(start, end)
+  fd$validity<-r2p_validityPeriod(start, end)
   n<-1+length(calendar$fixed_days)
   calendar$fixed_days[[n]]<-fd
+}
+
+#' @export
+fixedday<-function(month, day, weight=1, start=NULL, end=NULL){
+  return (structure(list(month=month, day=day, weight=weight, validity=list(start=start, end=end)), class='JD3_FIXEDDAY'))
+}
+
+#' @export
+p2r_fixedday<-function(p){
+  return (structure(list(month=p$month, day=p$day, weight=p$weight, validity=p2r_validityPeriod(p$validity)), class='JD3_FIXEDDAY'))
+}
+
+#' @export
+r2p_fixedday<-function(r){
+  fd<-jd3.FixedDay$new()
+  fd$month<-r$month
+  fd$day<-r$day
+  fd$weight<-r$weight
+  fd$validity<-r2p_validityPeriod(r$validity$start, r$validity$end)
+
+  return (fd)
 }
 
 #' Add fixed week day to a calendar
@@ -104,7 +143,7 @@ calendar.fixedweekday<-function(calendar, month, week,
   fd$position <- week
   fd$weekday <- dayofweek
   fd$weight<-weight
-  fd$validity<-validityPeriod(start, end)
+  fd$validity<-r2p_validityPeriod(start, end)
   n<-1+length(calendar$fixed_week_days)
   calendar$fixed_week_days[[n]]<-fd
 }
@@ -125,7 +164,7 @@ calendar.easter<-function(calendar, offset, julian=FALSE, weight=1, start=NULL, 
   ed$offset<-offset
   ed$julian<-julian
   ed$weight<-weight
-  ed$validity<-validityPeriod(start, end)
+  ed$validity<-r2p_validityPeriod(start, end)
   n<-1+length(calendar$easter_related_days)
   calendar$easter_related_days[[n]]<-ed
 }
@@ -190,7 +229,7 @@ calendar.holiday<-function(calendar, event, offset=0, weight=1, start=NULL, end=
   pd$event<-rjd3toolkit::enum_of(jd3.CalendarEvent, event, "HOLIDAY")
   pd$offset<-offset
   pd$weight<-weight
-  pd$validity<-validityPeriod(start, end)
+  pd$validity<-r2p_validityPeriod(start, end)
   n<-1+length(calendar$prespecified_holidays)
   calendar$prespecified_holidays[[n]]<-pd
 }
@@ -201,6 +240,7 @@ p2jd_calendar<-function(pcalendar){
                "calendarOf", bytes)
   return (jcal)
 }
+
 group_names <- function(x, contrasts = TRUE){
   if(!is.matrix(x))
     return(x)
@@ -357,3 +397,4 @@ stock.td<-function(frequency, start, length, w = 31){
   colnames(data) <- c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
   return (ts(data, frequency = frequency, start= start))
 }
+
