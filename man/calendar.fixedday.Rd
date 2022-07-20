@@ -21,5 +21,5 @@ Add fixed day to a calendar
 \examples{
 calendar <-calendar.new()
 calendar.fixedday(calendar, 1, 1) # add New-Year
-calendar.fixedday(calendar, 12, 24) # add Christmas
+calendar.fixedday(calendar, 12, 25) # add Christmas
 }
