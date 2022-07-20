@@ -11,9 +11,6 @@ td.ch(s, differencing)
 
 \item{differencing}{differencing lags}
 }
-\value{
-
-}
 \description{
 Canova-Hansen Trading Days test
 }

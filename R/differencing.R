@@ -90,10 +90,10 @@ differences<-function(data, lags=1, mean=TRUE){
                  as.numeric(data), .jarray(as.integer(lags)), mean))
 }
 
-#' Title
+#' Range-Mean Regression
 #'
 #' Function to perform a range-mean regression, trimmed to avoid outlier distortion.
-#' The slope is used in TRAMO to select whether the original series will be transformed into log or maintain the level.
+#' The slope is used in TRAMO to select whether the original series will be transformed into log or maintain in level.
 #'
 #' @param data data to test.
 #' @param period periodicity of the data.
@@ -109,19 +109,19 @@ differences<-function(data, lags=1, mean=TRUE){
 #' - it is equal to `period` otherwise.
 #' @param trim number of trimmed observations.
 #'
-#' @details \loadmathjax
+#' @details
 #' First, the data is divided into \eqn{n} groups of successive observations of length \eqn{l} (`groupsize`).
 #' That is, the first group is formed with the first \eqn{l} observations,
 #' the second group is formed with observations \eqn{1+l} to \eqn{2l}, etc.
 #' Then, for each group \eqn{i}, the observations are sorted and the `trim` smallest and largest
 #' observations are rejected (to avoid outlier distortion).
-#' With the other observations, the range (noted \mjseqn{y_i}) and mean (noted \mjseqn{m_i}) are computed.
+#' With the other observations, the range (noted \eqn{y_i}) and mean (noted \eqn{m_i}) are computed.
 #'
 #' Finally, the following regression is performed :
-#' \mjsdeqn{
+#' \deqn{
 #' y_t = \alpha + \beta m_t + u_t.
 #' }
-#' The function `rangemean.tstat` returns the T-statistic associated to \mjseqn{\beta}.
+#' The function `rangemean.tstat` returns the T-statistic associated to \eqn{\beta}.
 #' If it is significantly higher than 0, log transformation is recommended.
 #'
 #' @return T-Stat of the slope of the range-mean regression.

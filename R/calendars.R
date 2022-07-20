@@ -40,6 +40,7 @@ calendar.new<-function(){
 }
 
 #' @export
+#' @rdname jd3_utilities
 r2p_validityPeriod<-function(start, end){
   vp<-jd3.ValidityPeriod$new()
   if (is.null(start)) {
@@ -59,6 +60,7 @@ r2p_validityPeriod<-function(start, end){
 
 
 #' @export
+#' @rdname jd3_utilities
 p2r_validityPeriod<-function(vp){
   pstart<-vp$start
   if (pstart == rjd3toolkit::DATE_MIN)
@@ -112,11 +114,13 @@ fixedday<-function(month, day, weight=1, start=NULL, end=NULL){
 }
 
 #' @export
+#' @rdname jd3_utilities
 p2r_fixedday<-function(p){
   return (structure(list(month=p$month, day=p$day, weight=p$weight, validity=p2r_validityPeriod(p$validity)), class='JD3_FIXEDDAY'))
 }
 
 #' @export
+#' @rdname jd3_utilities
 r2p_fixedday<-function(r){
   fd<-jd3.FixedDay$new()
   fd$month<-r$month
@@ -169,13 +173,11 @@ calendar.easter<-function(calendar, offset, julian=FALSE, weight=1, start=NULL, 
   calendar$easter_related_days[[n]]<-ed
 }
 
-#' Title
+#' Add Single Date to a Calendar
 #'
-#' @param calendar
-#' @param date
-#' @param weight
+#' @inheritParams calendar.fixedday
+#' @param date the date of the holiday in the format `"YYYY-MM-DD"`.
 #'
-#' @return
 #' @export
 #'
 #' @examples
@@ -251,9 +253,11 @@ group_names <- function(x, contrasts = TRUE){
 
 #' Usual trading days variables
 #'
-#' @param frequency Annual frequency. Should be a divisor of 12.
-#' @param start Array with the first year and the first period (for instance \code{c(1980, 1)}).
-#' @param length Length of the variables
+#' @param frequency Annual frequency (divisor of 12).
+#' @param start,length First date (array with the first year and the first period)
+#' (for instance `c(1980, 1)`) and number of periods of the output variables. Can also be provided with the `s` argument
+#' @param s time series used to get the dates for the trading days variables. If supplied the
+#' parameters `frequency`, `start` and `length` are ignored.
 #' @param groups Groups of days. The length of the array must be 7. It indicates to what group each week day
 #' belongs. The first item corresponds to Mondays and the last one to Sundays. The group used for contrasts (usually Sundays) is identified by 0.
 #' The other groups are identified by 1, 2,... n (<= 6). For instance, usual trading days are defined by c(1,2,3,4,5,6,0),
@@ -265,7 +269,12 @@ group_names <- function(x, contrasts = TRUE){
 #' @export
 #'
 #' @examples
-td<-function(frequency, start, length, groups=c(1,2,3,4,5,6,0), contrasts=TRUE){
+td<-function(frequency, start, length, s, groups=c(1,2,3,4,5,6,0), contrasts=TRUE){
+  if(!missing(s) && !is.ts(s)) {
+    frequency = frequency(s)
+    start = start(s)
+    length = length_ts(s)
+  }
   jdom<-rjd3toolkit::tsdomain_r2jd(frequency, start[1], start[2], length)
   igroups<-as.integer(groups)
   jm<-.jcall("demetra/modelling/r/Variables", "Ldemetra/math/matrices/Matrix;",
@@ -275,13 +284,6 @@ td<-function(frequency, start, length, groups=c(1,2,3,4,5,6,0), contrasts=TRUE){
   return (ts(data, start = start, frequency = frequency))
 }
 
-#' @param s time series used to get the dates for the trading days variables.
-#' @export
-#' @rdname td
-td.forTs<-function(s, groups=c(1,2,3,4,5,6,0), contrasts=TRUE){
-  if (! is.ts(s)) stop("s should be a time series")
-  return (td(frequency(s), start(s), length_ts(s), groups, contrasts))
-}
 
 #' Calendar specific trading days variables
 #'
@@ -296,8 +298,13 @@ td.forTs<-function(s, groups=c(1,2,3,4,5,6,0), contrasts=TRUE){
 #' @export
 #'
 #' @examples
-htd<-function(calendar,frequency, start, length, groups=c(1,2,3,4,5,6,0), holiday=7, contrasts=TRUE,
+htd<-function(calendar,frequency, start, length, s, groups=c(1,2,3,4,5,6,0), holiday=7, contrasts=TRUE,
               meanCorrection = contrasts){
+  if(!missing(s) && !is.ts(s)) {
+    frequency = frequency(s)
+    start = start(s)
+    length = length_ts(s)
+  }
   jdom<-rjd3toolkit::tsdomain_r2jd(frequency, start[1], start[2], length)
   jcal<-p2jd_calendar(calendar)
   jm<-.jcall("demetra/modelling/r/Variables", "Ldemetra/math/matrices/Matrix;",
@@ -305,14 +312,6 @@ htd<-function(calendar,frequency, start, length, groups=c(1,2,3,4,5,6,0), holida
   return <- rjd3toolkit::matrix_jd2r(jm)
   return <- group_names(return, contrasts = contrasts)
   return (ts(return, start = start, frequency = frequency))
-}
-
-#' @param s The time series.
-#' @export
-#' @rdname htd
-htd.forTs<-function(s, calendar, groups = c(1,2,3,4,5,6,0), holiday=7, contrasts = TRUE){
-  if (! is.ts(s)) stop("s should be a time series")
-  return (htd(calendar, frequency(s), start(s), length_ts(s), groups, as.integer(holiday), contrasts))
 }
 
 
@@ -326,7 +325,7 @@ htd.forTs<-function(s, calendar, groups = c(1,2,3,4,5,6,0), holiday=7, contrasts
 #' \code{"PreviousWorkingDay"},
 #' \code{"Skip"} (holidays corresponding to non working days are simply skipped in the matrix),
 #' \code{"All"} (holidays are always put in the matrix, even if they correspond to a non working day).
-#' @param single Single variable or matrix containing the different holidays in separate columns
+#' @param single boolean indication if a single variable (`TRUE`) should be return or a matrix (`FALSE`, the default) containing the different holidays in separate columns
 #' @returns A matrix where each column is associated to a holiday (in the order of creation of the holiday) and each row to a date.
 #'
 #' @examples
@@ -390,7 +389,12 @@ easter.dates<-function(year0, year1, julian = FALSE){
 #' @inheritParams td
 #' @param w indicates day of the month when inventories and other stock are reported (to denote the last day of the month enter 31).
 #' @export
-stock.td<-function(frequency, start, length, w = 31){
+stock.td<-function(frequency, start, length, s, w = 31){
+  if(!missing(s) && !is.ts(s)) {
+    frequency = frequency(s)
+    start = start(s)
+    length = length_ts(s)
+  }
   jdom <- rjd3toolkit::tsdomain_r2jd(frequency, start[1], start[2], length)
   jm<-.jcall("demetra/modelling/r/Variables", "Ldemetra/math/matrices/Matrix;", "stockTradingDays", jdom, as.integer(w))
   data <- rjd3toolkit::matrix_jd2r(jm)

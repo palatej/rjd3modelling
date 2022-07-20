@@ -9,9 +9,6 @@ ucarima.model(model = NULL, components, complements = NULL, checkmodel = F)
 \arguments{
 \item{complements}{Complements of (some) components}
 }
-\value{
-
-}
 \description{
 Title
 }

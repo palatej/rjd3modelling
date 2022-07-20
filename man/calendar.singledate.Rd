@@ -2,16 +2,17 @@
 % Please edit documentation in R/calendars.R
 \name{calendar.singledate}
 \alias{calendar.singledate}
-\title{Title}
+\title{Add Single Date to a Calendar}
 \usage{
 calendar.singledate(calendar, date, weight = 1)
 }
 \arguments{
-\item{weight}{}
-}
-\value{
+\item{calendar}{The calendar.}
 
+\item{date}{the date of the holiday in the format \code{"YYYY-MM-DD"}.}
+
+\item{weight}{weight associated to the holiday.}
 }
 \description{
-Title
+Add Single Date to a Calendar
 }

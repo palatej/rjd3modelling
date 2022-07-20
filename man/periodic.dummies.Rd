@@ -5,16 +5,18 @@
 \alias{periodic.contrasts}
 \title{Periodic dummies and contrasts}
 \usage{
-periodic.dummies(frequency, start, length)
+periodic.dummies(frequency, start, length, s)
 
-periodic.contrasts(frequency, start, length)
+periodic.contrasts(frequency, start, length, s)
 }
 \arguments{
-\item{frequency}{Annual frequency. Should be a divisor of 12.}
+\item{frequency}{Annual frequency (divisor of 12).}
 
-\item{start}{Array with the first year and the first period (for instance \code{c(1980, 1)}).}
+\item{start, length}{First date (array with the first year and the first period)
+(for instance \code{c(1980, 1)}) and number of periods of the output variables. Can also be provided with the \code{s} argument}
 
-\item{length}{Length of the variables}
+\item{s}{time series used to get the dates for the trading days variables. If supplied the
+parameters \code{frequency}, \code{start} and \code{length} are ignored.}
 }
 \description{
 Periodic dummies and contrasts

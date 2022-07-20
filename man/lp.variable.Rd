@@ -4,14 +4,22 @@
 \alias{lp.variable}
 \title{Leap Year regressor}
 \usage{
-lp.variable(frequency, start, length, type = c("LeapYear", "LengthOfPeriod"))
+lp.variable(
+  frequency,
+  start,
+  length,
+  s,
+  type = c("LeapYear", "LengthOfPeriod")
+)
 }
 \arguments{
-\item{frequency}{Annual frequency. Should be a divisor of 12.}
+\item{frequency}{Annual frequency (divisor of 12).}
 
-\item{start}{Array with the first year and the first period (for instance \code{c(1980, 1)}).}
+\item{start, length}{First date (array with the first year and the first period)
+(for instance \code{c(1980, 1)}) and number of periods of the output variables. Can also be provided with the \code{s} argument}
 
-\item{length}{Length of the variables}
+\item{s}{time series used to get the dates for the trading days variables. If supplied the
+parameters \code{frequency}, \code{start} and \code{length} are ignored.}
 
 \item{type}{the modelisation of the leap year effect: as a contrast variable (\code{type = "LeapYear"}, default)
 or by a length-of-month (or length-of-quarter; \code{type = "LengthOfPeriod"}).}

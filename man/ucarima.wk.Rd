@@ -9,9 +9,6 @@ ucarima.wk(ucm, cmp, signal = T, nspectrum = 601, nwk = 300)
 \arguments{
 \item{nwk}{}
 }
-\value{
-
-}
 \description{
 Title
 }

@@ -6,28 +6,30 @@ NULL
 #' @inheritParams td
 #' @param duration Duration (length in days) of the Easter effect.
 #' @param endpos Position of the end of the Easter effect, relatively to Easter.
-#' @param correction
+#' @param correction mean correction option.
 #'
 #' @export
-easter.variable<-function(frequency, start, length, duration=6, endpos=-1,
+easter.variable<-function(frequency, start, length, s, duration=6, endpos=-1,
                           correction=c("Simple", "PreComputed", "Theoretical", "None")){
   correction<-match.arg(correction)
+  if(!missing(s) && !is.ts(s)) {
+    frequency = frequency(s)
+    start = start(s)
+    length = length_ts(s)
+  }
   jdom<-rjd3toolkit::tsdomain_r2jd(frequency, start[1], start[2], length)
   data<-.jcall("demetra/modelling/r/Variables", "[D", "easter", jdom, as.integer(duration), as.integer(endpos), correction)
   return (ts(data, frequency = frequency, start= start))
 }
-#' @export
-#' @rdname easter.variable
-easter.variable.forTs<-function(s, duration = 6, endpos=-1, correction=c("Simple", "PreComputed", "Theoretical", "None")){
-  if (! is.ts(s))
-    stop("s should be a time series")
-  return (easter.variable(frequency = frequency(s), start = start(s), length = length_ts(s),
-                          duration = duration, endpos = endpos, correction = correction))
-}
 
 #' @rdname easter.variable
 #' @export
-julianeaster.variable<-function(frequency, start, length, duration=6){
+julianeaster.variable<-function(frequency, start, length, s, duration=6){
+  if(!missing(s) && !is.ts(s)) {
+    frequency = frequency(s)
+    start = start(s)
+    length = length_ts(s)
+  }
   jdom<-rjd3toolkit::tsdomain_r2jd(frequency, start[1], start[2], length)
   data<-.jcall("demetra/modelling/r/Variables", "[D", "julianEaster", jdom, as.integer(duration))
   return (ts(data, frequency = frequency, start= start))
@@ -44,9 +46,14 @@ julianeaster.variable<-function(frequency, start, length, duration=6){
 #' @examples
 #' # Leap years occurs on 2000, 2004, 2008 and 2012
 #' lp.variable(4, start = c(2000, 1), length = 4*13)
-lp.variable<-function(frequency, start, length, type=c("LeapYear", "LengthOfPeriod")){
+lp.variable<-function(frequency, start, length, s, type=c("LeapYear", "LengthOfPeriod")){
   type=match.arg(type)
   lp<-type == "LeapYear"
+  if(!missing(s) && !is.ts(s)) {
+    frequency = frequency(s)
+    start = start(s)
+    length = length_ts(s)
+  }
   jdom<-rjd3toolkit::tsdomain_r2jd(frequency, start[1], start[2], length)
   data<-.jcall("demetra/modelling/r/Variables", "[D", "leapYear", jdom, as.logical(lp))
   return (ts(data, frequency = frequency, start= start))
@@ -60,19 +67,19 @@ lp.variable<-function(frequency, start, length, type=c("LeapYear", "LengthOfPeri
 #' @param rate the rate of the transitory change regressor (see details).
 #' @param zeroended boolean indicating if the regressor should end by 0 (\code{zeroended = TRUE}, default) or 1 (\code{zeroended = FALSE}).
 #'
-#' @details \loadmathjax
+#' @details
 #' An additive outlier (AO, \code{ao.variable}) is defined as:
-#' \mjsdeqn{AO_t = \begin{cases}1 &\text{if } t=t_0 \newline
+#' \deqn{AO_t = \begin{cases}1 &\text{if } t=t_0 \newline
 #'  0 & \text{if }t\ne t_0\end{cases}}
 #'
 #' A level shift (LS, \code{ls.variable}) is defined as (if \code{zeroended = FALSE}):
-#' \mjsdeqn{LS_t = \begin{cases}-1 &\text{if } t < t_0 \newline
+#' \deqn{LS_t = \begin{cases}-1 &\text{if } t < t_0 \newline
 #'  0 & \text{if }t\geq t_0 \end{cases}}
 #' A transitory change (TC, \code{tc.variable}) is defined as:
-#' \mjsdeqn{TC_t = \begin{cases} 0 &\text{if }t < t_0 \newline
+#' \deqn{TC_t = \begin{cases} 0 &\text{if }t < t_0 \newline
 #' \alpha^{t-t_0} & t\geq t_0 \end{cases}}
 #' A seasonal outlier (SO, \code{so.variable}) is defined as (if \code{zeroended = FALSE}):
-#' \mjsdeqn{SO_t = \begin{cases} 0 &\text{if }t\geq t_0 \newline
+#' \deqn{SO_t = \begin{cases} 0 &\text{if }t\geq t_0 \newline
 #' -1 & \text{if }t < t_0 \text{ and $t$ same periode as }t_0\newline
 #'  -\frac{1}{s-1} & \text{otherwise }\end{cases}}
 #'
@@ -88,7 +95,12 @@ lp.variable<-function(frequency, start, length, type=c("LeapYear", "LengthOfPeri
 #'         col = c("black", "orange", "green", "gray"))
 #' @name outliers.variables
 #' @rdname outliers.variables
-ao.variable<-function(frequency, start, length, pos, date=NULL){
+ao.variable<-function(frequency, start, length, s, pos, date=NULL){
+  if(!missing(s) && !is.ts(s)) {
+    frequency = frequency(s)
+    start = start(s)
+    length = length_ts(s)
+  }
   jdom<-rjd3toolkit::tsdomain_r2jd(frequency, start[1], start[2], length)
   if (is.null(date)){
     data<-.jcall("demetra/modelling/r/Variables", "[D", "ao", jdom, as.integer(pos-1))
@@ -99,7 +111,12 @@ ao.variable<-function(frequency, start, length, pos, date=NULL){
 }
 #' @export
 #' @rdname outliers.variables
-tc.variable<-function(frequency, start, length, pos, date=NULL, rate=0.7){
+tc.variable<-function(frequency, start, length, s, pos, date=NULL, rate=0.7){
+  if(!missing(s) && !is.ts(s)) {
+    frequency = frequency(s)
+    start = start(s)
+    length = length_ts(s)
+  }
   jdom<-rjd3toolkit::tsdomain_r2jd(frequency, start[1], start[2], length)
   if (is.null(date)){
     data<-.jcall("demetra/modelling/r/Variables", "[D", "tc", jdom, as.integer(pos-1), rate)
@@ -111,7 +128,12 @@ tc.variable<-function(frequency, start, length, pos, date=NULL, rate=0.7){
 
 #' @export
 #' @rdname outliers.variables
-ls.variable<-function(frequency, start, length, pos, date=NULL, zeroended=TRUE){
+ls.variable<-function(frequency, start, length, s, pos, date=NULL, zeroended=TRUE){
+  if(!missing(s) && !is.ts(s)) {
+    frequency = frequency(s)
+    start = start(s)
+    length = length_ts(s)
+  }
   jdom<-rjd3toolkit::tsdomain_r2jd(frequency, start[1], start[2], length)
   if (is.null(date)){
     data<-.jcall("demetra/modelling/r/Variables", "[D", "ls", jdom, as.integer(pos-1), as.logical(zeroended))
@@ -123,7 +145,12 @@ ls.variable<-function(frequency, start, length, pos, date=NULL, zeroended=TRUE){
 
 #' @export
 #' @rdname outliers.variables
-so.variable<-function(frequency, start, length, pos, date=NULL, zeroended=TRUE){
+so.variable<-function(frequency, start, length, s, pos, date=NULL, zeroended=TRUE){
+  if(!missing(s) && !is.ts(s)) {
+    frequency = frequency(s)
+    start = start(s)
+    length = length_ts(s)
+  }
   jdom<-rjd3toolkit::tsdomain_r2jd(frequency, start[1], start[2], length)
   if (is.null(date)){
     data<-.jcall("demetra/modelling/r/Variables", "[D", "so", jdom, as.integer(pos-1), as.logical(zeroended))
@@ -140,9 +167,9 @@ so.variable<-function(frequency, start, length, pos, date=NULL, zeroended=TRUE){
 #' @param range the range of the regressor. A vector of length 2 containing the datesin the format \code{"YYYY-MM-DD"}
 #' or the position in period compared to the first date.
 #'
-#' @details \loadmathjax
-#' A ramp between two dates \mjseqn{t_0} and \mjseqn{t_1} is defined as:
-#' \mjsdeqn{RP_t=
+#' @details
+#' A ramp between two dates \eqn{t_0} and \eqn{t_1} is defined as:
+#' \deqn{RP_t=
 #' \begin{cases}
 #' -1 & \text{if }t\geq t_0 \newline
 #' \frac{t-t_0}{t_1-t_0}-1 & t_0< t < t_1 \newlin
@@ -157,7 +184,12 @@ so.variable<-function(frequency, start, length, pos, date=NULL, zeroended=TRUE){
 #' ramp.variable(12, c(2000,1), length = 12*4, range = c(13, 21))
 #' # Or equivalently
 #' ramp.variable(12, c(2000,1), length = 12*4, range = c("2001-01-01", "2001-09-02"))
-ramp.variable<-function(frequency, start, length, range){
+ramp.variable<-function(frequency, start, length, s, range){
+  if(!missing(s) && !is.ts(s)) {
+    frequency = frequency(s)
+    start = start(s)
+    length = length_ts(s)
+  }
   jdom<-rjd3toolkit::tsdomain_r2jd(frequency, start[1], start[2], length)
   if (length(range) != 2) stop("Invalid range")
   if (is.character(range)){
@@ -179,10 +211,10 @@ ramp.variable<-function(frequency, start, length, range){
 #' Can be characters or integers.
 #' @param delta regular differencing order.
 #' @param seasonaldelta segular differencing order.
-#' @details \loadmathjax
+#' @details
 #' Intervention variables are combinations of any possible sequence of ones and zeros
 #' (the sequence of ones being defined by  by the parameters `starts` and `ends`)
-#' and of \mjseqn{\frac{1}{(1-B)^d}} and \mjseqn{\frac{1}{(1-B^s)^D}} where \eqn{B} is the
+#' and of \eqn{\frac{1}{(1-B)^d}} and \eqn{\frac{1}{(1-B^s)^D}} where \eqn{B} is the
 #' backwar operation, \eqn{s} is the frequency of the time series,
 #' \eqn{d} and \eqn{D} are the parameters `delta` and `seasonaldelta`.
 #'
@@ -196,7 +228,12 @@ ramp.variable<-function(frequency, start, length, range){
 #' intervention.variable(12, c(2000, 1), 60,
 #'     starts = "2001-01-01", ends = "2001-12-01", delta = 1)
 #' @export
-intervention.variable<-function(frequency, start, length, starts, ends, delta=0, seasonaldelta=0){
+intervention.variable<-function(frequency, start, length, s, starts, ends, delta=0, seasonaldelta=0){
+  if(!missing(s) && !is.ts(s)) {
+    frequency = frequency(s)
+    start = start(s)
+    length = length_ts(s)
+  }
   if (length(starts) != length(ends)) stop("Invalid spans in intervention variable")
 
   jdom<-rjd3toolkit::tsdomain_r2jd(frequency, start[1], start[2], length)
@@ -220,7 +257,12 @@ intervention.variable<-function(frequency, start, length, starts, ends, delta=0,
 #'
 #' @inheritParams outliers.variables
 #'@export
-periodic.dummies <-function(frequency, start, length){
+periodic.dummies <-function(frequency, start, length, s){
+  if(!missing(s) && !is.ts(s)) {
+    frequency = frequency(s)
+    start = start(s)
+    length = length_ts(s)
+  }
   jdom <- rjd3toolkit::tsdomain_r2jd(frequency, start[1], start[2], length)
   jm<-.jcall("demetra/modelling/r/Variables", "Ldemetra/math/matrices/Matrix;", "periodicDummies", jdom)
   data <- rjd3toolkit::matrix_jd2r(jm)
@@ -228,7 +270,12 @@ periodic.dummies <-function(frequency, start, length){
 }
 #'@export
 #'@rdname periodic.dummies
-periodic.contrasts <-function(frequency, start, length){
+periodic.contrasts <-function(frequency, start, length, s){
+  if(!missing(s) && !is.ts(s)) {
+    frequency = frequency(s)
+    start = start(s)
+    length = length_ts(s)
+  }
   jdom <- rjd3toolkit::tsdomain_r2jd(frequency, start[1], start[2], length)
   jm<-.jcall("demetra/modelling/r/Variables", "Ldemetra/math/matrices/Matrix;", "periodicContrasts", jdom)
   data <- rjd3toolkit::matrix_jd2r(jm)
@@ -242,16 +289,16 @@ periodic.contrasts <-function(frequency, start, length){
 #' @param seasonal_frequency the seasonal frequencies.
 #' By default the fundamental seasonal frequency and all the harmonics are used.
 #'
-#' @details \loadmathjax
-#' Denote by \mjseqn{P} the value of `frequency` (= the period) and
-#' \mjseqn{f_1}, ..., \mjseqn{f_n} the frequencies provides by \code{seasonal_frequency}
-#' (if \code{seasonal_frequency = NULL} then \mjseqn{n=\lfloor P/2\rfloor} and \mjseqn{f_i}=i).
+#' @details
+#' Denote by \eqn{P} the value of `frequency` (= the period) and
+#' \eqn{f_1}, ..., \eqn{f_n} the frequencies provides by \code{seasonal_frequency}
+#' (if \code{seasonal_frequency = NULL} then \eqn{n=\lfloor P/2\rfloor} and \eqn{f_i}=i).
 #'
-#' \code{trigonometric.variables} returns a matrix of size \mjseqn{length\times(2n)}.
+#' \code{trigonometric.variables} returns a matrix of size \eqn{length\times(2n)}.
 #'
-#' For each date \mjseqn{t} associated to the period \mjseqn{m} (\mjseqn{m \in \[1,P\]}),
-#' the columns \mjseqn{2i} and \mjseqn{2i-1} are equal to:
-#' \mjsdeqn{
+#' For each date \eqn{t} associated to the period \eqn{m} (\eqn{m\in[1,P]}),
+#' the columns \eqn{2i} and \eqn{2i-1} are equal to:
+#' \deqn{
 #' \cos \left(
 #' \frac{2 \pi}{P}  \times m \times f_i
 #' \right)
@@ -262,10 +309,10 @@ periodic.contrasts <-function(frequency, start, length){
 #' }
 #' Take for example the case when the first date (\code{date}) is a January, \code{frequency = 12}
 #' (monthly time series), \code{length = 12} and \code{seasonal_frequency = NULL}.
-#' The first frequency, \mjseqn{\lambda_1 = 2\pi /12} represent the fundamental seasonal frequency and the
-#' other frequencies (\mjseqn{\lambda_2 = 2\pi /12 \times 2}, ..., \mjseqn{\lambda_6 = 2\pi /12 \times 6})
+#' The first frequency, \eqn{\lambda_1 = 2\pi /12} represent the fundamental seasonal frequency and the
+#' other frequencies (\eqn{\lambda_2 = 2\pi /12 \times 2}, ..., \eqn{\lambda_6 = 2\pi /12 \times 6})
 #' are the five harmonics. The output matrix will be equal to:
-#' \mjsdeqn{
+#' \deqn{
 #' \begin{pmatrix}
 #' \cos(\lambda_1) & \sin (\lambda_1) & \cdots &
 #' \cos(\lambda_6) & \sin (\lambda_6) \newline
@@ -279,8 +326,13 @@ periodic.contrasts <-function(frequency, start, length){
 #'
 #'
 #' @export
-trigonometric.variables <- function(frequency, start, length,
+trigonometric.variables <- function(frequency, start, length, s,
                                     seasonal_frequency = NULL){
+  if(!missing(s) && !is.ts(s)) {
+    frequency = frequency(s)
+    start = start(s)
+    length = length_ts(s)
+  }
   jdom <- rjd3toolkit::tsdomain_r2jd(frequency, start[1], start[2], length)
 
   if(!is.null(seasonal_frequency))
@@ -295,14 +347,14 @@ trigonometric.variables <- function(frequency, start, length,
   return(ts(data, frequency = frequency, start = start))
 }
 
-# Denote by \mjseqn{l} the value of \code{length},
-# \mjseqn{s} the value of \code{start} and
-# \mjseqn{f_1}, ..., \mjseqn{f_n} the different frequencies.
-# \code{trigonometric.variables} returns a matrix of size \mjseqn{l\times(2n)}.
+# Denote by \eqn{l} the value of \code{length},
+# \eqn{s} the value of \code{start} and
+# \eqn{f_1}, ..., \eqn{f_n} the different frequencies.
+# \code{trigonometric.variables} returns a matrix of size \eqn{l\times(2n)}.
 #
-# For \mjseqn{i} in \mjseqn{[1,n]}, the columns \mjseqn{2*i} and
-# \mjseqn{2*i+1} are equal to
-# \mjsdeqn{
+# For \eqn{i} in \eqn{[1,n]}, the columns \eqn{2*i} and
+# \eqn{2*i+1} are equal to
+# \deqn{
 # \begin{pmatrix}
 # \cos(f_i \pi (0 + s)) \newline
 # \cos(f_i \pi (1 + s)) \newline \vdots \newline

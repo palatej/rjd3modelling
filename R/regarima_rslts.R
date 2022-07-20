@@ -1,6 +1,8 @@
 #' @include protobuf.R
 NULL
 
+#' @export
+#' @rdname jd3_utilities
 p2r_regarima_rslts<-function(p){
 
   return (structure(list(

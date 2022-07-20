@@ -2,7 +2,6 @@
 % Please edit documentation in R/calendars.R
 \name{htd}
 \alias{htd}
-\alias{htd.forTs}
 \title{Calendar specific trading days variables}
 \usage{
 htd(
@@ -10,28 +9,23 @@ htd(
   frequency,
   start,
   length,
+  s,
   groups = c(1, 2, 3, 4, 5, 6, 0),
   holiday = 7,
   contrasts = TRUE,
   meanCorrection = contrasts
 )
-
-htd.forTs(
-  s,
-  calendar,
-  groups = c(1, 2, 3, 4, 5, 6, 0),
-  holiday = 7,
-  contrasts = TRUE
-)
 }
 \arguments{
 \item{calendar}{The calendar.}
 
-\item{frequency}{Annual frequency. Should be a divisor of 12.}
+\item{frequency}{Annual frequency (divisor of 12).}
 
-\item{start}{Array with the first year and the first period (for instance \code{c(1980, 1)}).}
+\item{start, length}{First date (array with the first year and the first period)
+(for instance \code{c(1980, 1)}) and number of periods of the output variables. Can also be provided with the \code{s} argument}
 
-\item{length}{Length of the variables}
+\item{s}{time series used to get the dates for the trading days variables. If supplied the
+parameters \code{frequency}, \code{start} and \code{length} are ignored.}
 
 \item{groups}{Groups of days. The length of the array must be 7. It indicates to what group each week day
 belongs. The first item corresponds to Mondays and the last one to Sundays. The group used for contrasts (usually Sundays) is identified by 0.
@@ -44,8 +38,6 @@ week days by c(1,1,1,1,1,0,0), week days, Saturdays, Sundays by c(1,1,1,1,1,2,0)
 
 \item{meanCorrection}{boolean indicating if the regressors are corrected for long-term term.
 By default the correction is done if \code{contrasts = TRUE}.}
-
-\item{s}{The time series.}
 }
 \value{
 The variables corresponding to each group, starting with the 0-group (\code{contrasts = FALSE})

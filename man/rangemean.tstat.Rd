@@ -2,7 +2,7 @@
 % Please edit documentation in R/differencing.R
 \name{rangemean.tstat}
 \alias{rangemean.tstat}
-\title{Title}
+\title{Range-Mean Regression}
 \usage{
 rangemean.tstat(data, period = 0, groupsize = 0, trim = 0)
 }
@@ -31,22 +31,21 @@ T-Stat of the slope of the range-mean regression.
 }
 \description{
 Function to perform a range-mean regression, trimmed to avoid outlier distortion.
-The slope is used in TRAMO to select whether the original series will be transformed into log or maintain the level.
+The slope is used in TRAMO to select whether the original series will be transformed into log or maintain in level.
 }
 \details{
-\loadmathjax
 First, the data is divided into \eqn{n} groups of successive observations of length \eqn{l} (\code{groupsize}).
 That is, the first group is formed with the first \eqn{l} observations,
 the second group is formed with observations \eqn{1+l} to \eqn{2l}, etc.
 Then, for each group \eqn{i}, the observations are sorted and the \code{trim} smallest and largest
 observations are rejected (to avoid outlier distortion).
-With the other observations, the range (noted \mjseqn{y_i}) and mean (noted \mjseqn{m_i}) are computed.
+With the other observations, the range (noted \eqn{y_i}) and mean (noted \eqn{m_i}) are computed.
 
 Finally, the following regression is performed :
-\mjsdeqn{
+\deqn{
 y_t = \alpha + \beta m_t + u_t.
 }
-The function \code{rangemean.tstat} returns the T-statistic associated to \mjseqn{\beta}.
+The function \code{rangemean.tstat} returns the T-statistic associated to \eqn{\beta}.
 If it is significantly higher than 0, log transformation is recommended.
 }
 \examples{

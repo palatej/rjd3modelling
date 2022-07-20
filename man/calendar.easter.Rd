@@ -22,9 +22,7 @@ calendar.easter(
 
 \item{weight}{weight associated to the holiday.}
 
-\item{start}{Validity period of the holiday in the format \code{"YYYY-MM-DD"}.}
-
-\item{end}{Validity period of the holiday in the format \code{"YYYY-MM-DD"}.}
+\item{start, end}{Validity period of the holiday in the format \code{"YYYY-MM-DD"}.}
 }
 \description{
 Add Easter related day to a calendar

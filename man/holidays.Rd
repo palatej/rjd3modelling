@@ -27,7 +27,7 @@ holidays(
 \code{"Skip"} (holidays corresponding to non working days are simply skipped in the matrix),
 \code{"All"} (holidays are always put in the matrix, even if they correspond to a non working day).}
 
-\item{single}{Single variable or matrix containing the different holidays in separate columns}
+\item{single}{boolean indication if a single variable (\code{TRUE}) should be return or a matrix (\code{FALSE}, the default) containing the different holidays in separate columns}
 }
 \value{
 A matrix where each column is associated to a holiday (in the order of creation of the holiday) and each row to a date.
