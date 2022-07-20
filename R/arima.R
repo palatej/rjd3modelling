@@ -34,7 +34,8 @@ sarima.model<-function(name="sarima", period, phi=NULL, d=0, theta=NULL, bphi=NU
 #' plot(x, type = "line")
 #' @export
 sarima.random<-function(model, length, stde=5){
-  if (class(model) != "JD3_SARIMA") stop("Invalid model")
+  if (!inherits(model, "JD3_SARIMA"))
+    stop("Invalid model")
   return (.jcall("demetra/arima/r/SarimaModels", "[D", "random",
          as.integer(length),
          as.integer(model$period),
@@ -75,6 +76,8 @@ jd2r_sarima<-function(jsarima){
   return (p2r_sarima(rq))
 }
 
+#' @export
+#' @rdname jd3_utilities
 r2jd_sarima<-function(model){
   return (.jcall("demetra/arima/r/SarimaModels", "Ljdplus/sarima/SarimaModel;", "of",
                  as.integer(model$period),
@@ -176,6 +179,8 @@ r2jd_ucarima<-function(ucm){
   return (.jcall("demetra/arima/r/UcarimaModels", "Ljdplus/ucarima/UcarimaModel;", "of", jmodel, jcmps))
 }
 
+#' @export
+#' @rdname jd3_utilities
 jd2r_ucarima<-function(jucm){
 #  model<-.jcall(jucm, "Ljdplus/arima/ArimaModel;", "sum")
 #  jcmps<-.jcall(jucm, "[Ljdplus/arima/ArimaModel;", "getComponents")

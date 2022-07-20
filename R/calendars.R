@@ -40,6 +40,7 @@ calendar.new<-function(){
 }
 
 #' @export
+#' @rdname jd3_utilities
 r2p_validityPeriod<-function(start, end){
   vp<-jd3.ValidityPeriod$new()
   if (is.null(start)) {
@@ -59,6 +60,7 @@ r2p_validityPeriod<-function(start, end){
 
 
 #' @export
+#' @rdname jd3_utilities
 p2r_validityPeriod<-function(vp){
   pstart<-vp$start
   if (pstart == rjd3toolkit::DATE_MIN)
@@ -112,11 +114,13 @@ fixedday<-function(month, day, weight=1, start=NULL, end=NULL){
 }
 
 #' @export
+#' @rdname jd3_utilities
 p2r_fixedday<-function(p){
   return (structure(list(month=p$month, day=p$day, weight=p$weight, validity=p2r_validityPeriod(p$validity)), class='JD3_FIXEDDAY'))
 }
 
 #' @export
+#' @rdname jd3_utilities
 r2p_fixedday<-function(r){
   fd<-jd3.FixedDay$new()
   fd$month<-r$month

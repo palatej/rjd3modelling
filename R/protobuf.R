@@ -2,15 +2,28 @@
 #' @import rjd3toolkit
 NULL
 
+#' Java Utility Functions
+#'
+#' These functions are used in all JDemetra+ 3.0 packages to easily interact between R and Java objects.
+#'
+#' @param p,r,spec,model,jucm,vp,start,end parameters.
+#'
+#' @name jd3_utilities
+NULL
+#> NULL
+
 p2r_sarima<-function(p){
   return (sarima.model(p$name, p$period, p$phi, p$d, p$theta,
                p$bphi, p$bd, p$btheta))
 }
 
+#' @export
+#' @rdname jd3_utilities
 p2r_arima<-function(p){
   return (arima.model(p$name, p$ar, p$delta, p$ma, p$innovation_variance))
 }
-
+#' @export
+#' @rdname jd3_utilities
 p2r_ucarima<-function(p){
   model<-p2r_arima(p$model)
   return (ucarima.model(model,lapply(p$components, function(z){p2r_arima(z)}), lapply(p$complements, function(z){p2r_arima(z)}), F))
@@ -24,7 +37,8 @@ p2r_ucarima<-function(p){
 
 
 # Sarima
-
+#' @export
+#' @rdname jd3_utilities
 p2r_spec_sarima<-function(spec){
   return (structure(
     list(
@@ -39,6 +53,8 @@ p2r_spec_sarima<-function(spec){
   class="JD3_SARIMA_ESTIMATION"))
 }
 
+#' @export
+#' @rdname jd3_utilities
 r2p_spec_sarima<-function(r){
   p<-regarima.SarimaSpec$new()
   p$period<-r$period
@@ -50,6 +66,7 @@ r2p_spec_sarima<-function(r){
   p$btheta<-rjd3toolkit::r2p_parameters(r$btheta)
   return (p)
 }
+
 
 p2r_outlier<-function(p){
   return (list(
@@ -69,16 +86,21 @@ r2p_outlier<-function(r){
   return (p)
 }
 
+#' @export
+#' @rdname jd3_utilities
 p2r_outliers<-function(p){
   if (length(p) == 0){return (NULL)}
   return (lapply(p, function(z){p2r_outlier(z)}))
 }
 
+#' @export
+#' @rdname jd3_utilities
 r2p_outliers<-function(r){
   if (length(r) == 0){return (list())}
   l<-list()
   return (lapply(r, function(z){r2p_outlier(z)}))
 }
+
 
 p2r_ramp<-function(p){
   return (list(
@@ -98,11 +120,15 @@ r2p_ramp<-function(r){
   return (p)
 }
 
+#' @export
+#' @rdname jd3_utilities
 p2r_ramps<-function(p){
   if (length(p) == 0){return (NULL)}
   return (lapply(p, function(z){p2r_ramp(z)}))
 }
 
+#' @export
+#' @rdname jd3_utilities
 r2p_ramps<-function(r){
   if (length(r) == 0){return (list())}
   l<-list()
@@ -166,7 +192,8 @@ r2p_uservars<-function(r){
   l<-list()
   return (lapply(r, function(z){r2p_uservar(z)}))
 }
-
+#' @export
+#' @rdname jd3_utilities
 p2r_variables<-function(p){
   return (lapply(p, function(v){p2r_variable(v)}))
 }
