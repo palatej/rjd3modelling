@@ -345,7 +345,12 @@ easter.dates<-function(year0, year1, julian = FALSE){
 #' @inheritParams td
 #' @param w indicates day of the month when inventories and other stock are reported (to denote the last day of the month enter 31).
 #' @export
-stock.td<-function(frequency, start, length, w = 31){
+stock.td<-function(frequency, start, length, s, w = 31){
+  if(!missing(s) && !is.ts(s)) {
+    frequency = frequency(s)
+    start = start(s)
+    length = length_ts(s)
+  }
   jdom <- rjd3toolkit::tsdomain_r2jd(frequency, start[1], start[2], length)
   jm<-.jcall("demetra/modelling/r/Variables", "Ldemetra/math/matrices/Matrix;", "stockTradingDays", jdom, as.integer(w))
   data <- rjd3toolkit::matrix_jd2r(jm)
