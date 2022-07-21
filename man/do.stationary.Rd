@@ -7,9 +7,9 @@
 do.stationary(data, period)
 }
 \arguments{
-\item{data}{Series being differenced}
+\item{data}{Series being differenced.}
 
-\item{period}{Period of the series}
+\item{period}{Period of the series.}
 }
 \value{
 Stationary transformation

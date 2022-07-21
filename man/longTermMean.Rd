@@ -16,10 +16,10 @@ belongs. The first item corresponds to Mondays and the last one to Sundays. The 
 The other groups are identified by 1, 2,... n (<= 6). For instance, usual trading days are defined by c(1,2,3,4,5,6,0),
 week days by c(1,1,1,1,1,0,0), week days, Saturdays, Sundays by c(1,1,1,1,1,2,0) etc...}
 
-\item{holiday}{Day for holidays (holidays are considered as that day). 1 for Monday... 7 for Sunday. Doesn't necessary belong to the 0-group}
+\item{holiday}{Day for holidays (holidays are considered as that day). 1 for Monday... 7 for Sunday. Doesn't necessary belong to the 0-group.}
 }
 \value{
-The long term means corresponding to each group/period, starting with the 0-group
+The long term means corresponding to each group/period, starting with the 0-group.
 }
 \description{
 Long-term means of a calendar

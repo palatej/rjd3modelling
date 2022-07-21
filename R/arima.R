@@ -54,7 +54,7 @@ sarima.random<-function(model, length, stde=5){
 #' @param ar Coefficients of the regular auto-regressive polynomial (1 + ar(1)B + ar(2)B + ...). True signs.
 #' @param delta The non stationary auto-regressive polynomial.
 #' @param ma Coefficients of the regular moving average polynomial (1 + ma(1)B + ma(2)B + ...). True signs.
-#' @param variance the innovation variance
+#' @param variance the innovation variance.
 #'
 #' @return a `"JD3_ARIMA"` model.
 #' @export

@@ -9,7 +9,7 @@ NULL
 #' @param s a \code{ts} object that corresponds to the input time series to test.
 #' @param model the model to use for the residuals. See details.
 #'
-#' @details 
+#' @details
 #' The function performs a residual seasonality test that is a joint F-Test on the coefficients of trading days regressors.
 #' Several specifications can be used on the model:
 #' \itemize{
@@ -57,7 +57,7 @@ td.f<-function(s, model=c("D1", "DY", "DYD1", "WN", "AIRLINE", "R011", "R100"), 
 #' Canova-Hansen Trading Days test
 #'
 #' @inheritParams td.f
-#' @param differencing differencing lags
+#' @param differencing differencing lags.
 #'
 #' @return
 #' @export

@@ -289,7 +289,7 @@ td<-function(frequency, start, length, s, groups=c(1,2,3,4,5,6,0), contrasts=TRU
 #'
 #' @inheritParams td
 #' @param calendar The calendar.
-#' @param holiday Day for holidays (holidays are considered as that day). 1 for Monday... 7 for Sunday. Doesn't necessary belong to the 0-group
+#' @param holiday Day for holidays (holidays are considered as that day). 1 for Monday... 7 for Sunday. Doesn't necessary belong to the 0-group.
 #' @param meanCorrection boolean indicating if the regressors are corrected for long-term term.
 #' By default the correction is done if \code{contrasts = TRUE}.
 #'
@@ -325,7 +325,7 @@ htd<-function(calendar,frequency, start, length, s, groups=c(1,2,3,4,5,6,0), hol
 #' \code{"PreviousWorkingDay"},
 #' \code{"Skip"} (holidays corresponding to non working days are simply skipped in the matrix),
 #' \code{"All"} (holidays are always put in the matrix, even if they correspond to a non working day).
-#' @param single boolean indication if a single variable (`TRUE`) should be return or a matrix (`FALSE`, the default) containing the different holidays in separate columns
+#' @param single boolean indication if a single variable (`TRUE`) should be return or a matrix (`FALSE`, the default) containing the different holidays in separate columns.
 #' @returns A matrix where each column is associated to a holiday (in the order of creation of the holiday) and each row to a date.
 #'
 #' @examples
@@ -358,7 +358,7 @@ holidays<-function(calendar, start, length, nonworking=c(6,7), type=c("Skip", "A
 #'
 #' @inheritParams htd
 #'
-#' @return The long term means corresponding to each group/period, starting with the 0-group
+#' @return The long term means corresponding to each group/period, starting with the 0-group.
 #' @export
 #'
 #' @examples

@@ -20,8 +20,8 @@ p2r_differencing<-function(p){
 #' The series should not be seasonal.
 #' Source: Tramo
 #'
-#' @param data Series being differenced
-#' @param period Period of the series
+#' @param data Series being differenced.
+#' @param period Period of the series.
 #'
 #' @return
 #' Stationary transformation
@@ -44,13 +44,13 @@ do.stationary<-function(data, period){
 
 #' Automatic differencing
 #'
-#' The series is differentiated till its variance is decreasing
+#' The series is differentiated till its variance is decreasing.
 #'
-#' @param data Series being differenced
-#' @param period Period considered in the automatic differencing
-#' @param mad Use of MAD in the computation of the variance (true by default)
-#' @param centile Percentage of the data used for computing the variance (90 by default)
-#' @param k tolerance in the decrease of the variance. The algorithm stops if the new varance is higher than k*the old variance
+#' @param data Series being differenced.
+#' @param period Period considered in the automatic differencing.
+#' @param mad Use of MAD in the computation of the variance (true by default).
+#' @param centile Percentage of the data used for computing the variance (90 by default).
+#' @param k tolerance in the decrease of the variance. The algorithm stops if the new varance is higher than k*the old variance.
 #'
 #' @return
 #' Stationary transformation
@@ -75,11 +75,11 @@ differencing.fast<-function(data, period, mad=TRUE, centile=90, k=1.2){
 
 #' Differencing of a series
 #'
-#' @param data The series to be differenced
-#' @param lags Lags of the differencing
-#' @param mean Mean correction
+#' @param data The series to be differenced.
+#' @param lags Lags of the differencing.
+#' @param mean Mean correction.
 #'
-#' @return The differenced series
+#' @return The differenced series.
 #' @export
 #'
 #' @examples

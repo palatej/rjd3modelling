@@ -19,7 +19,7 @@ parameters \code{frequency}, \code{start} and \code{length} are ignored.}
 By default the fundamental seasonal frequency and all the harmonics are used.}
 }
 \description{
-Computes trigonometric variables at different frequencies
+Computes trigonometric variables at different frequencies.
 }
 \details{
 Denote by \eqn{P} the value of \code{frequency} (= the period) and

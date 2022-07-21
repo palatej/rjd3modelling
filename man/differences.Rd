@@ -7,14 +7,14 @@
 differences(data, lags = 1, mean = TRUE)
 }
 \arguments{
-\item{data}{The series to be differenced}
+\item{data}{The series to be differenced.}
 
-\item{lags}{Lags of the differencing}
+\item{lags}{Lags of the differencing.}
 
-\item{mean}{Mean correction}
+\item{mean}{Mean correction.}
 }
 \value{
-The differenced series
+The differenced series.
 }
 \description{
 Differencing of a series

@@ -54,7 +54,7 @@ r2p_fixedday(r)
 p2r_regarima_rslts(p)
 }
 \arguments{
-\item{p, r, spec, model, jucm, vp, start, end}{parameters.}
+\item{p, r, spec, model, jucm, vp, start, end, jrslts}{parameters.}
 }
 \description{
 These functions are used in all JDemetra+ 3.0 packages to easily interact between R and Java objects.

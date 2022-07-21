@@ -283,7 +283,7 @@ periodic.contrasts <-function(frequency, start, length, s){
 }
 #' Trigonometric variables
 #'
-#' Computes trigonometric variables at different frequencies
+#' Computes trigonometric variables at different frequencies.
 #'
 #' @inheritParams outliers.variables
 #' @param seasonal_frequency the seasonal frequencies.

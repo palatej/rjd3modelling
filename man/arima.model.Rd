@@ -15,7 +15,7 @@ arima.model(name = "arima", ar = 1, delta = 1, ma = 1, variance = 1)
 
 \item{ma}{Coefficients of the regular moving average polynomial (1 + ma(1)B + ma(2)B + ...). True signs.}
 
-\item{variance}{the innovation variance}
+\item{variance}{the innovation variance.}
 }
 \value{
 a \code{"JD3_ARIMA"} model.

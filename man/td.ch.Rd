@@ -9,7 +9,7 @@ td.ch(s, differencing)
 \arguments{
 \item{s}{a \code{ts} object that corresponds to the input time series to test.}
 
-\item{differencing}{differencing lags}
+\item{differencing}{differencing lags.}
 }
 \description{
 Canova-Hansen Trading Days test
