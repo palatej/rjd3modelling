@@ -1,6 +1,6 @@
 Package: rjd3modelling
 Type: Package
-Title: Interface to 'JDemetra+ 3.0' Seasonal Adjustment Software
+Title: Time Series Modelling Functions with 'JDemetra+ 3.0'
 Version: 0.3.2
 Authors@R: c(
   person("Jean", "Palate", role = c("aut", "cre"),
@@ -8,7 +8,9 @@ Authors@R: c(
   person("Alain", "Quartier-la-Tente", role = c("aut"),
                  email = "alain.quartier@yahoo.fr",
                  comment = c(ORCID = "0000-0001-7890-3857")))
-Description: Interface around 'JDemetra+ 3.x' arima-toolkit (<https://github.com/jdemetra/jdemetra-core>), STACE project. 
+Description: Interface around 'JDemetra+ 3.x' (<https://github.com/jdemetra/jdemetra-core>) seasonal adjustment software, STACE project.
+ It offers access to several functions model time series: create outlier regressors, user-defined calendar regressors, trading-days tests,
+ UCARIMA models and other tools around seasonal adjustment.
 Depends:
   R (>= 3.6)
 Imports:
